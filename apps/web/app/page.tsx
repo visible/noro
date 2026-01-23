@@ -1,62 +1,106 @@
+"use client";
+
+import { useState } from "react";
+import Link from "next/link";
+import { Dock } from "@/components/dock";
+import { BackgroundBeams } from "@/components/background-beams";
+
+type Language = "en" | "jp";
+
+const content = {
+  en: {
+    title: "noro",
+    tagline: "share secrets securely. one-time links that self-destruct.",
+  },
+  jp: {
+    title: "ノロ",
+    tagline: "シークレットを安全に共有。取得後に自動削除。",
+  },
+};
+
 export default function Home() {
+  const [lang, setLang] = useState<Language>("en");
+  const t = content[lang];
+
   return (
-    <div style={{ maxWidth: 640, margin: "0 auto", padding: "4rem 1.5rem" }}>
-      <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "2rem" }}>
-        <img src="/icon.svg" alt="" width={28} height={28} aria-hidden="true" style={{ filter: "invert(1)" }} />
-        <span style={{ color: "#888", fontSize: 13, fontWeight: 500 }}>noro</span>
-      </div>
-      <p style={{ fontSize: 13, marginBottom: "0.25rem" }}>share env vars with one command</p>
-      <p style={{ color: "#555", fontSize: 11, marginBottom: "3rem" }}>one-time links that self-destruct after claiming</p>
+    <BackgroundBeams className="text-white selection:bg-[#FF6B00] selection:text-black">
+      {/* Dock */}
+      <Dock lang={lang} />
 
-      <section style={{ marginBottom: "2.5rem" }}>
-        <p style={{ fontSize: 13, color: "#666", marginBottom: "0.75rem" }}><span style={{ color: "#888" }}>&gt;</span> share?</p>
-        <pre style={{ background: "#111", padding: "0.75rem", borderRadius: 6, fontSize: 11, lineHeight: 1.6, border: "1px solid #222", color: "#888" }}>
-{`noro share OPENAI_API_KEY
+      {/* Language Toggle - Top Right */}
+      <nav className="fixed top-0 right-0 p-8 z-50">
+        <div className="flex items-center gap-2 text-xs tracking-widest">
+          <button
+            onClick={() => setLang("en")}
+            className={lang === "en" ? "text-[#FF6B00]" : "text-white/30 hover:text-white"}
+            type="button"
+          >
+            EN
+          </button>
+          <span className="text-white/20">/</span>
+          <button
+            onClick={() => setLang("jp")}
+            className={lang === "jp" ? "text-[#FF6B00]" : "text-white/30 hover:text-white"}
+            type="button"
+          >
+            JP
+          </button>
+        </div>
+      </nav>
 
-  → noro.sh/a8f3k2#key
-  → or: npx noro a8f3k2#key`}
-        </pre>
-      </section>
+      {/* Logo - Bottom Right */}
+      <Link href="/" className="fixed bottom-0 right-0 p-8 z-50 hover:opacity-60 transition-opacity">
+        <svg
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+          aria-label="noro logo"
+        >
+          <path
+            fill="#fff"
+            d="M17.5,3.875 C19.7782,3.875 21.625,5.72183 21.625,8 C21.625,9.2471 21.0714,10.36501 20.1971,11.12122 C20.4748,11.86972 20.625,12.66939 20.625,13.5 C20.625,15.89 19.382,18.0188 17.4446,19.4143 C17.1624,19.6176 16.8653,19.8054 16.5551,19.9763 L16.5183,19.9964 C15.2037,20.7125 13.6559,21.125 12,21.125 C10.34411,21.125 8.79628,20.7124 7.48166,19.9964 C7.1745,19.8291 6.88004,19.6452 6.59991,19.4462 L6.55539,19.4143 C4.61803,18.0188 3.375,15.89 3.375,13.5 C3.375,12.66939 3.52525,11.86971 3.80294,11.12122 C2.92856,10.36501 2.375,9.2471 2.375,8 C2.375,5.72183 4.22183,3.875 6.5,3.875 C8.07432,3.875 9.44244,4.75696 10.1376,6.05321 C10.73749,5.9365 11.36069,5.875 12,5.875 C12.6393,5.875 13.2625,5.9365 13.8624,6.05321 C14.5576,4.75696 15.9257,3.875 17.5,3.875 Z M13.5225,16.3968 C13.4126,16.6012 13.2228,16.7712 12.99,16.8943 C12.7145,17.04 12.3705,17.125 12,17.125 C11.62961,17.125 11.28562,17.0401 11.01014,16.8944 C10.77744,16.7713 10.58761,16.6014 10.47768,16.3971 C9.33578,16.8209 8.41869,17.7081 7.95497,18.8301 C9.1128,19.4892 10.50081,19.875 12,19.875 C13.4993,19.875 14.8874,19.4892 16.0453,18.8299 C15.7958,18.2257 15.4115,17.6816 14.9154,17.2378 C14.5045,16.8703 14.0326,16.586 13.5225,16.3968 Z M12,7.125 C7.88428,7.125 4.625,10.02458 4.625,13.5 C4.625,15.2987 5.49533,16.9402 6.9074,18.1082 C7.80618,16.1978 9.74847,14.875 12,14.875 C13.4399,14.875 14.7538,15.4162 15.7487,16.3061 C16.3092,16.8075 16.7686,17.4196 17.0926,18.1082 C18.5047,16.9402 19.375,15.2987 19.375,13.5 C19.375,10.02458 16.1157,7.125 12,7.125 Z M6.5,5.125 C4.91218,5.125 3.625,6.41218 3.625,8 C3.625,8.73272 3.90091,9.41662 4.37336,9.93541 C5.34066,8.32097 6.94287,7.05326 8.88195,6.38844 C8.35812,5.61513 7.47532,5.125 6.5,5.125 Z M17.5,5.125 C16.5254,5.125 15.6424,5.6143 15.1181,6.38845 C17.0571,7.05327 18.6593,8.32095 19.6266,9.93534 C20.1002,9.41558 20.375,8.73173 20.375,8 C20.375,6.41218 19.0878,5.125 17.5,5.125 Z"
+          />
+        </svg>
+      </Link>
 
-      <section style={{ marginBottom: "2.5rem" }}>
-        <p style={{ fontSize: 13, color: "#666", marginBottom: "0.75rem" }}><span style={{ color: "#888" }}>&gt;</span> claim?</p>
-        <pre style={{ background: "#111", padding: "0.75rem", borderRadius: 6, fontSize: 11, lineHeight: 1.6, border: "1px solid #222", color: "#888" }}>
-{`npx noro a8f3k2#key
-
-  # in project folder:
-  → ✓ added OPENAI_API_KEY to .env
-
-  # anywhere else:
-  → OPENAI_API_KEY=sk-********
-  → ✓ copied to clipboard`}
-        </pre>
-      </section>
-
-      <section style={{ marginBottom: "2.5rem" }}>
-        <p style={{ fontSize: 13, color: "#666", marginBottom: "0.75rem" }}><span style={{ color: "#888" }}>&gt;</span> install?</p>
-        <pre style={{ background: "#111", padding: "0.75rem", borderRadius: 6, fontSize: 11, lineHeight: 1.6, border: "1px solid #222", color: "#888" }}>
-{`npm i -g noro`}
-        </pre>
-      </section>
-
-      <section style={{ marginBottom: "2.5rem" }}>
-        <p style={{ fontSize: 13, color: "#666", marginBottom: "0.75rem" }}><span style={{ color: "#888" }}>&gt;</span> how?</p>
-        <div style={{ paddingLeft: "1rem", fontSize: 11 }}>
-          <p style={{ color: "#555", margin: "0.5rem 0" }}>secrets encrypted client-side with aes-256-gcm</p>
-          <p style={{ color: "#555", margin: "0.5rem 0" }}>key never leaves your machine, only in url fragment</p>
-          <p style={{ color: "#555", margin: "0.5rem 0" }}>server only stores encrypted blob, can't read it</p>
-          <p style={{ color: "#555", margin: "0.5rem 0" }}>deleted immediately after first claim</p>
+      {/* Hero */}
+      <section className="absolute inset-0 flex items-center px-8 md:px-16 z-10">
+        <div>
+          <div className="relative inline-block">
+            <h1 className="text-[18vw] md:text-[12vw] leading-none font-bold tracking-tighter border-b-4 border-[#FF6B00]">
+              <span className="invisible">{content.en.title}</span>
+            </h1>
+            <span 
+              className="absolute inset-0 text-[18vw] md:text-[12vw] leading-none font-bold tracking-tighter transition-opacity duration-200"
+              style={{ opacity: lang === "en" ? 1 : 0 }}
+            >
+              {content.en.title}
+            </span>
+            <span 
+              className="absolute inset-0 text-[18vw] md:text-[12vw] leading-none font-bold tracking-tighter transition-opacity duration-200"
+              style={{ opacity: lang === "jp" ? 1 : 0 }}
+            >
+              {content.jp.title}
+            </span>
+          </div>
+          <div className="relative mt-8 h-16">
+            <p 
+              className="absolute top-0 left-0 text-lg md:text-xl leading-relaxed max-w-xl text-white/60 transition-opacity duration-200"
+              style={{ opacity: lang === "en" ? 1 : 0 }}
+            >
+              {content.en.tagline}
+            </p>
+            <p 
+              className="absolute top-0 left-0 text-lg md:text-xl leading-relaxed max-w-xl text-white/60 transition-opacity duration-200"
+              style={{ opacity: lang === "jp" ? 1 : 0 }}
+            >
+              {content.jp.tagline}
+            </p>
+          </div>
         </div>
       </section>
-
-      <footer style={{ paddingTop: "2rem", borderTop: "1px solid #1a1a1a" }}>
-        <a href="https://github.com/visible" target="_blank" rel="noopener noreferrer" style={{ color: "#444", fontSize: 11, textDecoration: "none", display: "inline-flex", alignItems: "center", gap: "0.5rem" }}>
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
-          </svg>
-          visible
-        </a>
-      </footer>
-    </div>
-  )
+    </BackgroundBeams>
+  );
 }

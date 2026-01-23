@@ -1,5 +1,10 @@
-import { redis } from "@/lib/redis"
+import { Redis } from "@upstash/redis"
 import { NextResponse } from "next/server"
+
+const redis = new Redis({
+  url: process.env.KV_REST_API_URL!,
+  token: process.env.KV_REST_API_TOKEN!,
+})
 
 function generateid(): string {
   const chars = "abcdefghijklmnopqrstuvwxyz0123456789"
@@ -17,7 +22,7 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "invalid data" }, { status: 400 })
     }
     const id = generateid()
-    await redis.set(`noro:${id}`, data, { ex: 60 * 60 * 24 })
+    await redis.set(id, data, { ex: 86400 })
     return NextResponse.json({ id })
   } catch {
     return NextResponse.json({ error: "failed" }, { status: 500 })
