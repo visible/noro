@@ -15,6 +15,8 @@ const content = {
     value: "value",
     copy: "copy",
     copied: "copied",
+    show: "show",
+    hide: "hide",
     warning: "this secret has been permanently deleted",
     create: "create your own",
   },
@@ -27,6 +29,8 @@ const content = {
     value: "値",
     copy: "コピー",
     copied: "コピー済",
+    show: "表示",
+    hide: "隠す",
     warning: "このシークレットは完全に削除されました",
     create: "新規作成",
   },
@@ -63,6 +67,7 @@ export default function ClaimPage({ params }: { params: Promise<{ code: string }
   const [status, setStatus] = useState<"loading" | "success" | "notfound" | "error">("loading")
   const [secret, setSecret] = useState<{ label?: string; value: string } | null>(null)
   const [copied, setCopied] = useState(false)
+  const [revealed, setRevealed] = useState(false)
 
   const t = content[lang]
 
@@ -142,16 +147,39 @@ export default function ClaimPage({ params }: { params: Promise<{ code: string }
 
       <section className="min-h-screen flex items-center justify-center px-8">
         <div className="w-full max-w-md">
-          <h1 className="text-4xl font-bold tracking-tighter mb-2 border-b-4 border-[#FF6B00] inline-block">
-            {t.title}
-          </h1>
+          <div className="mb-16">
+            <div className="relative">
+              <h1 className="text-4xl font-bold tracking-tighter border-b-4 border-[#FF6B00] inline-block invisible">
+                {content.en.title}
+              </h1>
+              <h1
+                className="absolute top-0 left-0 text-4xl font-bold tracking-tighter border-b-4 border-[#FF6B00] transition-opacity duration-200"
+                style={{ opacity: lang === "en" ? 1 : 0 }}
+              >
+                {content.en.title}
+              </h1>
+              <h1
+                className="absolute top-0 left-0 text-4xl font-bold tracking-tighter border-b-4 border-[#FF6B00] transition-opacity duration-200"
+                style={{ opacity: lang === "jp" ? 1 : 0 }}
+              >
+                {content.jp.title}
+              </h1>
+            </div>
+            <div className="mt-4 h-5"></div>
+          </div>
 
-          {status === "loading" && (
-            <p className="text-white/40 text-sm mt-8">{t.loading}</p>
-          )}
+          <div className="relative h-[340px]">
+            <div
+              className="absolute inset-0 transition-opacity duration-300"
+              style={{ opacity: status === "loading" ? 1 : 0, pointerEvents: status === "loading" ? "auto" : "none" }}
+            >
+              <p className="text-white/40 text-sm">{t.loading}</p>
+            </div>
 
-          {status === "notfound" && (
-            <div className="mt-8 space-y-6">
+            <div
+              className="absolute inset-0 space-y-6 transition-opacity duration-300"
+              style={{ opacity: status === "notfound" ? 1 : 0, pointerEvents: status === "notfound" ? "auto" : "none" }}
+            >
               <p className="text-white/40 text-sm">{t.notfound}</p>
               <Link
                 href="/share"
@@ -160,10 +188,11 @@ export default function ClaimPage({ params }: { params: Promise<{ code: string }
                 {t.create}
               </Link>
             </div>
-          )}
 
-          {status === "error" && (
-            <div className="mt-8 space-y-6">
+            <div
+              className="absolute inset-0 space-y-6 transition-opacity duration-300"
+              style={{ opacity: status === "error" ? 1 : 0, pointerEvents: status === "error" ? "auto" : "none" }}
+            >
               <p className="text-red-400 text-sm">{t.error}</p>
               <Link
                 href="/share"
@@ -172,33 +201,45 @@ export default function ClaimPage({ params }: { params: Promise<{ code: string }
                 {t.create}
               </Link>
             </div>
-          )}
 
-          {status === "success" && secret && (
-            <div className="mt-8 space-y-6">
-              {secret.label && (
-                <div>
-                  <p className="text-xs tracking-widest text-white/40 mb-2">{t.label}</p>
-                  <p className="text-[#FF6B00] font-mono text-sm">{secret.label}</p>
-                </div>
-              )}
+            <div
+              className="absolute inset-0 transition-opacity duration-300"
+              style={{ opacity: status === "success" ? 1 : 0, pointerEvents: status === "success" ? "auto" : "none" }}
+            >
+              <div className="h-[38px] mb-6">
+                {secret?.label && (
+                  <>
+                    <p className="text-xs tracking-widest text-white/40 mb-2">{t.label}</p>
+                    <p className="text-[#FF6B00] font-mono text-sm">{secret.label}</p>
+                  </>
+                )}
+              </div>
 
-              <div>
+              <div className="mb-6">
                 <p className="text-xs tracking-widest text-white/40 mb-2">{t.value}</p>
-                <div className="border border-white/10 p-4 bg-white/5">
-                  <code className="text-sm text-white/80 break-all font-mono">{secret.value}</code>
+                <div className="border border-white/10 p-4 bg-white/5 flex items-center gap-3 h-[52px]">
+                  <code className="text-sm text-white/80 font-mono flex-1 truncate">
+                    {revealed ? secret?.value : "••••••••••••••••••••••••••••••••"}
+                  </code>
+                  <button
+                    type="button"
+                    onClick={() => setRevealed(!revealed)}
+                    className="text-white/40 hover:text-white text-xs tracking-widest shrink-0"
+                  >
+                    {revealed ? t.hide : t.show}
+                  </button>
                 </div>
               </div>
 
               <button
                 type="button"
                 onClick={handleCopy}
-                className="w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:bg-white transition-colors"
+                className="w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:bg-white transition-colors mb-6"
               >
                 {copied ? t.copied : t.copy}
               </button>
 
-              <p className="text-xs text-white/30 text-center">{t.warning}</p>
+              <p className="text-xs text-white/30 text-center mb-6">{t.warning}</p>
 
               <Link
                 href="/share"
@@ -207,7 +248,7 @@ export default function ClaimPage({ params }: { params: Promise<{ code: string }
                 {t.create}
               </Link>
             </div>
-          )}
+          </div>
         </div>
       </section>
     </div>

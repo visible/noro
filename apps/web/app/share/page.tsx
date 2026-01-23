@@ -70,6 +70,7 @@ export default function SharePage() {
   const [isGenerating, setIsGenerating] = useState(false)
   const [generatedLink, setGeneratedLink] = useState("")
   const [copied, setCopied] = useState(false)
+  const [revealed, setRevealed] = useState(false)
 
   const t = content[lang]
 
@@ -112,6 +113,7 @@ export default function SharePage() {
     setSecret("")
     setGeneratedLink("")
     setCopied(false)
+    setRevealed(false)
   }
 
   return (
@@ -154,13 +156,47 @@ export default function SharePage() {
 
       <section className="min-h-screen flex items-center justify-center px-8">
         <div className="w-full max-w-md">
-          <h1 className="text-4xl font-bold tracking-tighter mb-2 border-b-4 border-[#FF6B00] inline-block">
-            {t.title}
-          </h1>
-          <p className="text-white/40 text-sm mt-4 mb-8">{t.subtitle}</p>
+          <div className="mb-16">
+            <div className="relative">
+              <h1 className="text-4xl font-bold tracking-tighter border-b-4 border-[#FF6B00] inline-block invisible">
+                {content.en.title}
+              </h1>
+              <h1
+                className="absolute top-0 left-0 text-4xl font-bold tracking-tighter border-b-4 border-[#FF6B00] transition-opacity duration-200"
+                style={{ opacity: lang === "en" ? 1 : 0 }}
+              >
+                {content.en.title}
+              </h1>
+              <h1
+                className="absolute top-0 left-0 text-4xl font-bold tracking-tighter border-b-4 border-[#FF6B00] transition-opacity duration-200"
+                style={{ opacity: lang === "jp" ? 1 : 0 }}
+              >
+                {content.jp.title}
+              </h1>
+            </div>
+            <div className="relative mt-4">
+              <p className="text-white/40 text-sm invisible">{content.en.subtitle}</p>
+              <p
+                className="absolute top-0 left-0 text-white/40 text-sm transition-opacity duration-200"
+                style={{ opacity: lang === "en" ? 1 : 0 }}
+              >
+                {content.en.subtitle}
+              </p>
+              <p
+                className="absolute top-0 left-0 text-white/40 text-sm transition-opacity duration-200"
+                style={{ opacity: lang === "jp" ? 1 : 0 }}
+              >
+                {content.jp.subtitle}
+              </p>
+            </div>
+          </div>
 
-          {!generatedLink ? (
-            <form onSubmit={handleSubmit} className="space-y-6">
+          <div className="relative h-[340px]">
+            <form
+              onSubmit={handleSubmit}
+              className="absolute inset-0 space-y-6 transition-opacity duration-300"
+              style={{ opacity: generatedLink ? 0 : 1, pointerEvents: generatedLink ? "none" : "auto" }}
+            >
               <div>
                 <label className="text-xs tracking-widest text-white/40 block mb-2">
                   {t.labelLabel}
@@ -204,23 +240,40 @@ export default function SharePage() {
                 {isGenerating ? t.generating : t.button}
               </button>
             </form>
-          ) : (
-            <div className="space-y-6">
-              <p className="text-[#FF6B00] text-sm">{t.success}</p>
 
-              <div className="border border-white/10 p-4 bg-white/5">
-                <code className="text-sm text-white/80 break-all font-mono">{generatedLink}</code>
+            <div
+              className="absolute inset-0 transition-opacity duration-300"
+              style={{ opacity: generatedLink ? 1 : 0, pointerEvents: generatedLink ? "auto" : "none" }}
+            >
+              <div className="h-[38px] mb-6">
+                <p className="text-[#FF6B00] text-sm">{t.success}</p>
+              </div>
+
+              <div className="mb-6">
+                <p className="text-xs tracking-widest text-white/40 mb-2 invisible">link</p>
+                <div className="border border-white/10 p-4 bg-white/5 flex items-center gap-3 h-[52px]">
+                  <code className="text-sm text-white/80 font-mono flex-1 truncate">
+                    {revealed ? generatedLink : "••••••••••••••••••••••••••••••••"}
+                  </code>
+                  <button
+                    type="button"
+                    onClick={() => setRevealed(!revealed)}
+                    className="text-white/40 hover:text-white text-xs tracking-widest shrink-0"
+                  >
+                    {revealed ? "hide" : "show"}
+                  </button>
+                </div>
               </div>
 
               <button
                 type="button"
                 onClick={handleCopy}
-                className="w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:bg-white transition-colors"
+                className="w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:bg-white transition-colors mb-6"
               >
                 {copied ? t.copied : t.copy}
               </button>
 
-              <p className="text-xs text-white/30 text-center">{t.expires}</p>
+              <p className="text-xs text-white/30 text-center mb-6">{t.expires}</p>
 
               <button
                 type="button"
@@ -230,7 +283,7 @@ export default function SharePage() {
                 {t.newLink}
               </button>
             </div>
-          )}
+          </div>
         </div>
       </section>
     </div>
