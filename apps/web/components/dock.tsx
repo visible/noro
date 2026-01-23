@@ -26,7 +26,7 @@ const items = [
     ),
   },
   {
-    href: "https://github.com/visible/noro#readme",
+    href: "/docs",
     label: { en: "docs", jp: "ドキュメント" },
     icon: (
       <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
