@@ -1,0 +1,5 @@
+{
+  "name": "noro",
+  "private": true,
+  "workspaces": ["apps/*", "packages/*"]
+}
