@@ -1,7 +1,10 @@
 export default function Home() {
   return (
     <div style={{ maxWidth: 640, margin: "0 auto", padding: "4rem 1.5rem" }}>
-      <p style={{ color: "#444", fontSize: 11, marginBottom: "2rem" }}>noro.sh</p>
+      <div style={{ display: "flex", alignItems: "center", gap: "0.75rem", marginBottom: "2rem" }}>
+        <img src="/icon.svg" alt="" width={28} height={28} aria-hidden="true" style={{ filter: "invert(1)" }} />
+        <span style={{ color: "#888", fontSize: 13, fontWeight: 500 }}>noro</span>
+      </div>
       <p style={{ fontSize: 13, marginBottom: "0.25rem" }}>share env vars with one command</p>
       <p style={{ color: "#555", fontSize: 11, marginBottom: "3rem" }}>one-time links that self-destruct after claiming</p>
 

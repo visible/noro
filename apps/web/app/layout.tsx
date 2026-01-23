@@ -3,6 +3,9 @@ import type { Metadata } from "next"
 export const metadata: Metadata = {
   title: "noro",
   description: "share env vars with one command",
+  icons: {
+    icon: "/favicon.svg",
+  },
 }
 
 export default function Layout({ children }: { children: React.ReactNode }) {
