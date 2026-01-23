@@ -48,7 +48,7 @@ function writeenv(name: string, value: string): string | null {
   if (regex.test(content)) {
     content = content.replace(regex, `${name}=${value}`)
   } else {
-    content = content.trim() + `\n${name}=${value}\n`
+    content = content.trim() + `\n\n${name}=${value}\n`
   }
   writeFileSync(envpath, content)
   return envpath
