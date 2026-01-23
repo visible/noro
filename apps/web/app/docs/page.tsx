@@ -4,73 +4,285 @@ import { useState } from "react"
 import Link from "next/link"
 
 type Language = "en" | "jp"
+type Section = "cli" | "web" | "desktop" | "extension"
+
+const nav = {
+  en: [
+    { id: "cli" as Section, label: "cli" },
+    { id: "web" as Section, label: "website" },
+    { id: "desktop" as Section, label: "desktop" },
+    { id: "extension" as Section, label: "extension" },
+  ],
+  jp: [
+    { id: "cli" as Section, label: "CLI" },
+    { id: "web" as Section, label: "ウェブサイト" },
+    { id: "desktop" as Section, label: "デスクトップ" },
+    { id: "extension" as Section, label: "拡張機能" },
+  ],
+}
 
 const content = {
   en: {
-    title: "docs",
-    subtitle: "how noro works",
-    sections: [
-      {
-        title: "share via cli",
-        items: [
-          { code: "npx noro share API_KEY", desc: "share a variable from your .env" },
-          { code: "npx noro share API_KEY --ttl=1h", desc: "set expiry: 1h, 6h, 12h, 1d, 7d" },
-          { code: "npx noro abc123#key", desc: "claim and auto-add to .env" },
-        ],
-      },
-      {
-        title: "share via web",
-        items: [
-          { code: "noro.sh/share", desc: "create a one-time link" },
-          { code: "noro.sh/abc123#key", desc: "view and copy secret" },
-        ],
-      },
-      {
-        title: "security",
-        items: [
-          { code: "AES-256-GCM", desc: "encryption happens in your browser" },
-          { code: "key in url fragment", desc: "never sent to server" },
-          { code: "one-time claim", desc: "deleted after viewing" },
-          { code: "24hr ttl", desc: "expires even if unclaimed" },
-        ],
-      },
-    ],
+    cli: {
+      title: "command line",
+      sections: [
+        {
+          title: "share a secret",
+          items: [
+            { code: "npx noro share API_KEY", desc: null },
+            { code: null, desc: "generates a one-time link like noro.sh/x7k#key" },
+            { code: null, desc: "encrypted client-side before upload" },
+          ],
+        },
+        {
+          title: "set expiry",
+          items: [
+            { code: "npx noro share API_KEY --ttl=1h", desc: null },
+            { code: null, desc: "options: 1h, 6h, 12h, 1d (default), 7d" },
+          ],
+        },
+        {
+          title: "claim a secret",
+          items: [
+            { code: "npx noro x7k#key", desc: null },
+            { code: null, desc: "auto-adds to .env or .env.local" },
+            { code: null, desc: "link destroyed after claiming" },
+          ],
+        },
+        {
+          title: "security",
+          items: [
+            { code: null, desc: "AES-256-GCM encryption" },
+            { code: null, desc: "key stays in URL fragment (never sent to server)" },
+            { code: null, desc: "zero-knowledge architecture" },
+          ],
+        },
+      ],
+    },
+    web: {
+      title: "website",
+      sections: [
+        {
+          title: "create a link",
+          items: [
+            { code: "noro.sh/share", desc: null },
+            { code: null, desc: "paste your secret and generate a one-time link" },
+            { code: null, desc: "same encryption as CLI" },
+          ],
+        },
+        {
+          title: "view a secret",
+          items: [
+            { code: "noro.sh/x7k#key", desc: null },
+            { code: null, desc: "view and copy the secret" },
+            { code: null, desc: "hidden by default for screen sharing" },
+          ],
+        },
+        {
+          title: "no account required",
+          items: [
+            { code: null, desc: "no sign up, no login" },
+            { code: null, desc: "completely anonymous" },
+            { code: null, desc: "we never see your data" },
+          ],
+        },
+      ],
+    },
+    desktop: {
+      title: "desktop app",
+      sections: [
+        {
+          title: "coming soon",
+          items: [
+            { code: null, desc: "secure password manager" },
+            { code: null, desc: "OTP authenticator built-in" },
+            { code: null, desc: "encrypted notes and secrets" },
+          ],
+        },
+        {
+          title: "features",
+          items: [
+            { code: null, desc: "local-first, encrypted storage" },
+            { code: null, desc: "optional cloud sync across devices" },
+            { code: null, desc: "biometric unlock" },
+            { code: null, desc: "auto-fill for apps and browsers" },
+          ],
+        },
+        {
+          title: "platforms",
+          items: [
+            { code: null, desc: "macOS" },
+            { code: null, desc: "Windows" },
+            { code: null, desc: "Linux" },
+          ],
+        },
+      ],
+    },
+    extension: {
+      title: "browser extension",
+      sections: [
+        {
+          title: "coming soon",
+          items: [
+            { code: null, desc: "auto-fill passwords and logins" },
+            { code: null, desc: "generate secure passwords" },
+            { code: null, desc: "OTP auto-fill" },
+          ],
+        },
+        {
+          title: "sync everywhere",
+          items: [
+            { code: null, desc: "syncs with desktop app" },
+            { code: null, desc: "access from any browser" },
+            { code: null, desc: "works on mobile browsers" },
+          ],
+        },
+        {
+          title: "browsers",
+          items: [
+            { code: null, desc: "Chrome" },
+            { code: null, desc: "Firefox" },
+            { code: null, desc: "Safari" },
+            { code: null, desc: "Edge" },
+          ],
+        },
+      ],
+    },
   },
   jp: {
-    title: "ドキュメント",
-    subtitle: "noroの仕組み",
-    sections: [
-      {
-        title: "CLIで共有",
-        items: [
-          { code: "npx noro share API_KEY", desc: ".envから変数を共有" },
-          { code: "npx noro share API_KEY --ttl=1h", desc: "有効期限: 1h, 6h, 12h, 1d, 7d" },
-          { code: "npx noro abc123#key", desc: "取得して.envに自動追加" },
-        ],
-      },
-      {
-        title: "Webで共有",
-        items: [
-          { code: "noro.sh/share", desc: "ワンタイムリンクを作成" },
-          { code: "noro.sh/abc123#key", desc: "シークレットを表示・コピー" },
-        ],
-      },
-      {
-        title: "セキュリティ",
-        items: [
-          { code: "AES-256-GCM", desc: "ブラウザで暗号化" },
-          { code: "URLフラグメントにキー", desc: "サーバーに送信されない" },
-          { code: "ワンタイム取得", desc: "閲覧後に削除" },
-          { code: "24時間TTL", desc: "未取得でも期限切れ" },
-        ],
-      },
-    ],
+    cli: {
+      title: "コマンドライン",
+      sections: [
+        {
+          title: "シークレットを共有",
+          items: [
+            { code: "npx noro share API_KEY", desc: null },
+            { code: null, desc: "noro.sh/x7k#keyのようなワンタイムリンクを生成" },
+            { code: null, desc: "アップロード前にクライアント側で暗号化" },
+          ],
+        },
+        {
+          title: "有効期限を設定",
+          items: [
+            { code: "npx noro share API_KEY --ttl=1h", desc: null },
+            { code: null, desc: "オプション: 1h, 6h, 12h, 1d (デフォルト), 7d" },
+          ],
+        },
+        {
+          title: "シークレットを取得",
+          items: [
+            { code: "npx noro x7k#key", desc: null },
+            { code: null, desc: ".envまたは.env.localに自動追加" },
+            { code: null, desc: "取得後にリンクは削除" },
+          ],
+        },
+        {
+          title: "セキュリティ",
+          items: [
+            { code: null, desc: "AES-256-GCM暗号化" },
+            { code: null, desc: "キーはURLフラグメントに保持（サーバーに送信されない）" },
+            { code: null, desc: "ゼロ知識アーキテクチャ" },
+          ],
+        },
+      ],
+    },
+    web: {
+      title: "ウェブサイト",
+      sections: [
+        {
+          title: "リンクを作成",
+          items: [
+            { code: "noro.sh/share", desc: null },
+            { code: null, desc: "シークレットを貼り付けてワンタイムリンクを生成" },
+            { code: null, desc: "CLIと同じ暗号化" },
+          ],
+        },
+        {
+          title: "シークレットを表示",
+          items: [
+            { code: "noro.sh/x7k#key", desc: null },
+            { code: null, desc: "シークレットを表示・コピー" },
+            { code: null, desc: "画面共有用にデフォルトで非表示" },
+          ],
+        },
+        {
+          title: "アカウント不要",
+          items: [
+            { code: null, desc: "サインアップ不要、ログイン不要" },
+            { code: null, desc: "完全に匿名" },
+            { code: null, desc: "データは一切見えない" },
+          ],
+        },
+      ],
+    },
+    desktop: {
+      title: "デスクトップアプリ",
+      sections: [
+        {
+          title: "近日公開",
+          items: [
+            { code: null, desc: "安全なパスワードマネージャー" },
+            { code: null, desc: "OTP認証機能内蔵" },
+            { code: null, desc: "暗号化されたメモとシークレット" },
+          ],
+        },
+        {
+          title: "機能",
+          items: [
+            { code: null, desc: "ローカルファースト、暗号化ストレージ" },
+            { code: null, desc: "デバイス間のクラウド同期（オプション）" },
+            { code: null, desc: "生体認証でロック解除" },
+            { code: null, desc: "アプリとブラウザの自動入力" },
+          ],
+        },
+        {
+          title: "プラットフォーム",
+          items: [
+            { code: null, desc: "macOS" },
+            { code: null, desc: "Windows" },
+            { code: null, desc: "Linux" },
+          ],
+        },
+      ],
+    },
+    extension: {
+      title: "ブラウザ拡張機能",
+      sections: [
+        {
+          title: "近日公開",
+          items: [
+            { code: null, desc: "パスワードとログインの自動入力" },
+            { code: null, desc: "安全なパスワード生成" },
+            { code: null, desc: "OTP自動入力" },
+          ],
+        },
+        {
+          title: "どこでも同期",
+          items: [
+            { code: null, desc: "デスクトップアプリと同期" },
+            { code: null, desc: "どのブラウザからもアクセス" },
+            { code: null, desc: "モバイルブラウザでも動作" },
+          ],
+        },
+        {
+          title: "ブラウザ",
+          items: [
+            { code: null, desc: "Chrome" },
+            { code: null, desc: "Firefox" },
+            { code: null, desc: "Safari" },
+            { code: null, desc: "Edge" },
+          ],
+        },
+      ],
+    },
   },
 }
 
 export default function DocsPage() {
   const [lang, setLang] = useState<Language>("en")
-  const t = content[lang]
+  const [section, setSection] = useState<Section>("cli")
+  const t = content[lang][section]
+  const navItems = nav[lang]
 
   return (
     <div className="min-h-screen bg-black text-white selection:bg-[#FF6B00] selection:text-black">
@@ -110,69 +322,52 @@ export default function DocsPage() {
         </svg>
       </Link>
 
-      <section className="min-h-screen flex items-center justify-center px-8 py-24">
-        <div className="w-full max-w-md">
-          <div className="mb-16">
-            <div className="relative">
-              <h1 className="text-4xl font-bold tracking-tighter border-b-4 border-[#FF6B00] inline-block invisible">
-                {content.en.title}
-              </h1>
-              <h1
-                className="absolute top-0 left-0 text-4xl font-bold tracking-tighter border-b-4 border-[#FF6B00] transition-opacity duration-200"
-                style={{ opacity: lang === "en" ? 1 : 0 }}
+      <div className="flex min-h-screen">
+        <aside className="fixed left-0 top-0 h-full w-48 p-12 pt-24 flex flex-col border-r border-white/5">
+          <h1 className="text-lg font-bold tracking-tight mb-12">
+            <span className="text-[#FF6B00]">noro</span>
+            <span className="text-white/30"> / docs</span>
+          </h1>
+          <nav className="space-y-4">
+            {navItems.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => setSection(item.id)}
+                className={`block text-sm tracking-wide transition-colors text-left ${
+                  section === item.id ? "text-white" : "text-white/30 hover:text-white/60"
+                }`}
+                type="button"
               >
-                {content.en.title}
-              </h1>
-              <h1
-                className="absolute top-0 left-0 text-4xl font-bold tracking-tighter border-b-4 border-[#FF6B00] transition-opacity duration-200"
-                style={{ opacity: lang === "jp" ? 1 : 0 }}
-              >
-                {content.jp.title}
-              </h1>
-            </div>
-            <div className="relative mt-4">
-              <p className="text-white/40 text-sm invisible">{content.en.subtitle}</p>
-              <p
-                className="absolute top-0 left-0 text-white/40 text-sm transition-opacity duration-200"
-                style={{ opacity: lang === "en" ? 1 : 0 }}
-              >
-                {content.en.subtitle}
-              </p>
-              <p
-                className="absolute top-0 left-0 text-white/40 text-sm transition-opacity duration-200"
-                style={{ opacity: lang === "jp" ? 1 : 0 }}
-              >
-                {content.jp.subtitle}
-              </p>
-            </div>
-          </div>
-
-          <div className="space-y-10">
-            {t.sections.map((section, i) => (
-              <div key={i}>
-                <h2 className="text-xs tracking-widest text-white/40 mb-4">{section.title}</h2>
-                <div className="space-y-3">
-                  {section.items.map((item, j) => (
-                    <div key={j} className="border border-white/10 p-4 bg-white/5">
-                      <code className="text-sm text-[#FF6B00] font-mono block mb-1">{item.code}</code>
-                      <p className="text-xs text-white/40">{item.desc}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
+                {item.label}
+              </button>
             ))}
-          </div>
+          </nav>
+        </aside>
 
-          <div className="mt-16">
-            <Link
-              href="/share"
-              className="block w-full text-center bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:bg-white transition-colors"
-            >
-              {lang === "en" ? "try it now" : "試してみる"}
-            </Link>
+        <main className="flex-1 ml-48 p-12 pt-24">
+          <div className="max-w-2xl">
+            <div className="space-y-16">
+              {t.sections.map((sec, i) => (
+                <section key={i}>
+                  <h2 className="text-xs tracking-widest text-[#FF6B00] mb-6">{sec.title}</h2>
+                  <div className="space-y-3 pl-4 border-l border-white/10">
+                    {sec.items.map((item, j) => (
+                      <div key={j}>
+                        {item.code && (
+                          <code className="text-white font-mono text-sm">{item.code}</code>
+                        )}
+                        {item.desc && (
+                          <p className="text-white/40 text-sm">{item.desc}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </section>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </main>
+      </div>
     </div>
   )
 }

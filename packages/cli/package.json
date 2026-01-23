@@ -4,9 +4,11 @@
   "description": "share env vars with one command",
   "type": "module",
   "bin": {
-    "noro": "./dist/index.js"
+    "noro": "dist/index.js"
   },
-  "files": ["dist"],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsup src/index.ts src/crypto.ts --format esm --dts",
     "dev": "tsup src/index.ts src/crypto.ts --format esm --watch",
