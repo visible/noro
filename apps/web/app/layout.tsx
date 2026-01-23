@@ -1,4 +1,5 @@
 import type { Metadata } from "next"
+import { Analytics } from "@vercel/analytics/react"
 
 export const metadata: Metadata = {
   title: "noro",
@@ -19,6 +20,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         fontFamily: "ui-monospace, SFMono-Regular, 'SF Mono', Menlo, Consolas, monospace",
       }}>
         {children}
+        <Analytics />
       </body>
     </html>
   )
