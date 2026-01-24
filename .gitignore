@@ -1,6 +1,7 @@
+next-env.d.ts
 node_modules
+.env.local
+.DS_Store
 .next
 dist
 .env
-.env.local
-.DS_Store
