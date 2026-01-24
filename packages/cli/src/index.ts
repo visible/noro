@@ -1,12 +1,61 @@
 #!/usr/bin/env node
 
 import { execSync } from "child_process";
-import { existsSync, readFileSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import { homedir } from "os";
 import { join } from "path";
 import { decrypt, encrypt } from "./crypto";
 
 const API = process.env.NORO_API || "https://noro.sh";
 const TTLS = ["1h", "6h", "12h", "1d", "7d"];
+const HISTORY_DIR = join(homedir(), ".noro");
+const HISTORY_FILE = join(HISTORY_DIR, "history.json");
+
+interface HistoryEntry {
+  id: string;
+  variables: string[];
+  ttl: string;
+  created: number;
+  expires: number;
+}
+
+function loadhistory(): HistoryEntry[] {
+  if (!existsSync(HISTORY_FILE)) return [];
+  try {
+    return JSON.parse(readFileSync(HISTORY_FILE, "utf-8"));
+  } catch {
+    return [];
+  }
+}
+
+function savehistory(entries: HistoryEntry[]) {
+  if (!existsSync(HISTORY_DIR)) {
+    mkdirSync(HISTORY_DIR, { recursive: true });
+  }
+  writeFileSync(HISTORY_FILE, JSON.stringify(entries, null, 2));
+}
+
+function addtohistory(entry: HistoryEntry) {
+  const history = loadhistory();
+  history.unshift(entry);
+  savehistory(history.slice(0, 50));
+}
+
+function removefromhistory(id: string) {
+  const history = loadhistory();
+  savehistory(history.filter((e) => e.id !== id));
+}
+
+function ttltoms(ttl: string): number {
+  const map: Record<string, number> = {
+    "1h": 3600000,
+    "6h": 21600000,
+    "12h": 43200000,
+    "1d": 86400000,
+    "7d": 604800000,
+  };
+  return map[ttl] || map["1d"];
+}
 
 function parseenvfile(filepath: string, name: string): string | null {
   if (!existsSync(filepath)) return null;
@@ -80,6 +129,17 @@ function mask(value: string): string {
   return value.slice(0, 4) + "*".repeat(value.length - 8) + value.slice(-4);
 }
 
+function timeago(ms: number): string {
+  const seconds = Math.floor(ms / 1000);
+  if (seconds < 60) return `${seconds}s`;
+  const minutes = Math.floor(seconds / 60);
+  if (minutes < 60) return `${minutes}m`;
+  const hours = Math.floor(minutes / 60);
+  if (hours < 24) return `${hours}h`;
+  const days = Math.floor(hours / 24);
+  return `${days}d`;
+}
+
 async function share(names: string[], ttl: string) {
   const pairs: string[] = [];
   for (const name of names) {
@@ -103,6 +163,14 @@ async function share(names: string[], ttl: string) {
     process.exit(1);
   }
   const { id } = await res.json();
+  const now = Date.now();
+  addtohistory({
+    id,
+    variables: names,
+    ttl,
+    created: now,
+    expires: now + ttltoms(ttl),
+  });
   console.log(`\n  ${API}/${id}#${key}\n`);
   console.log(`  or: npx noro ${id}#${key}`);
   console.log(`  expires: ${ttl}`);
@@ -157,6 +225,39 @@ async function claim(code: string) {
   }
 }
 
+async function list() {
+  const history = loadhistory();
+  const now = Date.now();
+  const active = history.filter((e) => e.expires > now);
+  if (active.length === 0) {
+    console.log("\n  no active secrets\n");
+    return;
+  }
+  console.log("\n  active secrets:\n");
+  for (const entry of active) {
+    const remaining = timeago(entry.expires - now);
+    console.log(
+      `  ${entry.id}  ${entry.variables.join(", ")}  expires in ${remaining}`,
+    );
+  }
+  console.log("");
+}
+
+async function revoke(id: string) {
+  const res = await fetch(`${API}/api/revoke/${id}`, { method: "DELETE" });
+  if (res.status === 404) {
+    console.log("✗ secret not found or already claimed");
+    removefromhistory(id);
+    process.exit(1);
+  }
+  if (!res.ok) {
+    console.log("✗ failed to revoke");
+    process.exit(1);
+  }
+  removefromhistory(id);
+  console.log(`✓ revoked ${id}`);
+}
+
 async function main() {
   const args = process.argv.slice(2);
   if (args.length === 0 || args[0] === "--help" || args[0] === "-h") {
@@ -165,11 +266,15 @@ async function main() {
 
   usage:
     noro share <VAR...> [--ttl=1d]     share env vars
+    noro list                          show active secrets
+    noro revoke <id>                   delete a secret
     noro <code>                        claim a shared secret
 
   examples:
     noro share API_KEY
     noro share API_KEY DB_URL --ttl=1h
+    noro list
+    noro revoke abc123
     noro abc123#key
 
   ttl options:
@@ -195,6 +300,14 @@ async function main() {
       }
     }
     await share(names, ttl);
+  } else if (args[0] === "list") {
+    await list();
+  } else if (args[0] === "revoke") {
+    if (!args[1]) {
+      console.log("✗ specify secret id");
+      process.exit(1);
+    }
+    await revoke(args[1]);
   } else {
     await claim(args[0]);
   }
