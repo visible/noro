@@ -76,6 +76,29 @@ function parseenvfile(filepath: string, name: string): string | null {
   return null;
 }
 
+function parseallenv(): { name: string; value: string }[] {
+  const envpath = getenvpath();
+  if (!envpath) return [];
+  const content = readFileSync(envpath, "utf-8");
+  const vars: { name: string; value: string }[] = [];
+  for (const line of content.split("\n")) {
+    if (!line.trim() || line.startsWith("#")) continue;
+    const match = line.match(/^([^=]+)=(.*)$/);
+    if (match) {
+      const name = match[1].trim();
+      let value = match[2].trim();
+      if (
+        (value.startsWith('"') && value.endsWith('"')) ||
+        (value.startsWith("'") && value.endsWith("'"))
+      ) {
+        value = value.slice(1, -1);
+      }
+      vars.push({ name, value });
+    }
+  }
+  return vars;
+}
+
 function readenv(name: string): string | null {
   if (process.env[name]) return process.env[name]!;
   const cwd = process.cwd();
@@ -151,6 +174,40 @@ async function share(names: string[], ttl: string) {
     pairs.push(`${name}=${value}`);
   }
   const payload = pairs.join("\n");
+  const key = crypto.randomUUID().replace(/-/g, "");
+  const encrypted = await encrypt(payload, key);
+  const res = await fetch(`${API}/api/store`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ data: encrypted, ttl }),
+  });
+  if (!res.ok) {
+    console.log("✗ failed to create link");
+    process.exit(1);
+  }
+  const { id } = await res.json();
+  const now = Date.now();
+  addtohistory({
+    id,
+    variables: names,
+    ttl,
+    created: now,
+    expires: now + ttltoms(ttl),
+  });
+  console.log(`\n  ${API}/${id}#${key}\n`);
+  console.log(`  or: npx noro ${id}#${key}`);
+  console.log(`  expires: ${ttl}`);
+  console.log(`  variables: ${names.join(", ")}\n`);
+}
+
+async function push(ttl: string) {
+  const vars = parseallenv();
+  if (vars.length === 0) {
+    console.log("✗ no .env file found");
+    process.exit(1);
+  }
+  const names = vars.map((v) => v.name);
+  const payload = vars.map((v) => `${v.name}=${v.value}`).join("\n");
   const key = crypto.randomUUID().replace(/-/g, "");
   const encrypted = await encrypt(payload, key);
   const res = await fetch(`${API}/api/store`, {
@@ -266,6 +323,7 @@ async function main() {
 
   usage:
     noro share <VAR...> [--ttl=1d]     share env vars
+    noro push [--ttl=1d]               share all from .env
     noro list                          show active secrets
     noro revoke <id>                   delete a secret
     noro <code>                        claim a shared secret
@@ -273,6 +331,7 @@ async function main() {
   examples:
     noro share API_KEY
     noro share API_KEY DB_URL --ttl=1h
+    noro push
     noro list
     noro revoke abc123
     noro abc123#key
@@ -300,6 +359,19 @@ async function main() {
       }
     }
     await share(names, ttl);
+  } else if (args[0] === "push") {
+    let ttl = "1d";
+    const ttlArg = args.find((a) => a.startsWith("--ttl="));
+    if (ttlArg) {
+      const val = ttlArg.split("=")[1];
+      if (TTLS.includes(val)) {
+        ttl = val;
+      } else {
+        console.log(`✗ invalid ttl. options: ${TTLS.join(", ")}`);
+        process.exit(1);
+      }
+    }
+    await push(ttl);
   } else if (args[0] === "list") {
     await list();
   } else if (args[0] === "revoke") {
