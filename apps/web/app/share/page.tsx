@@ -168,7 +168,7 @@ export default function SharePage() {
 
   return (
     <div className="min-h-screen bg-black text-white selection:bg-[#FF6B00] selection:text-black">
-      <nav className="fixed top-0 right-0 p-8 z-50">
+      <nav className="fixed top-0 right-0 p-4 sm:p-8 z-50">
         <div className="flex items-center gap-2 text-xs tracking-widest">
           <button
             onClick={() => setLang("en")}
@@ -188,7 +188,7 @@ export default function SharePage() {
         </div>
       </nav>
 
-      <Link href="/" className="fixed bottom-0 right-0 p-8 z-50 hover:opacity-60 transition-opacity">
+      <Link href="/" className="fixed bottom-0 right-0 p-4 sm:p-8 z-50 hover:opacity-60 transition-opacity">
         <svg
           width="24"
           height="24"
@@ -204,21 +204,21 @@ export default function SharePage() {
         </svg>
       </Link>
 
-      <section className="min-h-screen flex items-center justify-center px-8">
+      <section className="min-h-screen flex items-center justify-center px-4 sm:px-8">
         <div className="w-full max-w-md">
-          <div className="mb-16">
+          <div className="mb-8 sm:mb-16">
             <div className="relative">
-              <h1 className="text-4xl font-bold tracking-tighter border-b-4 border-[#FF6B00] inline-block invisible">
+              <h1 className="text-3xl sm:text-4xl font-bold tracking-tighter border-b-4 border-[#FF6B00] inline-block invisible">
                 {content.en.title}
               </h1>
               <h1
-                className="absolute top-0 left-0 text-4xl font-bold tracking-tighter border-b-4 border-[#FF6B00] transition-opacity duration-200"
+                className="absolute top-0 left-0 text-3xl sm:text-4xl font-bold tracking-tighter border-b-4 border-[#FF6B00] transition-opacity duration-200"
                 style={{ opacity: lang === "en" ? 1 : 0 }}
               >
                 {content.en.title}
               </h1>
               <h1
-                className="absolute top-0 left-0 text-4xl font-bold tracking-tighter border-b-4 border-[#FF6B00] transition-opacity duration-200"
+                className="absolute top-0 left-0 text-3xl sm:text-4xl font-bold tracking-tighter border-b-4 border-[#FF6B00] transition-opacity duration-200"
                 style={{ opacity: lang === "jp" ? 1 : 0 }}
               >
                 {content.jp.title}
@@ -335,13 +335,13 @@ export default function SharePage() {
                 <label className="text-xs tracking-widest text-white/40 block mb-2">
                   {t.views}
                 </label>
-                <div className="flex gap-2">
+                <div className="flex gap-1.5 sm:gap-2">
                   {[1, 2, 3, 4, 5].map((n) => (
                     <button
                       key={n}
                       type="button"
                       onClick={() => setViews(n)}
-                      className={`w-10 h-10 text-sm transition-colors ${
+                      className={`w-9 h-9 sm:w-10 sm:h-10 text-sm transition-colors ${
                         views === n
                           ? "bg-[#FF6B00] text-black"
                           : "border border-white/10 text-white/40 hover:text-white hover:border-white/30"

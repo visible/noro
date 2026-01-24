@@ -32,12 +32,18 @@ interface StorePayload {
   views?: number
 }
 
+const maxsize = 5 * 1024 * 1024
+
 export async function POST(req: Request) {
   try {
     const body: StorePayload = await req.json()
     const { data, ttl, type = "text", filename, mimetype, views = 1 } = body
     if (!data || typeof data !== "string") {
       return NextResponse.json({ error: "invalid data" }, { status: 400 })
+    }
+    const decodedsize = Math.ceil(data.length * 0.75)
+    if (decodedsize > maxsize) {
+      return NextResponse.json({ error: "file too large" }, { status: 413 })
     }
     const clampedviews = Math.min(Math.max(views, 1), 5)
     const id = generateid()
