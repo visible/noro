@@ -2,41 +2,57 @@
 
 import { useState, useEffect } from "react"
 import Link from "next/link"
+import { highlight } from "@/lib/highlight"
 
 type Language = "en" | "jp"
+type Status = "loading" | "confirm" | "claiming" | "success" | "notfound" | "error"
 
 const content = {
   en: {
     title: "secret",
-    loading: "decrypting...",
+    loading: "checking...",
+    confirm: "a secret is waiting for you",
+    confirmWarning: "once revealed, this secret will be permanently deleted",
+    confirmButton: "reveal secret",
+    claiming: "decrypting...",
     notfound: "this secret has expired or already been viewed",
     error: "failed to retrieve secret",
     label: "label",
     value: "value",
+    filename: "file",
     copy: "copy",
     copied: "copied",
+    download: "download",
     show: "show",
     hide: "hide",
     warning: "this secret has been permanently deleted",
+    remaining: "views remaining",
     create: "create your own",
   },
   jp: {
     title: "シークレット",
-    loading: "復号中...",
+    loading: "確認中...",
+    confirm: "シークレットが届いています",
+    confirmWarning: "表示後、このシークレットは完全に削除されます",
+    confirmButton: "シークレットを表示",
+    claiming: "復号中...",
     notfound: "このシークレットは期限切れか既に閲覧済みです",
     error: "シークレットの取得に失敗",
     label: "ラベル",
     value: "値",
+    filename: "ファイル",
     copy: "コピー",
     copied: "コピー済",
+    download: "ダウンロード",
     show: "表示",
     hide: "隠す",
     warning: "このシークレットは完全に削除されました",
+    remaining: "残り閲覧回数",
     create: "新規作成",
   },
 }
 
-async function decrypt(encrypted: string, key: string): Promise<string> {
+async function decrypt(encrypted: string, key: string): Promise<Uint8Array> {
   const base64 = encrypted.replace(/-/g, "+").replace(/_/g, "/")
   const padding = (4 - (base64.length % 4)) % 4
   const padded = base64 + "=".repeat(padding)
@@ -51,7 +67,7 @@ async function decrypt(encrypted: string, key: string): Promise<string> {
   const keyData = encoder.encode(key.padEnd(32, "0").slice(0, 32))
   const cryptoKey = await crypto.subtle.importKey("raw", keyData, "AES-GCM", false, ["decrypt"])
   const decrypted = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, cryptoKey, data)
-  return new TextDecoder().decode(decrypted)
+  return new Uint8Array(decrypted)
 }
 
 function parse(text: string): { label?: string; value: string } {
@@ -62,17 +78,28 @@ function parse(text: string): { label?: string; value: string } {
   return { value: text }
 }
 
+interface SecretData {
+  type: "text" | "file"
+  label?: string
+  value: string
+  filename?: string
+  mimetype?: string
+  remaining: number
+  bytes?: Uint8Array
+}
+
 export default function ClaimPage({ params }: { params: Promise<{ code: string }> }) {
   const [lang, setLang] = useState<Language>("en")
-  const [status, setStatus] = useState<"loading" | "success" | "notfound" | "error">("loading")
-  const [secret, setSecret] = useState<{ label?: string; value: string } | null>(null)
+  const [status, setStatus] = useState<Status>("loading")
+  const [secret, setSecret] = useState<SecretData | null>(null)
   const [copied, setCopied] = useState(false)
   const [revealed, setRevealed] = useState(false)
+  const [peekdata, setPeekdata] = useState<{ type: "text" | "file"; filename?: string } | null>(null)
 
   const t = content[lang]
 
   useEffect(() => {
-    async function claim() {
+    async function peek() {
       try {
         const { code } = await params
         const key = window.location.hash.slice(1)
@@ -80,7 +107,7 @@ export default function ClaimPage({ params }: { params: Promise<{ code: string }
           setStatus("error")
           return
         }
-        const res = await fetch(`/api/claim/${code}`)
+        const res = await fetch(`/api/peek/${code}`)
         if (res.status === 404) {
           setStatus("notfound")
           return
@@ -89,23 +116,66 @@ export default function ClaimPage({ params }: { params: Promise<{ code: string }
           setStatus("error")
           return
         }
-        const { data } = await res.json()
-        const decrypted = await decrypt(data, key)
-        setSecret(parse(decrypted))
-        setStatus("success")
+        const data = await res.json()
+        setPeekdata({ type: data.type, filename: data.filename })
+        setStatus("confirm")
       } catch {
         setStatus("error")
       }
     }
-    claim()
+    peek()
   }, [params])
 
+  const handleReveal = async () => {
+    setStatus("claiming")
+    try {
+      const { code } = await params
+      const key = window.location.hash.slice(1)
+      const res = await fetch(`/api/claim/${code}`)
+      if (res.status === 404) {
+        setStatus("notfound")
+        return
+      }
+      if (!res.ok) {
+        setStatus("error")
+        return
+      }
+      const { data, type, filename, mimetype, remaining } = await res.json()
+      const decrypted = await decrypt(data, key)
+      if (type === "file") {
+        setSecret({ type: "file", filename, mimetype, remaining, bytes: decrypted, value: "" })
+      } else {
+        const text = new TextDecoder().decode(decrypted)
+        const parsed = parse(text)
+        setSecret({ type: "text", ...parsed, remaining })
+      }
+      setStatus("success")
+    } catch {
+      setStatus("error")
+    }
+  }
+
   const handleCopy = async () => {
-    if (!secret) return
+    if (!secret || secret.type !== "text") return
     await navigator.clipboard.writeText(secret.value)
     setCopied(true)
     setTimeout(() => setCopied(false), 2000)
   }
+
+  const handleDownload = () => {
+    if (!secret || secret.type !== "file" || !secret.bytes) return
+    const blob = new Blob([secret.bytes], { type: secret.mimetype || "application/octet-stream" })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement("a")
+    a.href = url
+    a.download = secret.filename || "download"
+    document.body.appendChild(a)
+    a.click()
+    document.body.removeChild(a)
+    URL.revokeObjectURL(url)
+  }
+
+  const highlighted = secret?.type === "text" ? highlight(secret.value) : null
 
   return (
     <div className="min-h-screen bg-black text-white selection:bg-[#FF6B00] selection:text-black">
@@ -168,12 +238,36 @@ export default function ClaimPage({ params }: { params: Promise<{ code: string }
             <div className="mt-4 h-5"></div>
           </div>
 
-          <div className="relative h-[340px]">
+          <div className="relative min-h-[340px]">
             <div
               className="absolute inset-0 transition-opacity duration-300"
               style={{ opacity: status === "loading" ? 1 : 0, pointerEvents: status === "loading" ? "auto" : "none" }}
             >
               <p className="text-white/40 text-sm">{t.loading}</p>
+            </div>
+
+            <div
+              className="absolute inset-0 space-y-6 transition-opacity duration-300"
+              style={{ opacity: status === "confirm" ? 1 : 0, pointerEvents: status === "confirm" ? "auto" : "none" }}
+            >
+              <div className="space-y-2">
+                <p className="text-white text-sm">{t.confirm}</p>
+                <p className="text-white/30 text-xs">{t.confirmWarning}</p>
+              </div>
+              <button
+                type="button"
+                onClick={handleReveal}
+                className="w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:bg-white transition-colors"
+              >
+                {t.confirmButton}
+              </button>
+            </div>
+
+            <div
+              className="absolute inset-0 transition-opacity duration-300"
+              style={{ opacity: status === "claiming" ? 1 : 0, pointerEvents: status === "claiming" ? "auto" : "none" }}
+            >
+              <p className="text-white/40 text-sm">{t.claiming}</p>
             </div>
 
             <div
@@ -206,40 +300,83 @@ export default function ClaimPage({ params }: { params: Promise<{ code: string }
               className="absolute inset-0 transition-opacity duration-300"
               style={{ opacity: status === "success" ? 1 : 0, pointerEvents: status === "success" ? "auto" : "none" }}
             >
-              <div className="h-[38px] mb-6">
-                {secret?.label && (
-                  <>
-                    <p className="text-xs tracking-widest text-white/40 mb-2">{t.label}</p>
-                    <p className="text-[#FF6B00] font-mono text-sm">{secret.label}</p>
-                  </>
-                )}
-              </div>
+              {secret?.type === "text" ? (
+                <>
+                  <div className="h-[38px] mb-6">
+                    {secret.label && (
+                      <>
+                        <p className="text-xs tracking-widest text-white/40 mb-2">{t.label}</p>
+                        <p className="text-[#FF6B00] font-mono text-sm">{secret.label}</p>
+                      </>
+                    )}
+                  </div>
 
-              <div className="mb-6">
-                <p className="text-xs tracking-widest text-white/40 mb-2">{t.value}</p>
-                <div className="border border-white/10 p-4 bg-white/5 flex items-center gap-3 h-[52px]">
-                  <code className="text-sm text-white/80 font-mono flex-1 truncate">
-                    {revealed ? secret?.value : "••••••••••••••••••••••••••••••••"}
-                  </code>
+                  <div className="mb-6">
+                    <p className="text-xs tracking-widest text-white/40 mb-2">{t.value}</p>
+                    {highlighted?.isjson ? (
+                      <div className="border border-white/10 p-4 bg-white/5 max-h-[200px] overflow-auto">
+                        <pre
+                          className="text-sm font-mono whitespace-pre-wrap break-all"
+                          dangerouslySetInnerHTML={{ __html: revealed ? highlighted.html : "••••••••••••••••••••••••••••••••" }}
+                        />
+                        <button
+                          type="button"
+                          onClick={() => setRevealed(!revealed)}
+                          className="text-white/40 hover:text-white text-xs tracking-widest mt-2"
+                        >
+                          {revealed ? t.hide : t.show}
+                        </button>
+                      </div>
+                    ) : (
+                      <div className="border border-white/10 p-4 bg-white/5 flex items-center gap-3 min-h-[52px]">
+                        <code className="text-sm text-white/80 font-mono flex-1 break-all">
+                          {revealed ? secret.value : "••••••••••••••••••••••••••••••••"}
+                        </code>
+                        <button
+                          type="button"
+                          onClick={() => setRevealed(!revealed)}
+                          className="text-white/40 hover:text-white text-xs tracking-widest shrink-0"
+                        >
+                          {revealed ? t.hide : t.show}
+                        </button>
+                      </div>
+                    )}
+                  </div>
+
                   <button
                     type="button"
-                    onClick={() => setRevealed(!revealed)}
-                    className="text-white/40 hover:text-white text-xs tracking-widest shrink-0"
+                    onClick={handleCopy}
+                    className="w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:bg-white transition-colors mb-6"
                   >
-                    {revealed ? t.hide : t.show}
+                    {copied ? t.copied : t.copy}
                   </button>
-                </div>
-              </div>
+                </>
+              ) : secret?.type === "file" ? (
+                <>
+                  <div className="mb-6">
+                    <p className="text-xs tracking-widest text-white/40 mb-2">{t.filename}</p>
+                    <p className="text-[#FF6B00] font-mono text-sm">{secret.filename}</p>
+                  </div>
 
-              <button
-                type="button"
-                onClick={handleCopy}
-                className="w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:bg-white transition-colors mb-6"
-              >
-                {copied ? t.copied : t.copy}
-              </button>
+                  <button
+                    type="button"
+                    onClick={handleDownload}
+                    className="w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:bg-white transition-colors mb-6"
+                  >
+                    {t.download}
+                  </button>
+                </>
+              ) : null}
 
-              <p className="text-xs text-white/30 text-center mb-6">{t.warning}</p>
+              {secret && secret.remaining > 0 && (
+                <p className="text-xs text-[#FF6B00] text-center mb-6">
+                  {secret.remaining} {t.remaining}
+                </p>
+              )}
+
+              <p className="text-xs text-white/30 text-center mb-6">
+                {secret && secret.remaining === 0 ? t.warning : ""}
+              </p>
 
               <Link
                 href="/share"

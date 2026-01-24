@@ -73,14 +73,19 @@ function mask(value: string): string {
   return value.slice(0, 4) + "*".repeat(value.length - 8) + value.slice(-4)
 }
 
-async function share(name: string, ttl: string) {
-  const value = readenv(name)
-  if (!value) {
-    console.log(`✗ ${name} not found`)
-    process.exit(1)
+async function share(names: string[], ttl: string) {
+  const pairs: string[] = []
+  for (const name of names) {
+    const value = readenv(name)
+    if (!value) {
+      console.log(`✗ ${name} not found`)
+      process.exit(1)
+    }
+    pairs.push(`${name}=${value}`)
   }
+  const payload = pairs.join("\n")
   const key = crypto.randomUUID().replace(/-/g, "")
-  const encrypted = await encrypt(`${name}=${value}`, key)
+  const encrypted = await encrypt(payload, key)
   const res = await fetch(`${API}/api/store`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -93,7 +98,8 @@ async function share(name: string, ttl: string) {
   const { id } = await res.json()
   console.log(`\n  ${API}/${id}#${key}\n`)
   console.log(`  or: npx noro ${id}#${key}`)
-  console.log(`  expires: ${ttl}\n`)
+  console.log(`  expires: ${ttl}`)
+  console.log(`  variables: ${names.join(", ")}\n`)
 }
 
 async function claim(code: string) {
@@ -109,16 +115,37 @@ async function claim(code: string) {
   }
   const { data } = await res.json()
   const decrypted = await decrypt(data, key)
-  const [name, ...rest] = decrypted.split("=")
-  const value = rest.join("=")
-  const envpath = writeenv(name, value)
+  const lines = decrypted.split("\n")
+  let envpath: string | null = null
+  const processed: { name: string; value: string }[] = []
+  for (const line of lines) {
+    if (!line.trim()) continue
+    const [name, ...rest] = line.split("=")
+    const value = rest.join("=")
+    processed.push({ name, value })
+    const path = writeenv(name, value)
+    if (path) envpath = path
+  }
   if (envpath) {
     const filename = envpath.endsWith(".env.local") ? ".env.local" : ".env"
-    console.log(`✓ added ${name} to ${filename}`)
+    for (const { name } of processed) {
+      console.log(`✓ added ${name} to ${filename}`)
+    }
   } else {
-    console.log(`\n  ${name}=${mask(value)}\n`)
-    if (copy(`${name}=${value}`)) {
-      console.log("  ✓ copied to clipboard\n")
+    console.log("")
+    for (const { name, value } of processed) {
+      console.log(`  ${name}=${mask(value)}`)
+    }
+    console.log("")
+    if (processed.length === 1) {
+      if (copy(`${processed[0].name}=${processed[0].value}`)) {
+        console.log("  ✓ copied to clipboard\n")
+      }
+    } else {
+      const all = processed.map(p => `${p.name}=${p.value}`).join("\n")
+      if (copy(all)) {
+        console.log("  ✓ copied all to clipboard\n")
+      }
     }
   }
 }
@@ -130,8 +157,13 @@ async function main() {
   noro - share env vars with one command
 
   usage:
-    noro share <VAR> [--ttl=1d]     share an env var
-    noro <code>                     claim a shared secret
+    noro share <VAR...> [--ttl=1d]     share env vars
+    noro <code>                        claim a shared secret
+
+  examples:
+    noro share API_KEY
+    noro share API_KEY DB_URL --ttl=1h
+    noro abc123#key
 
   ttl options:
     1h, 6h, 12h, 1d (default), 7d
@@ -139,8 +171,9 @@ async function main() {
     process.exit(0)
   }
   if (args[0] === "share") {
-    if (!args[1]) {
-      console.log("✗ specify a variable name")
+    const names = args.slice(1).filter(a => !a.startsWith("--"))
+    if (names.length === 0) {
+      console.log("✗ specify at least one variable name")
       process.exit(1)
     }
     let ttl = "1d"
@@ -154,7 +187,7 @@ async function main() {
         process.exit(1)
       }
     }
-    await share(args[1], ttl)
+    await share(names, ttl)
   } else {
     await claim(args[0])
   }
