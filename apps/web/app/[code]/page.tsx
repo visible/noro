@@ -1,11 +1,17 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import Link from "next/link"
-import { highlight } from "@/lib/highlight"
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { highlight } from "@/lib/highlight";
 
-type Language = "en" | "jp"
-type Status = "loading" | "confirm" | "claiming" | "success" | "notfound" | "error"
+type Language = "en" | "jp";
+type Status =
+  | "loading"
+  | "confirm"
+  | "claiming"
+  | "success"
+  | "notfound"
+  | "error";
 
 const content = {
   en: {
@@ -50,132 +56,158 @@ const content = {
     remaining: "残り閲覧回数",
     create: "新規作成",
   },
-}
+};
 
 async function decrypt(encrypted: string, key: string): Promise<Uint8Array> {
-  const base64 = encrypted.replace(/-/g, "+").replace(/_/g, "/")
-  const padding = (4 - (base64.length % 4)) % 4
-  const padded = base64 + "=".repeat(padding)
-  const binary = atob(padded)
-  const bytes = new Uint8Array(binary.length)
+  const base64 = encrypted.replace(/-/g, "+").replace(/_/g, "/");
+  const padding = (4 - (base64.length % 4)) % 4;
+  const padded = base64 + "=".repeat(padding);
+  const binary = atob(padded);
+  const bytes = new Uint8Array(binary.length);
   for (let i = 0; i < binary.length; i++) {
-    bytes[i] = binary.charCodeAt(i)
+    bytes[i] = binary.charCodeAt(i);
   }
-  const iv = bytes.slice(0, 12)
-  const data = bytes.slice(12)
-  const encoder = new TextEncoder()
-  const keyData = encoder.encode(key.padEnd(32, "0").slice(0, 32))
-  const cryptoKey = await crypto.subtle.importKey("raw", keyData, "AES-GCM", false, ["decrypt"])
-  const decrypted = await crypto.subtle.decrypt({ name: "AES-GCM", iv }, cryptoKey, data)
-  return new Uint8Array(decrypted)
+  const iv = bytes.slice(0, 12);
+  const data = bytes.slice(12);
+  const encoder = new TextEncoder();
+  const keyData = encoder.encode(key.padEnd(32, "0").slice(0, 32));
+  const cryptoKey = await crypto.subtle.importKey(
+    "raw",
+    keyData,
+    "AES-GCM",
+    false,
+    ["decrypt"],
+  );
+  const decrypted = await crypto.subtle.decrypt(
+    { name: "AES-GCM", iv },
+    cryptoKey,
+    data,
+  );
+  return new Uint8Array(decrypted);
 }
 
 function parse(text: string): { label?: string; value: string } {
-  const idx = text.indexOf("=")
+  const idx = text.indexOf("=");
   if (idx > 0 && idx < text.length - 1) {
-    return { label: text.slice(0, idx), value: text.slice(idx + 1) }
+    return { label: text.slice(0, idx), value: text.slice(idx + 1) };
   }
-  return { value: text }
+  return { value: text };
 }
 
 interface SecretData {
-  type: "text" | "file"
-  label?: string
-  value: string
-  filename?: string
-  mimetype?: string
-  remaining: number
-  bytes?: Uint8Array
+  type: "text" | "file";
+  label?: string;
+  value: string;
+  filename?: string;
+  mimetype?: string;
+  remaining: number;
+  bytes?: Uint8Array;
 }
 
-export default function ClaimPage({ params }: { params: Promise<{ code: string }> }) {
-  const [lang, setLang] = useState<Language>("en")
-  const [status, setStatus] = useState<Status>("loading")
-  const [secret, setSecret] = useState<SecretData | null>(null)
-  const [copied, setCopied] = useState(false)
-  const [revealed, setRevealed] = useState(false)
-  const [peekdata, setPeekdata] = useState<{ type: "text" | "file"; filename?: string } | null>(null)
+export default function ClaimPage({
+  params,
+}: {
+  params: Promise<{ code: string }>;
+}) {
+  const [lang, setLang] = useState<Language>("en");
+  const [status, setStatus] = useState<Status>("loading");
+  const [secret, setSecret] = useState<SecretData | null>(null);
+  const [copied, setCopied] = useState(false);
+  const [revealed, setRevealed] = useState(false);
+  const [_peekdata, setPeekdata] = useState<{
+    type: "text" | "file";
+    filename?: string;
+  } | null>(null);
 
-  const t = content[lang]
+  const t = content[lang];
 
   useEffect(() => {
     async function peek() {
       try {
-        const { code } = await params
-        const key = window.location.hash.slice(1)
+        const { code } = await params;
+        const key = window.location.hash.slice(1);
         if (!key) {
-          setStatus("error")
-          return
+          setStatus("error");
+          return;
         }
-        const res = await fetch(`/api/peek/${code}`)
+        const res = await fetch(`/api/peek/${code}`);
         if (res.status === 404) {
-          setStatus("notfound")
-          return
+          setStatus("notfound");
+          return;
         }
         if (!res.ok) {
-          setStatus("error")
-          return
+          setStatus("error");
+          return;
         }
-        const data = await res.json()
-        setPeekdata({ type: data.type, filename: data.filename })
-        setStatus("confirm")
+        const data = await res.json();
+        setPeekdata({ type: data.type, filename: data.filename });
+        setStatus("confirm");
       } catch {
-        setStatus("error")
+        setStatus("error");
       }
     }
-    peek()
-  }, [params])
+    peek();
+  }, [params]);
 
   const handleReveal = async () => {
-    setStatus("claiming")
+    setStatus("claiming");
     try {
-      const { code } = await params
-      const key = window.location.hash.slice(1)
-      const res = await fetch(`/api/claim/${code}`)
+      const { code } = await params;
+      const key = window.location.hash.slice(1);
+      const res = await fetch(`/api/claim/${code}`);
       if (res.status === 404) {
-        setStatus("notfound")
-        return
+        setStatus("notfound");
+        return;
       }
       if (!res.ok) {
-        setStatus("error")
-        return
+        setStatus("error");
+        return;
       }
-      const { data, type, filename, mimetype, remaining } = await res.json()
-      const decrypted = await decrypt(data, key)
+      const { data, type, filename, mimetype, remaining } = await res.json();
+      const decrypted = await decrypt(data, key);
       if (type === "file") {
-        setSecret({ type: "file", filename, mimetype, remaining, bytes: decrypted, value: "" })
+        setSecret({
+          type: "file",
+          filename,
+          mimetype,
+          remaining,
+          bytes: decrypted,
+          value: "",
+        });
       } else {
-        const text = new TextDecoder().decode(decrypted)
-        const parsed = parse(text)
-        setSecret({ type: "text", ...parsed, remaining })
+        const text = new TextDecoder().decode(decrypted);
+        const parsed = parse(text);
+        setSecret({ type: "text", ...parsed, remaining });
       }
-      setStatus("success")
+      setStatus("success");
     } catch {
-      setStatus("error")
+      setStatus("error");
     }
-  }
+  };
 
   const handleCopy = async () => {
-    if (!secret || secret.type !== "text") return
-    await navigator.clipboard.writeText(secret.value)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
+    if (!secret || secret.type !== "text") return;
+    await navigator.clipboard.writeText(secret.value);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const handleDownload = () => {
-    if (!secret || secret.type !== "file" || !secret.bytes) return
-    const blob = new Blob([secret.bytes], { type: secret.mimetype || "application/octet-stream" })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement("a")
-    a.href = url
-    a.download = secret.filename || "download"
-    document.body.appendChild(a)
-    a.click()
-    document.body.removeChild(a)
-    URL.revokeObjectURL(url)
-  }
+    if (!secret || secret.type !== "file" || !secret.bytes) return;
+    const blob = new Blob([secret.bytes], {
+      type: secret.mimetype || "application/octet-stream",
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = secret.filename || "download";
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
 
-  const highlighted = secret?.type === "text" ? highlight(secret.value) : null
+  const highlighted = secret?.type === "text" ? highlight(secret.value) : null;
 
   return (
     <div className="min-h-screen bg-black text-white selection:bg-[#FF6B00] selection:text-black">
@@ -183,7 +215,11 @@ export default function ClaimPage({ params }: { params: Promise<{ code: string }
         <div className="flex items-center gap-2 text-xs tracking-widest">
           <button
             onClick={() => setLang("en")}
-            className={lang === "en" ? "text-[#FF6B00]" : "text-white/30 hover:text-white"}
+            className={
+              lang === "en"
+                ? "text-[#FF6B00]"
+                : "text-white/30 hover:text-white"
+            }
             type="button"
           >
             EN
@@ -191,7 +227,11 @@ export default function ClaimPage({ params }: { params: Promise<{ code: string }
           <span className="text-white/20">/</span>
           <button
             onClick={() => setLang("jp")}
-            className={lang === "jp" ? "text-[#FF6B00]" : "text-white/30 hover:text-white"}
+            className={
+              lang === "jp"
+                ? "text-[#FF6B00]"
+                : "text-white/30 hover:text-white"
+            }
             type="button"
           >
             JP
@@ -199,7 +239,10 @@ export default function ClaimPage({ params }: { params: Promise<{ code: string }
         </div>
       </nav>
 
-      <Link href="/" className="fixed bottom-0 right-0 p-4 sm:p-8 z-50 hover:opacity-60 transition-opacity">
+      <Link
+        href="/"
+        className="fixed bottom-0 right-0 p-4 sm:p-8 z-50 hover:opacity-60 transition-opacity"
+      >
         <svg
           width="24"
           height="24"
@@ -241,14 +284,20 @@ export default function ClaimPage({ params }: { params: Promise<{ code: string }
           <div className="relative min-h-[340px]">
             <div
               className="absolute inset-0 transition-opacity duration-300"
-              style={{ opacity: status === "loading" ? 1 : 0, pointerEvents: status === "loading" ? "auto" : "none" }}
+              style={{
+                opacity: status === "loading" ? 1 : 0,
+                pointerEvents: status === "loading" ? "auto" : "none",
+              }}
             >
               <p className="text-white/40 text-sm">{t.loading}</p>
             </div>
 
             <div
               className="absolute inset-0 space-y-6 transition-opacity duration-300"
-              style={{ opacity: status === "confirm" ? 1 : 0, pointerEvents: status === "confirm" ? "auto" : "none" }}
+              style={{
+                opacity: status === "confirm" ? 1 : 0,
+                pointerEvents: status === "confirm" ? "auto" : "none",
+              }}
             >
               <div className="space-y-2">
                 <p className="text-white text-sm">{t.confirm}</p>
@@ -265,14 +314,20 @@ export default function ClaimPage({ params }: { params: Promise<{ code: string }
 
             <div
               className="absolute inset-0 transition-opacity duration-300"
-              style={{ opacity: status === "claiming" ? 1 : 0, pointerEvents: status === "claiming" ? "auto" : "none" }}
+              style={{
+                opacity: status === "claiming" ? 1 : 0,
+                pointerEvents: status === "claiming" ? "auto" : "none",
+              }}
             >
               <p className="text-white/40 text-sm">{t.claiming}</p>
             </div>
 
             <div
               className="absolute inset-0 space-y-6 transition-opacity duration-300"
-              style={{ opacity: status === "notfound" ? 1 : 0, pointerEvents: status === "notfound" ? "auto" : "none" }}
+              style={{
+                opacity: status === "notfound" ? 1 : 0,
+                pointerEvents: status === "notfound" ? "auto" : "none",
+              }}
             >
               <p className="text-white/40 text-sm">{t.notfound}</p>
               <Link
@@ -285,7 +340,10 @@ export default function ClaimPage({ params }: { params: Promise<{ code: string }
 
             <div
               className="absolute inset-0 space-y-6 transition-opacity duration-300"
-              style={{ opacity: status === "error" ? 1 : 0, pointerEvents: status === "error" ? "auto" : "none" }}
+              style={{
+                opacity: status === "error" ? 1 : 0,
+                pointerEvents: status === "error" ? "auto" : "none",
+              }}
             >
               <p className="text-red-400 text-sm">{t.error}</p>
               <Link
@@ -298,26 +356,39 @@ export default function ClaimPage({ params }: { params: Promise<{ code: string }
 
             <div
               className="absolute inset-0 transition-opacity duration-300"
-              style={{ opacity: status === "success" ? 1 : 0, pointerEvents: status === "success" ? "auto" : "none" }}
+              style={{
+                opacity: status === "success" ? 1 : 0,
+                pointerEvents: status === "success" ? "auto" : "none",
+              }}
             >
               {secret?.type === "text" ? (
                 <>
                   <div className="h-[38px] mb-6">
                     {secret.label && (
                       <>
-                        <p className="text-xs tracking-widest text-white/40 mb-2">{t.label}</p>
-                        <p className="text-[#FF6B00] font-mono text-sm">{secret.label}</p>
+                        <p className="text-xs tracking-widest text-white/40 mb-2">
+                          {t.label}
+                        </p>
+                        <p className="text-[#FF6B00] font-mono text-sm">
+                          {secret.label}
+                        </p>
                       </>
                     )}
                   </div>
 
                   <div className="mb-6">
-                    <p className="text-xs tracking-widest text-white/40 mb-2">{t.value}</p>
+                    <p className="text-xs tracking-widest text-white/40 mb-2">
+                      {t.value}
+                    </p>
                     {highlighted?.isjson ? (
                       <div className="border border-white/10 p-4 bg-white/5 max-h-[200px] overflow-auto">
                         <pre
                           className="text-sm font-mono whitespace-pre-wrap break-all"
-                          dangerouslySetInnerHTML={{ __html: revealed ? highlighted.html : "••••••••••••••••••••••••••••••••" }}
+                          dangerouslySetInnerHTML={{
+                            __html: revealed
+                              ? highlighted.html
+                              : "••••••••••••••••••••••••••••••••",
+                          }}
                         />
                         <button
                           type="button"
@@ -330,7 +401,9 @@ export default function ClaimPage({ params }: { params: Promise<{ code: string }
                     ) : (
                       <div className="border border-white/10 p-4 bg-white/5 flex items-center gap-3 min-h-[52px]">
                         <code className="text-sm text-white/80 font-mono flex-1 break-all">
-                          {revealed ? secret.value : "••••••••••••••••••••••••••••••••"}
+                          {revealed
+                            ? secret.value
+                            : "••••••••••••••••••••••••••••••••"}
                         </code>
                         <button
                           type="button"
@@ -354,8 +427,12 @@ export default function ClaimPage({ params }: { params: Promise<{ code: string }
               ) : secret?.type === "file" ? (
                 <>
                   <div className="mb-6">
-                    <p className="text-xs tracking-widest text-white/40 mb-2">{t.filename}</p>
-                    <p className="text-[#FF6B00] font-mono text-sm">{secret.filename}</p>
+                    <p className="text-xs tracking-widest text-white/40 mb-2">
+                      {t.filename}
+                    </p>
+                    <p className="text-[#FF6B00] font-mono text-sm">
+                      {secret.filename}
+                    </p>
                   </div>
 
                   <button
@@ -389,5 +466,5 @@ export default function ClaimPage({ params }: { params: Promise<{ code: string }
         </div>
       </section>
     </div>
-  )
+  );
 }

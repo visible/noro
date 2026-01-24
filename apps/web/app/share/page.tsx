@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { useState, useRef } from "react"
-import Link from "next/link"
+import Link from "next/link";
+import { useRef, useState } from "react";
 
-type Language = "en" | "jp"
-type Mode = "text" | "file"
+type Language = "en" | "jp";
+type Mode = "text" | "file";
 
 const content = {
   en: {
@@ -57,114 +57,130 @@ const content = {
       "閲覧後に自動削除",
     ],
   },
-}
+};
 
 async function encrypt(data: Uint8Array, key: string): Promise<string> {
-  const keyData = new TextEncoder().encode(key.padEnd(32, "0").slice(0, 32))
-  const iv = crypto.getRandomValues(new Uint8Array(12))
-  const cryptoKey = await crypto.subtle.importKey("raw", keyData, "AES-GCM", false, ["encrypt"])
-  const encrypted = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, cryptoKey, data)
-  const combined = new Uint8Array(iv.length + encrypted.byteLength)
-  combined.set(iv)
-  combined.set(new Uint8Array(encrypted), iv.length)
-  let binary = ""
-  combined.forEach((byte) => (binary += String.fromCharCode(byte)))
-  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "")
+  const keyData = new TextEncoder().encode(key.padEnd(32, "0").slice(0, 32));
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const cryptoKey = await crypto.subtle.importKey(
+    "raw",
+    keyData,
+    "AES-GCM",
+    false,
+    ["encrypt"],
+  );
+  const encrypted = await crypto.subtle.encrypt(
+    { name: "AES-GCM", iv },
+    cryptoKey,
+    data,
+  );
+  const combined = new Uint8Array(iv.length + encrypted.byteLength);
+  combined.set(iv);
+  combined.set(new Uint8Array(encrypted), iv.length);
+  let binary = "";
+  combined.forEach((byte) => (binary += String.fromCharCode(byte)));
+  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
 }
 
 export default function SharePage() {
-  const [lang, setLang] = useState<Language>("en")
-  const [mode, setMode] = useState<Mode>("text")
-  const [label, setLabel] = useState("")
-  const [secret, setSecret] = useState("")
-  const [file, setFile] = useState<File | null>(null)
-  const [views, setViews] = useState(1)
-  const [isGenerating, setIsGenerating] = useState(false)
-  const [generatedLink, setGeneratedLink] = useState("")
-  const [copied, setCopied] = useState(false)
-  const [revealed, setRevealed] = useState(false)
-  const [dragover, setDragover] = useState(false)
-  const fileRef = useRef<HTMLInputElement>(null)
+  const [lang, setLang] = useState<Language>("en");
+  const [mode, setMode] = useState<Mode>("text");
+  const [label, setLabel] = useState("");
+  const [secret, setSecret] = useState("");
+  const [file, setFile] = useState<File | null>(null);
+  const [views, setViews] = useState(1);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generatedLink, setGeneratedLink] = useState("");
+  const [copied, setCopied] = useState(false);
+  const [revealed, setRevealed] = useState(false);
+  const [dragover, setDragover] = useState(false);
+  const fileRef = useRef<HTMLInputElement>(null);
 
-  const t = content[lang]
+  const t = content[lang];
 
   const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (mode === "text" && !secret) return
-    if (mode === "file" && !file) return
+    e.preventDefault();
+    if (mode === "text" && !secret) return;
+    if (mode === "file" && !file) return;
 
-    setIsGenerating(true)
+    setIsGenerating(true);
 
     try {
-      const key = crypto.randomUUID().replace(/-/g, "")
-      let payload: Uint8Array
-      let type: "text" | "file" = "text"
-      let filename: string | undefined
-      let mimetype: string | undefined
+      const key = crypto.randomUUID().replace(/-/g, "");
+      let payload: Uint8Array;
+      let type: "text" | "file" = "text";
+      let filename: string | undefined;
+      let mimetype: string | undefined;
 
       if (mode === "file" && file) {
-        const buffer = await file.arrayBuffer()
-        payload = new Uint8Array(buffer)
-        type = "file"
-        filename = file.name
-        mimetype = file.type || "application/octet-stream"
+        const buffer = await file.arrayBuffer();
+        payload = new Uint8Array(buffer);
+        type = "file";
+        filename = file.name;
+        mimetype = file.type || "application/octet-stream";
       } else {
-        const text = label ? `${label}=${secret}` : secret
-        payload = new TextEncoder().encode(text)
+        const text = label ? `${label}=${secret}` : secret;
+        payload = new TextEncoder().encode(text);
       }
 
-      const encrypted = await encrypt(payload, key)
+      const encrypted = await encrypt(payload, key);
 
       const res = await fetch("/api/store", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: encrypted, type, filename, mimetype, views }),
-      })
+        body: JSON.stringify({
+          data: encrypted,
+          type,
+          filename,
+          mimetype,
+          views,
+        }),
+      });
 
-      if (!res.ok) throw new Error("Failed to store")
+      if (!res.ok) throw new Error("Failed to store");
 
-      const { id } = await res.json()
-      setGeneratedLink(`${window.location.origin}/${id}#${key}`)
+      const { id } = await res.json();
+      setGeneratedLink(`${window.location.origin}/${id}#${key}`);
     } catch {
-      alert("Failed to create link")
+      alert("Failed to create link");
     } finally {
-      setIsGenerating(false)
+      setIsGenerating(false);
     }
-  }
+  };
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(generatedLink)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
+    await navigator.clipboard.writeText(generatedLink);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const handleReset = () => {
-    setLabel("")
-    setSecret("")
-    setFile(null)
-    setViews(1)
-    setGeneratedLink("")
-    setCopied(false)
-    setRevealed(false)
-  }
+    setLabel("");
+    setSecret("");
+    setFile(null);
+    setViews(1);
+    setGeneratedLink("");
+    setCopied(false);
+    setRevealed(false);
+  };
 
   const handleFileDrop = (e: React.DragEvent) => {
-    e.preventDefault()
-    setDragover(false)
-    const dropped = e.dataTransfer.files[0]
+    e.preventDefault();
+    setDragover(false);
+    const dropped = e.dataTransfer.files[0];
     if (dropped && dropped.size <= 5 * 1024 * 1024) {
-      setFile(dropped)
+      setFile(dropped);
     }
-  }
+  };
 
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const selected = e.target.files?.[0]
+    const selected = e.target.files?.[0];
     if (selected && selected.size <= 5 * 1024 * 1024) {
-      setFile(selected)
+      setFile(selected);
     }
-  }
+  };
 
-  const canSubmit = mode === "text" ? !!secret : !!file
+  const canSubmit = mode === "text" ? !!secret : !!file;
 
   return (
     <div className="min-h-screen bg-black text-white selection:bg-[#FF6B00] selection:text-black">
@@ -172,7 +188,11 @@ export default function SharePage() {
         <div className="flex items-center gap-2 text-xs tracking-widest">
           <button
             onClick={() => setLang("en")}
-            className={lang === "en" ? "text-[#FF6B00]" : "text-white/30 hover:text-white"}
+            className={
+              lang === "en"
+                ? "text-[#FF6B00]"
+                : "text-white/30 hover:text-white"
+            }
             type="button"
           >
             EN
@@ -180,7 +200,11 @@ export default function SharePage() {
           <span className="text-white/20">/</span>
           <button
             onClick={() => setLang("jp")}
-            className={lang === "jp" ? "text-[#FF6B00]" : "text-white/30 hover:text-white"}
+            className={
+              lang === "jp"
+                ? "text-[#FF6B00]"
+                : "text-white/30 hover:text-white"
+            }
             type="button"
           >
             JP
@@ -188,7 +212,10 @@ export default function SharePage() {
         </div>
       </nav>
 
-      <Link href="/" className="fixed bottom-0 right-0 p-4 sm:p-8 z-50 hover:opacity-60 transition-opacity">
+      <Link
+        href="/"
+        className="fixed bottom-0 right-0 p-4 sm:p-8 z-50 hover:opacity-60 transition-opacity"
+      >
         <svg
           width="24"
           height="24"
@@ -225,7 +252,9 @@ export default function SharePage() {
               </h1>
             </div>
             <div className="relative mt-4">
-              <p className="text-white/40 text-sm invisible">{content.en.subtitle}</p>
+              <p className="text-white/40 text-sm invisible">
+                {content.en.subtitle}
+              </p>
               <p
                 className="absolute top-0 left-0 text-white/40 text-sm transition-opacity duration-200"
                 style={{ opacity: lang === "en" ? 1 : 0 }}
@@ -245,7 +274,10 @@ export default function SharePage() {
             <form
               onSubmit={handleSubmit}
               className="absolute inset-0 space-y-6 transition-opacity duration-300"
-              style={{ opacity: generatedLink ? 0 : 1, pointerEvents: generatedLink ? "none" : "auto" }}
+              style={{
+                opacity: generatedLink ? 0 : 1,
+                pointerEvents: generatedLink ? "none" : "auto",
+              }}
             >
               <div className="flex gap-2 mb-6">
                 <button
@@ -303,7 +335,10 @@ export default function SharePage() {
               ) : (
                 <div
                   onClick={() => fileRef.current?.click()}
-                  onDragOver={(e) => { e.preventDefault(); setDragover(true) }}
+                  onDragOver={(e) => {
+                    e.preventDefault();
+                    setDragover(true);
+                  }}
                   onDragLeave={() => setDragover(false)}
                   onDrop={handleFileDrop}
                   className={`border border-dashed px-4 py-12 text-center cursor-pointer transition-colors ${
@@ -321,7 +356,9 @@ export default function SharePage() {
                     className="hidden"
                   />
                   {file ? (
-                    <p className="text-[#FF6B00] font-mono text-sm">{file.name}</p>
+                    <p className="text-[#FF6B00] font-mono text-sm">
+                      {file.name}
+                    </p>
                   ) : (
                     <>
                       <p className="text-white/40 text-sm mb-1">{t.dropzone}</p>
@@ -355,7 +392,10 @@ export default function SharePage() {
 
               <ul className="space-y-1">
                 {t.security.map((note, i) => (
-                  <li key={i} className="text-xs text-white/30 flex items-center gap-2">
+                  <li
+                    key={i}
+                    className="text-xs text-white/30 flex items-center gap-2"
+                  >
                     <span className="w-1 h-1 bg-[#FF6B00] rounded-full" />
                     {note}
                   </li>
@@ -373,17 +413,24 @@ export default function SharePage() {
 
             <div
               className="absolute inset-0 transition-opacity duration-300"
-              style={{ opacity: generatedLink ? 1 : 0, pointerEvents: generatedLink ? "auto" : "none" }}
+              style={{
+                opacity: generatedLink ? 1 : 0,
+                pointerEvents: generatedLink ? "auto" : "none",
+              }}
             >
               <div className="h-[38px] mb-6">
                 <p className="text-[#FF6B00] text-sm">{t.success}</p>
               </div>
 
               <div className="mb-6">
-                <p className="text-xs tracking-widest text-white/40 mb-2 invisible">link</p>
+                <p className="text-xs tracking-widest text-white/40 mb-2 invisible">
+                  link
+                </p>
                 <div className="border border-white/10 p-4 bg-white/5 flex items-center gap-3 h-[52px]">
                   <code className="text-sm text-white/80 font-mono flex-1 truncate">
-                    {revealed ? generatedLink : "••••••••••••••••••••••••••••••••"}
+                    {revealed
+                      ? generatedLink
+                      : "••••••••••••••••••••••••••••••••"}
                   </code>
                   <button
                     type="button"
@@ -403,7 +450,9 @@ export default function SharePage() {
                 {copied ? t.copied : t.copy}
               </button>
 
-              <p className="text-xs text-white/30 text-center mb-6">{t.expires}</p>
+              <p className="text-xs text-white/30 text-center mb-6">
+                {t.expires}
+              </p>
 
               <button
                 type="button"
@@ -417,5 +466,5 @@ export default function SharePage() {
         </div>
       </section>
     </div>
-  )
+  );
 }

@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
-import { Dock } from "@/components/dock";
+import { useState } from "react";
 import { BackgroundBeams } from "@/components/background-beams";
+import { Dock } from "@/components/dock";
 
 type Language = "en" | "jp";
 
@@ -20,7 +20,7 @@ const content = {
 
 export default function Home() {
   const [lang, setLang] = useState<Language>("en");
-  const t = content[lang];
+  const _t = content[lang];
 
   return (
     <BackgroundBeams className="text-white selection:bg-[#FF6B00] selection:text-black">
@@ -32,7 +32,11 @@ export default function Home() {
         <div className="flex items-center gap-2 text-xs tracking-widest">
           <button
             onClick={() => setLang("en")}
-            className={lang === "en" ? "text-[#FF6B00]" : "text-white/30 hover:text-white"}
+            className={
+              lang === "en"
+                ? "text-[#FF6B00]"
+                : "text-white/30 hover:text-white"
+            }
             type="button"
           >
             EN
@@ -40,7 +44,11 @@ export default function Home() {
           <span className="text-white/20">/</span>
           <button
             onClick={() => setLang("jp")}
-            className={lang === "jp" ? "text-[#FF6B00]" : "text-white/30 hover:text-white"}
+            className={
+              lang === "jp"
+                ? "text-[#FF6B00]"
+                : "text-white/30 hover:text-white"
+            }
             type="button"
           >
             JP
@@ -49,7 +57,10 @@ export default function Home() {
       </nav>
 
       {/* Logo - Bottom Right */}
-      <Link href="/" className="fixed bottom-0 right-0 p-8 z-50 hover:opacity-60 transition-opacity">
+      <Link
+        href="/"
+        className="fixed bottom-0 right-0 p-8 z-50 hover:opacity-60 transition-opacity"
+      >
         <svg
           width="24"
           height="24"
@@ -72,13 +83,13 @@ export default function Home() {
             <h1 className="text-[18vw] md:text-[12vw] leading-none font-bold tracking-tighter border-b-4 border-[#FF6B00]">
               <span className="invisible">{content.en.title}</span>
             </h1>
-            <span 
+            <span
               className="absolute inset-0 text-[18vw] md:text-[12vw] leading-none font-bold tracking-tighter transition-opacity duration-200"
               style={{ opacity: lang === "en" ? 1 : 0 }}
             >
               {content.en.title}
             </span>
-            <span 
+            <span
               className="absolute inset-0 text-[18vw] md:text-[12vw] leading-none font-bold tracking-tighter transition-opacity duration-200"
               style={{ opacity: lang === "jp" ? 1 : 0 }}
             >
@@ -86,13 +97,13 @@ export default function Home() {
             </span>
           </div>
           <div className="relative mt-8 h-16">
-            <p 
+            <p
               className="absolute top-0 left-0 text-lg md:text-xl leading-relaxed max-w-xl text-white/60 transition-opacity duration-200"
               style={{ opacity: lang === "en" ? 1 : 0 }}
             >
               {content.en.tagline}
             </p>
-            <p 
+            <p
               className="absolute top-0 left-0 text-lg md:text-xl leading-relaxed max-w-xl text-white/60 transition-opacity duration-200"
               style={{ opacity: lang === "jp" ? 1 : 0 }}
             >

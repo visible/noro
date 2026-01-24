@@ -1,10 +1,10 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import Link from "next/link"
+import Link from "next/link";
+import { useState } from "react";
 
-type Language = "en" | "jp"
-type Section = "cli" | "web" | "desktop" | "extension"
+type Language = "en" | "jp";
+type Section = "cli" | "web" | "desktop" | "extension";
 
 const nav = {
   en: [
@@ -19,7 +19,7 @@ const nav = {
     { id: "desktop" as Section, label: "デスクトップ" },
     { id: "extension" as Section, label: "拡張機能" },
   ],
-}
+};
 
 const content = {
   en: {
@@ -30,7 +30,10 @@ const content = {
           title: "share a secret",
           items: [
             { code: "npx noro share API_KEY", desc: null },
-            { code: null, desc: "generates a one-time link like noro.sh/x7k#key" },
+            {
+              code: null,
+              desc: "generates a one-time link like noro.sh/x7k#key",
+            },
             { code: null, desc: "encrypted client-side before upload" },
           ],
         },
@@ -53,7 +56,10 @@ const content = {
           title: "security",
           items: [
             { code: null, desc: "AES-256-GCM encryption" },
-            { code: null, desc: "key stays in URL fragment (never sent to server)" },
+            {
+              code: null,
+              desc: "key stays in URL fragment (never sent to server)",
+            },
             { code: null, desc: "zero-knowledge architecture" },
           ],
         },
@@ -66,7 +72,10 @@ const content = {
           title: "create a link",
           items: [
             { code: "noro.sh/share", desc: null },
-            { code: null, desc: "paste your secret and generate a one-time link" },
+            {
+              code: null,
+              desc: "paste your secret and generate a one-time link",
+            },
             { code: null, desc: "same encryption as CLI" },
           ],
         },
@@ -157,7 +166,10 @@ const content = {
           title: "シークレットを共有",
           items: [
             { code: "npx noro share API_KEY", desc: null },
-            { code: null, desc: "noro.sh/x7k#keyのようなワンタイムリンクを生成" },
+            {
+              code: null,
+              desc: "noro.sh/x7k#keyのようなワンタイムリンクを生成",
+            },
             { code: null, desc: "アップロード前にクライアント側で暗号化" },
           ],
         },
@@ -165,7 +177,10 @@ const content = {
           title: "有効期限を設定",
           items: [
             { code: "npx noro share API_KEY --ttl=1h", desc: null },
-            { code: null, desc: "オプション: 1h, 6h, 12h, 1d (デフォルト), 7d" },
+            {
+              code: null,
+              desc: "オプション: 1h, 6h, 12h, 1d (デフォルト), 7d",
+            },
           ],
         },
         {
@@ -180,7 +195,10 @@ const content = {
           title: "セキュリティ",
           items: [
             { code: null, desc: "AES-256-GCM暗号化" },
-            { code: null, desc: "キーはURLフラグメントに保持（サーバーに送信されない）" },
+            {
+              code: null,
+              desc: "キーはURLフラグメントに保持（サーバーに送信されない）",
+            },
             { code: null, desc: "ゼロ知識アーキテクチャ" },
           ],
         },
@@ -193,7 +211,10 @@ const content = {
           title: "リンクを作成",
           items: [
             { code: "noro.sh/share", desc: null },
-            { code: null, desc: "シークレットを貼り付けてワンタイムリンクを生成" },
+            {
+              code: null,
+              desc: "シークレットを貼り付けてワンタイムリンクを生成",
+            },
             { code: null, desc: "CLIと同じ暗号化" },
           ],
         },
@@ -276,13 +297,13 @@ const content = {
       ],
     },
   },
-}
+};
 
 export default function DocsPage() {
-  const [lang, setLang] = useState<Language>("en")
-  const [section, setSection] = useState<Section>("cli")
-  const t = content[lang][section]
-  const navItems = nav[lang]
+  const [lang, setLang] = useState<Language>("en");
+  const [section, setSection] = useState<Section>("cli");
+  const t = content[lang][section];
+  const navItems = nav[lang];
 
   return (
     <div className="min-h-screen bg-black text-white selection:bg-[#FF6B00] selection:text-black">
@@ -290,7 +311,11 @@ export default function DocsPage() {
         <div className="flex items-center gap-2 text-xs tracking-widest">
           <button
             onClick={() => setLang("en")}
-            className={lang === "en" ? "text-[#FF6B00]" : "text-white/30 hover:text-white"}
+            className={
+              lang === "en"
+                ? "text-[#FF6B00]"
+                : "text-white/30 hover:text-white"
+            }
             type="button"
           >
             EN
@@ -298,7 +323,11 @@ export default function DocsPage() {
           <span className="text-white/20">/</span>
           <button
             onClick={() => setLang("jp")}
-            className={lang === "jp" ? "text-[#FF6B00]" : "text-white/30 hover:text-white"}
+            className={
+              lang === "jp"
+                ? "text-[#FF6B00]"
+                : "text-white/30 hover:text-white"
+            }
             type="button"
           >
             JP
@@ -306,7 +335,10 @@ export default function DocsPage() {
         </div>
       </nav>
 
-      <Link href="/" className="fixed bottom-0 right-0 p-8 z-50 hover:opacity-60 transition-opacity">
+      <Link
+        href="/"
+        className="fixed bottom-0 right-0 p-8 z-50 hover:opacity-60 transition-opacity"
+      >
         <svg
           width="24"
           height="24"
@@ -334,7 +366,9 @@ export default function DocsPage() {
                 key={item.id}
                 onClick={() => setSection(item.id)}
                 className={`block text-sm tracking-wide transition-colors text-left ${
-                  section === item.id ? "text-white" : "text-white/30 hover:text-white/60"
+                  section === item.id
+                    ? "text-white"
+                    : "text-white/30 hover:text-white/60"
                 }`}
                 type="button"
               >
@@ -349,12 +383,16 @@ export default function DocsPage() {
             <div className="space-y-16">
               {t.sections.map((sec, i) => (
                 <section key={i}>
-                  <h2 className="text-xs tracking-widest text-[#FF6B00] mb-6">{sec.title}</h2>
+                  <h2 className="text-xs tracking-widest text-[#FF6B00] mb-6">
+                    {sec.title}
+                  </h2>
                   <div className="space-y-3 pl-4 border-l border-white/10">
                     {sec.items.map((item, j) => (
                       <div key={j}>
                         {item.code && (
-                          <code className="text-white font-mono text-sm">{item.code}</code>
+                          <code className="text-white font-mono text-sm">
+                            {item.code}
+                          </code>
                         )}
                         {item.desc && (
                           <p className="text-white/40 text-sm">{item.desc}</p>
@@ -369,5 +407,5 @@ export default function DocsPage() {
         </main>
       </div>
     </div>
-  )
+  );
 }
