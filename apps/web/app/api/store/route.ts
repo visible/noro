@@ -23,15 +23,34 @@ function generateid(): string {
   return id
 }
 
+interface StorePayload {
+  data: string
+  ttl?: string
+  type?: "text" | "file"
+  filename?: string
+  mimetype?: string
+  views?: number
+}
+
 export async function POST(req: Request) {
   try {
-    const { data, ttl } = await req.json()
+    const body: StorePayload = await req.json()
+    const { data, ttl, type = "text", filename, mimetype, views = 1 } = body
     if (!data || typeof data !== "string") {
       return NextResponse.json({ error: "invalid data" }, { status: 400 })
     }
+    const clampedviews = Math.min(Math.max(views, 1), 5)
     const id = generateid()
-    const ex = ttls[ttl] || ttls["1d"]
-    await redis.set(id, data, { ex })
+    const ex = ttls[ttl || "1d"] || ttls["1d"]
+    const payload = JSON.stringify({
+      data,
+      type,
+      filename,
+      mimetype,
+      views: clampedviews,
+      viewed: 0,
+    })
+    await redis.set(id, payload, { ex })
     return NextResponse.json({ id })
   } catch {
     return NextResponse.json({ error: "failed" }, { status: 500 })

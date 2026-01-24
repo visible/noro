@@ -1,24 +1,30 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import Link from "next/link"
 
 type Language = "en" | "jp"
+type Mode = "text" | "file"
 
 const content = {
   en: {
     title: "share",
     subtitle: "create a one-time secret link",
+    text: "text",
+    file: "file",
     labelLabel: "label (optional)",
     labelPlaceholder: "e.g. API_KEY",
     secretLabel: "secret",
     secretPlaceholder: "paste your secret here...",
+    dropzone: "click or drop file",
+    maxsize: "max 5mb",
+    views: "max views",
     button: "generate link",
     generating: "encrypting...",
     success: "link created",
     copy: "copy",
     copied: "copied",
-    expires: "link expires after one view",
+    expires: "link expires after viewing",
     newLink: "create another",
     security: [
       "end-to-end encrypted",
@@ -29,10 +35,15 @@ const content = {
   jp: {
     title: "共有",
     subtitle: "ワンタイムシークレットリンクを作成",
+    text: "テキスト",
+    file: "ファイル",
     labelLabel: "ラベル（任意）",
     labelPlaceholder: "例: API_KEY",
     secretLabel: "シークレット",
     secretPlaceholder: "ここにシークレットを貼り付け...",
+    dropzone: "クリックまたはドロップ",
+    maxsize: "最大5mb",
+    views: "最大閲覧数",
     button: "リンクを生成",
     generating: "暗号化中...",
     success: "リンク作成完了",
@@ -48,10 +59,8 @@ const content = {
   },
 }
 
-async function encrypt(text: string, key: string): Promise<string> {
-  const encoder = new TextEncoder()
-  const data = encoder.encode(text)
-  const keyData = encoder.encode(key.padEnd(32, "0").slice(0, 32))
+async function encrypt(data: Uint8Array, key: string): Promise<string> {
+  const keyData = new TextEncoder().encode(key.padEnd(32, "0").slice(0, 32))
   const iv = crypto.getRandomValues(new Uint8Array(12))
   const cryptoKey = await crypto.subtle.importKey("raw", keyData, "AES-GCM", false, ["encrypt"])
   const encrypted = await crypto.subtle.encrypt({ name: "AES-GCM", iv }, cryptoKey, data)
@@ -65,30 +74,51 @@ async function encrypt(text: string, key: string): Promise<string> {
 
 export default function SharePage() {
   const [lang, setLang] = useState<Language>("en")
+  const [mode, setMode] = useState<Mode>("text")
   const [label, setLabel] = useState("")
   const [secret, setSecret] = useState("")
+  const [file, setFile] = useState<File | null>(null)
+  const [views, setViews] = useState(1)
   const [isGenerating, setIsGenerating] = useState(false)
   const [generatedLink, setGeneratedLink] = useState("")
   const [copied, setCopied] = useState(false)
   const [revealed, setRevealed] = useState(false)
+  const [dragover, setDragover] = useState(false)
+  const fileRef = useRef<HTMLInputElement>(null)
 
   const t = content[lang]
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    if (!secret) return
+    if (mode === "text" && !secret) return
+    if (mode === "file" && !file) return
 
     setIsGenerating(true)
 
     try {
       const key = crypto.randomUUID().replace(/-/g, "")
-      const payload = label ? `${label}=${secret}` : secret
+      let payload: Uint8Array
+      let type: "text" | "file" = "text"
+      let filename: string | undefined
+      let mimetype: string | undefined
+
+      if (mode === "file" && file) {
+        const buffer = await file.arrayBuffer()
+        payload = new Uint8Array(buffer)
+        type = "file"
+        filename = file.name
+        mimetype = file.type || "application/octet-stream"
+      } else {
+        const text = label ? `${label}=${secret}` : secret
+        payload = new TextEncoder().encode(text)
+      }
+
       const encrypted = await encrypt(payload, key)
 
       const res = await fetch("/api/store", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ data: encrypted }),
+        body: JSON.stringify({ data: encrypted, type, filename, mimetype, views }),
       })
 
       if (!res.ok) throw new Error("Failed to store")
@@ -111,10 +141,30 @@ export default function SharePage() {
   const handleReset = () => {
     setLabel("")
     setSecret("")
+    setFile(null)
+    setViews(1)
     setGeneratedLink("")
     setCopied(false)
     setRevealed(false)
   }
+
+  const handleFileDrop = (e: React.DragEvent) => {
+    e.preventDefault()
+    setDragover(false)
+    const dropped = e.dataTransfer.files[0]
+    if (dropped && dropped.size <= 5 * 1024 * 1024) {
+      setFile(dropped)
+    }
+  }
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = e.target.files?.[0]
+    if (selected && selected.size <= 5 * 1024 * 1024) {
+      setFile(selected)
+    }
+  }
+
+  const canSubmit = mode === "text" ? !!secret : !!file
 
   return (
     <div className="min-h-screen bg-black text-white selection:bg-[#FF6B00] selection:text-black">
@@ -191,36 +241,116 @@ export default function SharePage() {
             </div>
           </div>
 
-          <div className="relative h-[340px]">
+          <div className="relative min-h-[420px]">
             <form
               onSubmit={handleSubmit}
               className="absolute inset-0 space-y-6 transition-opacity duration-300"
               style={{ opacity: generatedLink ? 0 : 1, pointerEvents: generatedLink ? "none" : "auto" }}
             >
-              <div>
-                <label className="text-xs tracking-widest text-white/40 block mb-2">
-                  {t.labelLabel}
-                </label>
-                <input
-                  type="text"
-                  value={label}
-                  onChange={(e) => setLabel(e.target.value)}
-                  placeholder={t.labelPlaceholder}
-                  className="w-full bg-transparent border border-white/10 px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-[#FF6B00] transition-colors font-mono text-sm"
-                />
+              <div className="flex gap-2 mb-6">
+                <button
+                  type="button"
+                  onClick={() => setMode("text")}
+                  className={`px-4 py-2 text-xs tracking-widest transition-colors ${
+                    mode === "text"
+                      ? "bg-[#FF6B00] text-black"
+                      : "border border-white/10 text-white/40 hover:text-white hover:border-white/30"
+                  }`}
+                >
+                  {t.text}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setMode("file")}
+                  className={`px-4 py-2 text-xs tracking-widest transition-colors ${
+                    mode === "file"
+                      ? "bg-[#FF6B00] text-black"
+                      : "border border-white/10 text-white/40 hover:text-white hover:border-white/30"
+                  }`}
+                >
+                  {t.file}
+                </button>
               </div>
+
+              {mode === "text" ? (
+                <>
+                  <div>
+                    <label className="text-xs tracking-widest text-white/40 block mb-2">
+                      {t.labelLabel}
+                    </label>
+                    <input
+                      type="text"
+                      value={label}
+                      onChange={(e) => setLabel(e.target.value)}
+                      placeholder={t.labelPlaceholder}
+                      className="w-full bg-transparent border border-white/10 px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-[#FF6B00] transition-colors font-mono text-sm"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="text-xs tracking-widest text-white/40 block mb-2">
+                      {t.secretLabel}
+                    </label>
+                    <textarea
+                      value={secret}
+                      onChange={(e) => setSecret(e.target.value)}
+                      placeholder={t.secretPlaceholder}
+                      rows={4}
+                      className="w-full bg-transparent border border-white/10 px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-[#FF6B00] transition-colors resize-none font-mono text-sm"
+                    />
+                  </div>
+                </>
+              ) : (
+                <div
+                  onClick={() => fileRef.current?.click()}
+                  onDragOver={(e) => { e.preventDefault(); setDragover(true) }}
+                  onDragLeave={() => setDragover(false)}
+                  onDrop={handleFileDrop}
+                  className={`border border-dashed px-4 py-12 text-center cursor-pointer transition-colors ${
+                    dragover
+                      ? "border-[#FF6B00] bg-[#FF6B00]/5"
+                      : file
+                        ? "border-[#FF6B00]/50 bg-[#FF6B00]/5"
+                        : "border-white/10 hover:border-white/30"
+                  }`}
+                >
+                  <input
+                    ref={fileRef}
+                    type="file"
+                    onChange={handleFileSelect}
+                    className="hidden"
+                  />
+                  {file ? (
+                    <p className="text-[#FF6B00] font-mono text-sm">{file.name}</p>
+                  ) : (
+                    <>
+                      <p className="text-white/40 text-sm mb-1">{t.dropzone}</p>
+                      <p className="text-white/20 text-xs">{t.maxsize}</p>
+                    </>
+                  )}
+                </div>
+              )}
 
               <div>
                 <label className="text-xs tracking-widest text-white/40 block mb-2">
-                  {t.secretLabel}
+                  {t.views}
                 </label>
-                <textarea
-                  value={secret}
-                  onChange={(e) => setSecret(e.target.value)}
-                  placeholder={t.secretPlaceholder}
-                  rows={4}
-                  className="w-full bg-transparent border border-white/10 px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-[#FF6B00] transition-colors resize-none font-mono text-sm"
-                />
+                <div className="flex gap-2">
+                  {[1, 2, 3, 4, 5].map((n) => (
+                    <button
+                      key={n}
+                      type="button"
+                      onClick={() => setViews(n)}
+                      className={`w-10 h-10 text-sm transition-colors ${
+                        views === n
+                          ? "bg-[#FF6B00] text-black"
+                          : "border border-white/10 text-white/40 hover:text-white hover:border-white/30"
+                      }`}
+                    >
+                      {n}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <ul className="space-y-1">
@@ -234,7 +364,7 @@ export default function SharePage() {
 
               <button
                 type="submit"
-                disabled={!secret || isGenerating}
+                disabled={!canSubmit || isGenerating}
                 className="w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:bg-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 {isGenerating ? t.generating : t.button}

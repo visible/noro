@@ -28,19 +28,12 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     } catch {
       secret = { data: raw as string, type: "text", views: 1, viewed: 0 }
     }
-    secret.viewed += 1
-    if (secret.viewed >= secret.views) {
-      await redis.del(id)
-    } else {
-      await redis.set(id, JSON.stringify(secret), { keepttl: true })
-    }
-    const remaining = Math.max(0, secret.views - secret.viewed)
     return NextResponse.json({
-      data: secret.data,
+      exists: true,
       type: secret.type,
       filename: secret.filename,
-      mimetype: secret.mimetype,
-      remaining,
+      views: secret.views,
+      viewed: secret.viewed,
     })
   } catch {
     return NextResponse.json({ error: "failed" }, { status: 500 })
