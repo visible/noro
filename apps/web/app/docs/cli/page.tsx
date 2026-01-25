@@ -71,26 +71,49 @@ export default function CLI() {
 
 			<Section id="claim" title="Claim a secret">
 				<p className="text-black/60 mb-6 max-w-2xl">
-					claim a secret using just the code and key from the link:
+					claim a secret using the code and key from the link:
 				</p>
 				<Code>npx noro x7k#key</Code>
 				<p className="text-black/60 mt-6 mb-6 max-w-2xl">
-					the CLI automatically writes the secret to <code className="text-[#C53D43]">.env.local</code> or <code className="text-[#C53D43]">.env</code> in your current directory.
+					when claiming multiple variables, the CLI shows an interactive picker:
 				</p>
-				<p className="text-black/60 max-w-2xl">
-					after claiming, the secret is permanently deleted from our servers.
+				<Code>{`◆ select variables to save
+│ ◼ API_KEY          sk-12****5678
+│ ◼ DATABASE_URL     postgres****
+│ ◻ DEBUG            true
+└
+
+◆ save to
+│ ○ .env (append)
+│ ○ .env.local (append)
+│ ○ new file...
+│ ○ custom path...
+│ ○ copy to clipboard
+└`}</Code>
+				<p className="text-black/60 mt-6 max-w-2xl">
+					select which variables you need, choose where to save them. the secret is permanently deleted after claiming.
 				</p>
 			</Section>
 
-			<Section id="output" title="Output formats">
+			<Section id="push" title="Push entire .env">
 				<p className="text-black/60 mb-6 max-w-2xl">
-					by default, claimed secrets are written to .env files. use flags to change behavior:
+					share all variables from your .env file at once:
 				</p>
-				<Code>{`# print to stdout instead of writing to file
-npx noro x7k#key --stdout
+				<Code>npx noro push</Code>
+				<p className="text-black/60 mt-6 max-w-2xl">
+					reads from <code className="text-[#C53D43]">.env.local</code> or <code className="text-[#C53D43]">.env</code> in your current directory.
+				</p>
+			</Section>
 
-# specify output file
-npx noro x7k#key --out=.env.production`}</Code>
+			<Section id="manage" title="Manage secrets">
+				<p className="text-black/60 mb-6 max-w-2xl">
+					list your active (unexpired) secrets:
+				</p>
+				<Code>npx noro list</Code>
+				<p className="text-black/60 mt-6 mb-6 max-w-2xl">
+					revoke a secret before it expires or is claimed:
+				</p>
+				<Code>npx noro revoke x7k</Code>
 			</Section>
 
 			<Prevnext />

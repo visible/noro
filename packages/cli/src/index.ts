@@ -1,7 +1,8 @@
 #!/usr/bin/env node
 
+import * as p from "@clack/prompts";
 import { execSync } from "child_process";
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import { existsSync, mkdirSync, readFileSync, readdirSync, writeFileSync } from "fs";
 import { homedir } from "os";
 import { join } from "path";
 import { decrypt, encrypt } from "./crypto";
@@ -115,6 +116,34 @@ function getenvpath(): string | null {
   if (existsSync(local)) return local;
   if (existsSync(regular)) return regular;
   return null;
+}
+
+function detectenvfiles(): string[] {
+  const cwd = process.cwd();
+  try {
+    const files = readdirSync(cwd);
+    return files
+      .filter((f) => f.startsWith(".env"))
+      .sort((a, b) => a.length - b.length);
+  } catch {
+    return [];
+  }
+}
+
+function appendtofile(filepath: string, vars: { name: string; value: string }[]) {
+  let content = "";
+  if (existsSync(filepath)) {
+    content = readFileSync(filepath, "utf-8");
+  }
+  for (const { name, value } of vars) {
+    const regex = new RegExp(`^${name}=.*$`, "m");
+    if (regex.test(content)) {
+      content = content.replace(regex, `${name}=${value}`);
+    } else {
+      content = content.trim() + `\n${name}=${value}`;
+    }
+  }
+  writeFileSync(filepath, content.trim() + "\n");
 }
 
 function writeenv(name: string, value: string): string | null {
@@ -248,38 +277,118 @@ async function claim(code: string) {
   const { data } = await res.json();
   const decrypted = await decrypt(data, key);
   const lines = decrypted.split("\n");
-  let envpath: string | null = null;
-  const processed: { name: string; value: string }[] = [];
+  const allvars: { name: string; value: string }[] = [];
   for (const line of lines) {
     if (!line.trim()) continue;
     const [name, ...rest] = line.split("=");
     const value = rest.join("=");
-    processed.push({ name, value });
-    const path = writeenv(name, value);
-    if (path) envpath = path;
+    allvars.push({ name, value });
   }
-  if (envpath) {
-    const filename = envpath.endsWith(".env.local") ? ".env.local" : ".env";
-    for (const { name } of processed) {
-      console.log(`✓ added ${name} to ${filename}`);
-    }
-  } else {
-    console.log("");
-    for (const { name, value } of processed) {
-      console.log(`  ${name}=${mask(value)}`);
-    }
-    console.log("");
-    if (processed.length === 1) {
-      if (copy(`${processed[0].name}=${processed[0].value}`)) {
+
+  if (allvars.length === 0) {
+    console.log("✗ no variables found");
+    process.exit(1);
+  }
+
+  if (allvars.length === 1) {
+    const envpath = getenvpath();
+    if (envpath) {
+      writeenv(allvars[0].name, allvars[0].value);
+      const filename = envpath.endsWith(".env.local") ? ".env.local" : ".env";
+      console.log(`✓ added ${allvars[0].name} to ${filename}`);
+    } else {
+      console.log(`\n  ${allvars[0].name}=${mask(allvars[0].value)}\n`);
+      if (copy(`${allvars[0].name}=${allvars[0].value}`)) {
         console.log("  ✓ copied to clipboard\n");
       }
-    } else {
-      const all = processed.map((p) => `${p.name}=${p.value}`).join("\n");
-      if (copy(all)) {
-        console.log("  ✓ copied all to clipboard\n");
-      }
     }
+    return;
   }
+
+  console.log("");
+  const selected = await p.multiselect({
+    message: "select variables to save",
+    options: allvars.map((v) => ({
+      value: v.name,
+      label: v.name,
+      hint: mask(v.value),
+    })),
+    initialValues: allvars.map((v) => v.name),
+  });
+
+  if (p.isCancel(selected)) {
+    p.cancel("cancelled");
+    process.exit(0);
+  }
+
+  const chosen = allvars.filter((v) => (selected as string[]).includes(v.name));
+  if (chosen.length === 0) {
+    console.log("✗ no variables selected");
+    process.exit(1);
+  }
+
+  const envfiles = detectenvfiles();
+  const fileoptions: { value: string; label: string }[] = envfiles.map((f) => ({
+    value: f,
+    label: `${f} (append)`,
+  }));
+  fileoptions.push({ value: "__new__", label: "new file..." });
+  fileoptions.push({ value: "__custom__", label: "custom path..." });
+  fileoptions.push({ value: "__clipboard__", label: "copy to clipboard" });
+
+  const destination = await p.select({
+    message: "save to",
+    options: fileoptions,
+  });
+
+  if (p.isCancel(destination)) {
+    p.cancel("cancelled");
+    process.exit(0);
+  }
+
+  let filepath: string;
+
+  if (destination === "__clipboard__") {
+    const content = chosen.map((v) => `${v.name}=${v.value}`).join("\n");
+    if (copy(content)) {
+      console.log(`\n✓ copied ${chosen.length} variable${chosen.length > 1 ? "s" : ""} to clipboard\n`);
+    } else {
+      console.log("✗ failed to copy to clipboard");
+    }
+    return;
+  }
+
+  if (destination === "__new__") {
+    const filename = await p.text({
+      message: "filename",
+      placeholder: ".env.new",
+      defaultValue: ".env.new",
+    });
+    if (p.isCancel(filename)) {
+      p.cancel("cancelled");
+      process.exit(0);
+    }
+    filepath = join(process.cwd(), filename as string);
+  } else if (destination === "__custom__") {
+    const custompath = await p.text({
+      message: "path",
+      placeholder: "./config/.env",
+    });
+    if (p.isCancel(custompath)) {
+      p.cancel("cancelled");
+      process.exit(0);
+    }
+    filepath = custompath as string;
+    if (!filepath.startsWith("/")) {
+      filepath = join(process.cwd(), filepath);
+    }
+  } else {
+    filepath = join(process.cwd(), destination as string);
+  }
+
+  appendtofile(filepath, chosen);
+  const filename = filepath.split("/").pop();
+  console.log(`\n✓ saved ${chosen.length} variable${chosen.length > 1 ? "s" : ""} to ${filename}\n`);
 }
 
 async function list() {
