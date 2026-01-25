@@ -1,5 +1,7 @@
 import type { Metadata, Viewport } from "next";
-import { Header, Section, Code, Prevnext } from "../components";
+import { Header, Prevnext } from "../components";
+import { Markdown } from "./markdown";
+import { readdoc, parsedoc } from "./reader";
 
 export const metadata: Metadata = {
 	title: "Install",
@@ -11,49 +13,16 @@ export const viewport: Viewport = {
 };
 
 export default function Install() {
+	const doc = parsedoc(readdoc("install"));
+
 	return (
 		<article className="py-8 md:py-12">
 			<Header
 				section="CLI"
-				title="Install"
-				description="share secrets from your terminal. no account required."
+				title={doc.title}
+				description={doc.description}
 			/>
-
-			<Section id="npx" title="Run with npx">
-				<p className="text-sm md:text-base text-black/60 mb-4 md:mb-6 max-w-2xl">
-					no installation required. run directly with npx:
-				</p>
-				<Code>npx noro share API_KEY</Code>
-			</Section>
-
-			<Section id="global" title="Global install">
-				<p className="text-sm md:text-base text-black/60 mb-4 md:mb-6 max-w-2xl">
-					install globally for faster access:
-				</p>
-				<Code>npm install -g noro</Code>
-				<p className="text-sm md:text-base text-black/60 mt-4 md:mt-6 mb-4 md:mb-6 max-w-2xl">
-					then use without npx:
-				</p>
-				<Code>noro share API_KEY</Code>
-			</Section>
-
-			<Section id="quickstart" title="Quickstart">
-				<p className="text-sm md:text-base text-black/60 mb-4 md:mb-6 max-w-2xl">
-					share a secret and get a one-time link:
-				</p>
-				<Code>{`# share a single variable
-noro share API_KEY
-
-# share multiple variables
-noro share API_KEY DATABASE_URL
-
-# share your entire .env file
-noro push`}</Code>
-				<p className="text-sm md:text-base text-black/60 mt-4 md:mt-6 max-w-2xl">
-					the recipient claims with the link. after viewing, it&apos;s permanently deleted.
-				</p>
-			</Section>
-
+			<Markdown sections={doc.sections} />
 			<Prevnext />
 		</article>
 	);

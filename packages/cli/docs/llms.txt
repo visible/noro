@@ -1,0 +1,44 @@
+# noro
+
+One-time secret sharing CLI for env vars.
+
+## Overview
+
+noro encrypts secrets client-side and creates self-destructing links. The server never sees your data.
+
+## Documentation
+
+- [Install](./install.md): Installation and quickstart
+- [Share](./share.md): Create one-time secret links
+- [Claim](./claim.md): Retrieve and save shared secrets
+- [Push](./push.md): Share entire .env files
+- [Manage](./manage.md): List and revoke secrets
+
+## Quick Reference
+
+```bash
+# share a secret
+noro share API_KEY
+
+# share multiple
+noro share API_KEY DB_URL --ttl=1h
+
+# share entire .env
+noro push
+
+# claim a secret
+noro abc123#key
+
+# list active secrets
+noro list
+
+# revoke a secret
+noro revoke abc123
+```
+
+## Security
+
+- AES-256-GCM encryption
+- Key stays in URL fragment (never sent to server)
+- Secrets deleted after viewing
+- Zero-knowledge architecture
