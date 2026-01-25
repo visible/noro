@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { JetBrains_Mono } from "next/font/google";
 import type React from "react";
 import "./globals.css";
+import { CommandPalette } from "./cmdk";
 
 const _jetbrainsMono = JetBrains_Mono({ subsets: ["latin"] });
 
@@ -40,6 +41,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`font-sans antialiased`}>
         {children}
+        <CommandPalette />
         <Analytics />
       </body>
     </html>

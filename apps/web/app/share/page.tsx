@@ -8,7 +8,7 @@ type Mode = "text" | "file";
 
 const content = {
   en: {
-    title: "share",
+    title: "new",
     subtitle: "create a one-time secret link",
     text: "text",
     file: "file",
@@ -16,6 +16,7 @@ const content = {
     labelPlaceholder: "e.g. API_KEY",
     secretLabel: "secret",
     secretPlaceholder: "paste your secret here...",
+    fileLabel: "file",
     dropzone: "click or drop file",
     maxsize: "max 5mb",
     views: "max views",
@@ -33,7 +34,7 @@ const content = {
     ],
   },
   jp: {
-    title: "共有",
+    title: "新規",
     subtitle: "ワンタイムシークレットリンクを作成",
     text: "テキスト",
     file: "ファイル",
@@ -41,6 +42,7 @@ const content = {
     labelPlaceholder: "例: API_KEY",
     secretLabel: "シークレット",
     secretPlaceholder: "ここにシークレットを貼り付け...",
+    fileLabel: "ファイル",
     dropzone: "クリックまたはドロップ",
     maxsize: "最大5mb",
     views: "最大閲覧数",
@@ -231,7 +233,7 @@ export default function SharePage() {
         </svg>
       </Link>
 
-      <section className="min-h-screen flex items-center justify-center px-4 sm:px-8">
+      <section className="min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 pb-32">
         <div className="w-full max-w-md">
           <div className="mb-8 sm:mb-16">
             <div className="relative">
@@ -283,10 +285,10 @@ export default function SharePage() {
                 <button
                   type="button"
                   onClick={() => setMode("text")}
-                  className={`px-4 py-2 text-xs tracking-widest transition-colors ${
+                  className={`px-4 py-2 text-xs tracking-widest transition-colors border ${
                     mode === "text"
-                      ? "bg-[#FF6B00] text-black"
-                      : "border border-white/10 text-white/40 hover:text-white hover:border-white/30"
+                      ? "bg-[#FF6B00] text-black border-[#FF6B00]"
+                      : "border-white/10 text-white/40 hover:text-white hover:border-white/30"
                   }`}
                 >
                   {t.text}
@@ -294,79 +296,80 @@ export default function SharePage() {
                 <button
                   type="button"
                   onClick={() => setMode("file")}
-                  className={`px-4 py-2 text-xs tracking-widest transition-colors ${
+                  className={`px-4 py-2 text-xs tracking-widest transition-colors border ${
                     mode === "file"
-                      ? "bg-[#FF6B00] text-black"
-                      : "border border-white/10 text-white/40 hover:text-white hover:border-white/30"
+                      ? "bg-[#FF6B00] text-black border-[#FF6B00]"
+                      : "border-white/10 text-white/40 hover:text-white hover:border-white/30"
                   }`}
                 >
                   {t.file}
                 </button>
               </div>
 
-              {mode === "text" ? (
-                <>
-                  <div>
-                    <label className="text-xs tracking-widest text-white/40 block mb-2">
-                      {t.labelLabel}
-                    </label>
-                    <input
-                      type="text"
-                      value={label}
-                      onChange={(e) => setLabel(e.target.value)}
-                      placeholder={t.labelPlaceholder}
-                      className="w-full bg-transparent border border-white/10 px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-[#FF6B00] transition-colors font-mono text-sm"
-                    />
-                  </div>
+              <div>
+                <label className="text-xs tracking-widest text-white/40 block mb-2">
+                  {t.labelLabel}
+                </label>
+                <input
+                  type="text"
+                  value={label}
+                  onChange={(e) => setLabel(e.target.value)}
+                  placeholder={t.labelPlaceholder}
+                  className="w-full bg-transparent border border-white/10 px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-[#FF6B00] transition-colors font-mono text-sm"
+                />
+              </div>
 
-                  <div>
-                    <label className="text-xs tracking-widest text-white/40 block mb-2">
-                      {t.secretLabel}
-                    </label>
+              <div className="h-[144px]">
+                <label className="text-xs tracking-widest text-white/40 block mb-2">
+                  {mode === "text" ? t.secretLabel : t.fileLabel}
+                </label>
+                <div className="h-[120px]">
+                  {mode === "text" ? (
                     <textarea
                       value={secret}
                       onChange={(e) => setSecret(e.target.value)}
                       placeholder={t.secretPlaceholder}
-                      rows={4}
-                      className="w-full bg-transparent border border-white/10 px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-[#FF6B00] transition-colors resize-none font-mono text-sm"
+                      className="w-full h-full bg-transparent border border-white/10 px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-[#FF6B00] transition-colors resize-none font-mono text-sm"
                     />
-                  </div>
-                </>
-              ) : (
-                <div
-                  onClick={() => fileRef.current?.click()}
-                  onDragOver={(e) => {
-                    e.preventDefault();
-                    setDragover(true);
-                  }}
-                  onDragLeave={() => setDragover(false)}
-                  onDrop={handleFileDrop}
-                  className={`border border-dashed px-4 py-12 text-center cursor-pointer transition-colors ${
-                    dragover
-                      ? "border-[#FF6B00] bg-[#FF6B00]/5"
-                      : file
-                        ? "border-[#FF6B00]/50 bg-[#FF6B00]/5"
-                        : "border-white/10 hover:border-white/30"
-                  }`}
-                >
-                  <input
-                    ref={fileRef}
-                    type="file"
-                    onChange={handleFileSelect}
-                    className="hidden"
-                  />
-                  {file ? (
-                    <p className="text-[#FF6B00] font-mono text-sm">
-                      {file.name}
-                    </p>
                   ) : (
-                    <>
-                      <p className="text-white/40 text-sm mb-1">{t.dropzone}</p>
-                      <p className="text-white/20 text-xs">{t.maxsize}</p>
-                    </>
+                    <div
+                      onClick={() => fileRef.current?.click()}
+                      onDragOver={(e) => {
+                        e.preventDefault();
+                        setDragover(true);
+                      }}
+                      onDragLeave={() => setDragover(false)}
+                      onDrop={handleFileDrop}
+                      className={`w-full h-full border px-4 flex items-center justify-center text-center cursor-pointer transition-colors ${
+                        dragover
+                          ? "border-[#FF6B00] bg-[#FF6B00]/5"
+                          : file
+                            ? "border-[#FF6B00]/50 bg-[#FF6B00]/5"
+                            : "border-white/10 hover:border-white/30"
+                      }`}
+                    >
+                      <input
+                        ref={fileRef}
+                        type="file"
+                        onChange={handleFileSelect}
+                        className="hidden"
+                      />
+                      <div>
+                        {file ? (
+                          <p className="text-[#FF6B00] font-mono text-sm">
+                            {file.name}
+                          </p>
+                        ) : (
+                          <>
+                            <p className="text-white/40 text-sm mb-1">{t.dropzone}</p>
+                            <p className="text-white/20 text-xs">{t.maxsize}</p>
+                          </>
+                        )}
+                      </div>
+                    </div>
                   )}
                 </div>
-              )}
+              </div>
 
               <div>
                 <label className="text-xs tracking-widest text-white/40 block mb-2">
