@@ -23,6 +23,7 @@ export const navigation = [
 			{ title: "Claim", href: "/docs/cli/claim" },
 			{ title: "Push", href: "/docs/cli/push" },
 			{ title: "Manage", href: "/docs/cli/manage" },
+			{ title: "Config", href: "/docs/cli/config" },
 		],
 	},
 	{

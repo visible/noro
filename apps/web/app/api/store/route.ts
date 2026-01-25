@@ -30,6 +30,7 @@ interface StorePayload {
   filename?: string;
   mimetype?: string;
   views?: number;
+  peek?: boolean;
 }
 
 const maxsize = 5 * 1024 * 1024;
@@ -37,7 +38,7 @@ const maxsize = 5 * 1024 * 1024;
 export async function POST(req: Request) {
   try {
     const body: StorePayload = await req.json();
-    const { data, ttl, type = "text", filename, mimetype, views = 1 } = body;
+    const { data, ttl, type = "text", filename, mimetype, views = 1, peek = false } = body;
     if (!data || typeof data !== "string") {
       return NextResponse.json({ error: "invalid data" }, { status: 400 });
     }
@@ -55,6 +56,7 @@ export async function POST(req: Request) {
       mimetype,
       views: clampedviews,
       viewed: 0,
+      peek,
     });
     await redis.set(id, payload, { ex });
     return NextResponse.json({ id });

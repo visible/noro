@@ -2,19 +2,21 @@
 
 Retrieve shared secrets and save them locally.
 
-## Claim a secret
-
-Use the code and key from the shared link:
+## Basic usage
 
 ```bash
-noro x7k#key
+noro abc123#key
 ```
 
-The secret is decrypted locally and permanently deleted from the server.
+For single variables, automatically saves to your .env file:
 
-## Interactive picker
+```
+✓ added API_KEY to .env
+```
 
-When claiming multiple variables, choose which ones to save:
+## Multiple variables
+
+When claiming multiple variables, select which ones to save:
 
 ```
 ◆ select variables to save
@@ -24,11 +26,7 @@ When claiming multiple variables, choose which ones to save:
 └
 ```
 
-Use arrow keys to navigate, space to toggle, enter to confirm.
-
-## Choose destination
-
-Select where to save the variables:
+Then choose where to save:
 
 ```
 ◆ save to
@@ -40,15 +38,62 @@ Select where to save the variables:
 └
 ```
 
-Existing variables are updated, new ones are appended.
+## Peek first
 
-## Automatic mode
-
-For single variables, the CLI automatically saves to your .env file:
+Preview variable names without claiming:
 
 ```bash
-$ noro x7k#key
-✓ added API_KEY to .env
+noro peek abc123#key
 ```
 
-If no .env file exists, the value is copied to clipboard instead.
+Output:
+
+```
+  API_KEY
+  DATABASE_URL
+
+  2/2 views remaining
+```
+
+Only works if sender used `--peek` flag.
+
+## Scripting
+
+Skip prompts with flags:
+
+```bash
+# json output
+noro abc123#key --json
+
+# key=value lines
+noro abc123#key --stdout
+
+# save to file
+noro abc123#key --output=.env
+
+# filter variables
+noro abc123#key --vars=API_KEY,DB_URL
+
+# combine
+noro abc123#key --vars=API_KEY --output=.env
+```
+
+### JSON output
+
+```bash
+noro abc123#key --json
+```
+
+```json
+{"variables":[{"name":"API_KEY","value":"sk-1234"}],"remaining":0}
+```
+
+### Peek JSON
+
+```bash
+noro peek abc123#key --json
+```
+
+```json
+{"keys":["API_KEY","DB_URL"],"views":2,"remaining":2}
+```

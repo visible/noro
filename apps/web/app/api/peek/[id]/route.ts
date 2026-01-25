@@ -13,6 +13,7 @@ interface StoredSecret {
   mimetype?: string;
   views: number;
   viewed: number;
+  peek?: boolean;
 }
 
 export async function GET(
@@ -30,6 +31,16 @@ export async function GET(
       secret = typeof raw === "string" ? JSON.parse(raw) : raw;
     } catch {
       secret = { data: raw as string, type: "text", views: 1, viewed: 0 };
+    }
+    if (secret.peek) {
+      return NextResponse.json({
+        exists: true,
+        type: secret.type,
+        filename: secret.filename,
+        views: secret.views,
+        viewed: secret.viewed,
+        data: secret.data,
+      });
     }
     return NextResponse.json({
       exists: true,

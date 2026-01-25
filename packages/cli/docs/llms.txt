@@ -1,46 +1,87 @@
 # noro
 
-> For AI agents: Documentation is bundled at `node_modules/noro/docs/`. Search with grep or read files directly.
+> AI agents: docs at `node_modules/noro/docs/`
 
 One-time secret sharing CLI for env vars.
 
-## Overview
-
-noro encrypts secrets client-side and creates self-destructing links. The server never sees your data.
-
-## Documentation
-
-- [Install](./install.md): Installation and quickstart
-- [Share](./share.md): Create one-time secret links
-- [Claim](./claim.md): Retrieve and save shared secrets
-- [Push](./push.md): Share entire .env files
-- [Manage](./manage.md): List and revoke secrets
-
-## Quick Reference
+## Commands
 
 ```bash
-# share a secret
-noro share API_KEY
+noro share API_KEY              # share variable
+noro share API_KEY DB_URL       # share multiple
+noro push                       # share .env file
+noro abc#key                    # claim secret
+noro peek abc#key               # preview keys
+noro list                       # active secrets
+noro revoke abc                 # delete secret
+noro config                     # view/set defaults
+```
 
-# share multiple
-noro share API_KEY DB_URL --ttl=1h
+## Options
 
-# share entire .env
-noro push
+```bash
+--ttl=1d      # expiry: 1h/6h/12h/1d/7d
+--views=2     # max views: 1-5
+--peek        # enable preview
+```
 
-# claim a secret
-noro abc123#key
+## AI Workflow
 
-# list active secrets
-noro list
+### Sender enables peek
 
-# revoke a secret
-noro revoke abc123
+```bash
+noro share API_KEY DB_URL --peek
+```
+
+### AI previews keys (doesn't consume views)
+
+```bash
+noro peek abc#key --json
+```
+
+Output:
+```json
+{"keys":["API_KEY","DB_URL"],"views":1,"remaining":1}
+```
+
+### AI claims specific variables
+
+```bash
+noro abc#key --vars=API_KEY --output=.env
+```
+
+## Scripting Flags
+
+```bash
+--json        # json output
+--stdout      # key=value lines
+--output=     # save to file
+--vars=       # filter variables
+```
+
+## JSON Responses
+
+Claim:
+```json
+{"variables":[{"name":"API_KEY","value":"sk-1234"}],"remaining":0}
+```
+
+Peek:
+```json
+{"keys":["API_KEY","DB_URL"],"views":2,"remaining":2}
+```
+
+Errors:
+```json
+{"error":"invalid code"}
+{"error":"not found"}
+{"error":"peek not enabled"}
+{"error":"no matching variables"}
 ```
 
 ## Security
 
 - AES-256-GCM encryption
-- Key stays in URL fragment (never sent to server)
-- Secrets deleted after viewing
+- Key in URL fragment (never sent to server)
+- Deleted after max views reached
 - Zero-knowledge architecture
