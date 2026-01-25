@@ -20,12 +20,13 @@ const content = {
     dropzone: "click or drop file",
     maxsize: "max 5mb",
     views: "max views",
+    expires: "expires after",
     button: "generate link",
     generating: "encrypting...",
     success: "link created",
     copy: "copy",
     copied: "copied",
-    expires: "link expires after viewing",
+    expiresNote: "link expires after viewing",
     newLink: "create another",
     security: [
       "end-to-end encrypted",
@@ -46,12 +47,13 @@ const content = {
     dropzone: "クリックまたはドロップ",
     maxsize: "最大5mb",
     views: "最大閲覧数",
+    expires: "有効期限",
     button: "リンクを生成",
     generating: "暗号化中...",
     success: "リンク作成完了",
     copy: "コピー",
     copied: "コピー済",
-    expires: "閲覧後にリンクは無効化",
+    expiresNote: "閲覧後にリンクは無効化",
     newLink: "新規作成",
     security: [
       "エンドツーエンド暗号化",
@@ -91,6 +93,7 @@ export default function SharePage() {
   const [secret, setSecret] = useState("");
   const [file, setFile] = useState<File | null>(null);
   const [views, setViews] = useState(1);
+  const [ttl, setTtl] = useState("1d");
   const [isGenerating, setIsGenerating] = useState(false);
   const [generatedLink, setGeneratedLink] = useState("");
   const [copied, setCopied] = useState(false);
@@ -136,6 +139,7 @@ export default function SharePage() {
           filename,
           mimetype,
           views,
+          ttl,
         }),
       });
 
@@ -161,6 +165,7 @@ export default function SharePage() {
     setSecret("");
     setFile(null);
     setViews(1);
+    setTtl("1d");
     setGeneratedLink("");
     setCopied(false);
     setRevealed(false);
@@ -371,25 +376,48 @@ export default function SharePage() {
                 </div>
               </div>
 
-              <div>
-                <label className="text-xs tracking-widest text-white/40 block mb-2">
-                  {t.views}
-                </label>
-                <div className="flex gap-1.5 sm:gap-2">
-                  {[1, 2, 3, 4, 5].map((n) => (
-                    <button
-                      key={n}
-                      type="button"
-                      onClick={() => setViews(n)}
-                      className={`w-9 h-9 sm:w-10 sm:h-10 text-sm transition-colors ${
-                        views === n
-                          ? "bg-[#FF6B00] text-black"
-                          : "border border-white/10 text-white/40 hover:text-white hover:border-white/30"
-                      }`}
-                    >
-                      {n}
-                    </button>
-                  ))}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="text-xs tracking-widest text-white/40 block mb-2">
+                    {t.views}
+                  </label>
+                  <div className="flex gap-1.5">
+                    {[1, 2, 3, 5].map((n) => (
+                      <button
+                        key={n}
+                        type="button"
+                        onClick={() => setViews(n)}
+                        className={`flex-1 h-9 text-sm transition-colors ${
+                          views === n
+                            ? "bg-[#FF6B00] text-black"
+                            : "border border-white/10 text-white/40 hover:text-white hover:border-white/30"
+                        }`}
+                      >
+                        {n}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <label className="text-xs tracking-widest text-white/40 block mb-2">
+                    {t.expires}
+                  </label>
+                  <div className="flex gap-1.5">
+                    {["1h", "1d", "7d"].map((v) => (
+                      <button
+                        key={v}
+                        type="button"
+                        onClick={() => setTtl(v)}
+                        className={`flex-1 h-9 text-sm transition-colors ${
+                          ttl === v
+                            ? "bg-[#FF6B00] text-black"
+                            : "border border-white/10 text-white/40 hover:text-white hover:border-white/30"
+                        }`}
+                      >
+                        {v}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               </div>
 
@@ -454,7 +482,7 @@ export default function SharePage() {
               </button>
 
               <p className="text-xs text-white/30 text-center mb-6">
-                {t.expires}
+                {t.expiresNote}
               </p>
 
               <button
