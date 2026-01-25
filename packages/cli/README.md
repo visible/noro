@@ -3,7 +3,7 @@
 │                                                              │
 │   / noro                                                     │
 │                                                              │
-│   one-time secret sharing for env vars                       │
+│   share env vars with one command                            │
 │                                                              │
 └──────────────────────────────────────────────────────────────┘
 ```
@@ -11,43 +11,57 @@
 ```bash
 > what is this?
 
-  share env vars with one command
-  secrets encrypted client-side with aes-256-gcm
+  cli tool for one-time secret sharing
+  encrypt env vars locally, share via link
   self-destructs after first claim
+
+> install?
+
+  npm i -g noro
 
 > share?
 
   noro share OPENAI_API_KEY
   → noro.sh/a8f3k2#key
 
+  noro share API_KEY DB_URL --ttl=1h
+  → share multiple vars
+
+  noro push
+  → share entire .env file
+
 > claim?
 
-  npx noro a8f3k2#key
+  noro a8f3k2#key
   → ✓ added OPENAI_API_KEY to .env
 
-> features?
+> manage?
 
-  ✓ end-to-end encryption (key never leaves your machine)
-  ✓ one-time use (deleted after claim)
-  ✓ no account required
-  ✓ works with any env var
-  ✓ cli + web interface
+  noro list
+  → show active secrets
 
-> how it works?
+  noro revoke abc123
+  → delete a secret
 
-  1. cli encrypts your env var locally
-  2. encrypted blob stored on server
-  3. decryption key stays in url fragment (never sent to server)
-  4. recipient decrypts client-side
-  5. secret deleted after first claim
+> options?
 
-> install?
+  --ttl=1h    1 hour
+  --ttl=6h    6 hours
+  --ttl=12h   12 hours
+  --ttl=1d    1 day (default)
+  --ttl=7d    7 days
 
-  npm i -g noro
+> security?
 
-> stack?
+  ✓ aes-256-gcm encryption
+  ✓ key never leaves your machine
+  ✓ server never sees plaintext
+  ✓ deleted after first claim
 
-  next.js · upstash redis · aes-256-gcm
+> web interface?
+
+  https://noro.sh
+  → share files, set view limits, no install needed
 
 > license?
 
