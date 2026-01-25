@@ -40,7 +40,7 @@ export function MobileMenu() {
 		<>
 			<button
 				onClick={() => setOpen(true)}
-				className="md:hidden p-2 -ml-2 text-black/60 hover:text-black transition-colors rounded-lg hover:bg-black/5"
+				className="md:hidden p-2 text-black/60 hover:text-black transition-colors rounded-lg hover:bg-black/5"
 				aria-label="Open menu"
 			>
 				{menuIcon}
@@ -57,8 +57,8 @@ export function MobileMenu() {
 				/>
 
 				<div
-					className={`absolute top-0 left-0 bottom-0 w-72 bg-white shadow-2xl transition-transform duration-300 ease-out ${
-						open ? "translate-x-0" : "-translate-x-full"
+					className={`absolute top-0 left-0 right-0 bg-white shadow-2xl rounded-b-2xl transition-transform duration-300 ease-out ${
+						open ? "translate-y-0" : "-translate-y-full"
 					}`}
 				>
 					<div className="flex items-center justify-between p-4 border-b border-black/5">
@@ -79,8 +79,8 @@ export function MobileMenu() {
 						</button>
 					</div>
 
-					<nav className="p-4 overflow-y-auto h-[calc(100%-65px)]">
-						<div className="space-y-6">
+					<nav className="p-4 pb-6 max-h-[70vh] overflow-y-auto">
+						<div className="space-y-4">
 							{navigation.map((group) => (
 								<div key={group.title}>
 									<h4 className="text-[11px] font-semibold uppercase tracking-wider text-[#C53D43]/70 mb-2 px-3">

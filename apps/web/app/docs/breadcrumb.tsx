@@ -22,15 +22,25 @@ export function Breadcrumb() {
 	const page = getpage(pathname);
 
 	return (
-		<div className="flex items-center">
-			<Link href="/" className="group flex items-center gap-3 px-3 py-1.5 -ml-3 rounded-lg hover:bg-black/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C53D43]">
-				<div className="w-2 h-2 rounded-full bg-[#C53D43]" />
-				<span className="font-medium text-sm text-black tracking-wide">noro</span>
-			</Link>
-			{chevron}
-			<span className="px-2 py-1 text-sm text-black/40">{sectionNames[page.section]}</span>
-			{chevron}
-			<span className="px-2 py-1 text-sm font-medium text-[#C53D43]">{page.title}</span>
-		</div>
+		<>
+			<div className="hidden md:flex items-center">
+				<Link href="/" className="group flex items-center gap-3 px-3 py-1.5 -ml-3 rounded-lg hover:bg-black/5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C53D43]">
+					<div className="w-2 h-2 rounded-full bg-[#C53D43]" />
+					<span className="font-medium text-sm text-black tracking-wide">noro</span>
+				</Link>
+				{chevron}
+				<span className="px-2 py-1 text-sm text-black/40">{sectionNames[page.section]}</span>
+				{chevron}
+				<span className="px-2 py-1 text-sm font-medium text-[#C53D43]">{page.title}</span>
+			</div>
+			<div className="flex md:hidden items-center gap-2">
+				<Link href="/" className="flex items-center gap-2">
+					<div className="w-2 h-2 rounded-full bg-[#C53D43]" />
+					<span className="font-semibold text-black">noro</span>
+				</Link>
+				<span className="text-black/30">/</span>
+				<span className="text-black/60">{page.title}</span>
+			</div>
+		</>
 	);
 }
