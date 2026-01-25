@@ -62,15 +62,15 @@ export function Header({
 	id?: string;
 }) {
 	return (
-		<div className="mb-12">
-			<p className="text-sm text-black/40 mb-2">{section}</p>
+		<div className="mb-8 md:mb-12">
+			<p className="text-xs md:text-sm text-black/40 mb-2">{section}</p>
 			<div className="flex items-center gap-2 group/heading">
-				<h1 id={id} className="text-5xl font-semibold tracking-tight text-black">
+				<h1 id={id} className="text-3xl md:text-5xl font-semibold tracking-tight text-black">
 					{title}
 				</h1>
 				<Anchor id={id} />
 			</div>
-			<p className="text-xl text-black/60 max-w-2xl mt-6">{description}</p>
+			<p className="text-base md:text-xl text-black/60 max-w-2xl mt-4 md:mt-6">{description}</p>
 		</div>
 	);
 }
@@ -88,7 +88,7 @@ export function Code({ children, className = "" }: { children: string; className
 		<div className={`relative group/code ${className}`}>
 			<button
 				onClick={copy}
-				className={`absolute top-4 right-4 p-2 rounded-lg transition-all ${
+				className={`absolute top-3 right-3 md:top-4 md:right-4 p-1.5 md:p-2 rounded-lg transition-all ${
 					copied
 						? "text-[#C53D43] bg-[#C53D43]/10"
 						: "text-black/30 hover:text-black/60 hover:bg-black/5 opacity-0 group-hover/code:opacity-100"
@@ -97,7 +97,7 @@ export function Code({ children, className = "" }: { children: string; className
 			>
 				{copied ? checkIcon : copyIcon}
 			</button>
-			<pre className="bg-black/5 border border-black/10 text-black/90 p-8 rounded-2xl text-sm font-mono leading-relaxed overflow-x-auto">
+			<pre className="bg-black/5 border border-black/10 text-black/90 p-4 md:p-6 rounded-xl md:rounded-2xl text-xs md:text-sm font-mono leading-relaxed overflow-x-auto">
 				{children}
 			</pre>
 		</div>
@@ -170,9 +170,9 @@ export function Section({
 	children: React.ReactNode;
 }) {
 	return (
-		<section className="mb-16 overflow-hidden">
-			<div className="flex items-center gap-2 mb-6 group/heading">
-				<h2 id={id} className="text-3xl font-semibold text-black">
+		<section className="mb-10 md:mb-16 overflow-hidden">
+			<div className="flex items-center gap-2 mb-4 md:mb-6 group/heading">
+				<h2 id={id} className="text-xl md:text-3xl font-semibold text-black">
 					{title}
 				</h2>
 				<Anchor id={id} />
