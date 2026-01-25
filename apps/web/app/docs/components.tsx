@@ -90,14 +90,14 @@ export function Code({ children, className = "" }: { children: string; className
 				onClick={copy}
 				className={`absolute top-3 right-3 md:top-4 md:right-4 p-1.5 md:p-2 rounded-lg transition-all ${
 					copied
-						? "text-[#C53D43] bg-[#C53D43]/10"
-						: "text-black/30 hover:text-black/60 hover:bg-black/5 opacity-0 group-hover/code:opacity-100"
+						? "text-[#C53D43] bg-[#C53D43]/20"
+						: "text-white/30 hover:text-white/60 hover:bg-white/10 opacity-0 group-hover/code:opacity-100"
 				}`}
 				title="Copy code"
 			>
 				{copied ? checkIcon : copyIcon}
 			</button>
-			<pre className="bg-black/5 border border-black/10 text-black/90 p-4 md:p-6 rounded-xl md:rounded-2xl text-xs md:text-sm font-mono leading-relaxed overflow-x-auto">
+			<pre className="bg-[#1a1a1a] text-[#e5e5e5] p-4 md:p-6 rounded-xl md:rounded-2xl text-xs md:text-sm font-mono leading-relaxed overflow-x-auto">
 				{children}
 			</pre>
 		</div>
@@ -106,7 +106,7 @@ export function Code({ children, className = "" }: { children: string; className
 
 export function Codeinline({ children, className = "" }: { children: string; className?: string }) {
 	return (
-		<code className={`bg-black/5 border border-black/10 text-black/90 px-2 py-1 rounded text-sm font-mono ${className}`}>
+		<code className={`bg-[#C53D43]/10 text-[#C53D43] px-1.5 py-0.5 rounded text-sm font-mono ${className}`}>
 			{children}
 		</code>
 	);

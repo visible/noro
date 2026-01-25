@@ -1,6 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import Link from "next/link";
-import { Header, Section } from "./components";
+import { Header, Section, Prevnext } from "./components";
 
 export const metadata: Metadata = {
 	title: "Introduction",
@@ -87,6 +87,8 @@ export default function Docs() {
 					</Link>
 				</div>
 			</section>
+
+			<Prevnext />
 		</article>
 	);
 }

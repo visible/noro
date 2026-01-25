@@ -91,7 +91,7 @@ function parseInline(text: string): React.ReactNode {
 				parts.push(remaining.slice(0, codeMatch.index));
 			}
 			parts.push(
-				<code key={key++} className="text-[#C53D43]">
+				<code key={key++} className="bg-[#C53D43]/10 text-[#C53D43] px-1.5 py-0.5 rounded text-sm font-mono">
 					{codeMatch[1]}
 				</code>
 			);
