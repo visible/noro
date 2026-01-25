@@ -15,7 +15,7 @@ type Status =
 
 const content = {
   en: {
-    title: "secret",
+    title: "view",
     loading: "checking...",
     confirm: "a secret is waiting for you",
     confirmWarning: "once revealed, this secret will be permanently deleted",
@@ -36,7 +36,7 @@ const content = {
     create: "create your own",
   },
   jp: {
-    title: "シークレット",
+    title: "表示",
     loading: "確認中...",
     confirm: "シークレットが届いています",
     confirmWarning: "表示後、このシークレットは完全に削除されます",
@@ -258,7 +258,7 @@ export default function ClaimPage({
         </svg>
       </Link>
 
-      <section className="min-h-screen flex items-center justify-center px-4 sm:px-8">
+      <section className="min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 pb-32">
         <div className="w-full max-w-md">
           <div className="mb-8 sm:mb-16">
             <div className="relative">
@@ -306,7 +306,7 @@ export default function ClaimPage({
               <button
                 type="button"
                 onClick={handleReveal}
-                className="w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:bg-white transition-colors"
+                className="w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:opacity-80 transition-opacity"
               >
                 {t.confirmButton}
               </button>
@@ -419,7 +419,7 @@ export default function ClaimPage({
                   <button
                     type="button"
                     onClick={handleCopy}
-                    className="w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:bg-white transition-colors mb-6"
+                    className="w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:opacity-80 transition-opacity mb-6"
                   >
                     {copied ? t.copied : t.copy}
                   </button>
@@ -438,7 +438,7 @@ export default function ClaimPage({
                   <button
                     type="button"
                     onClick={handleDownload}
-                    className="w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:bg-white transition-colors mb-6"
+                    className="w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:opacity-80 transition-opacity mb-6"
                   >
                     {t.download}
                   </button>

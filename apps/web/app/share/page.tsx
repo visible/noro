@@ -408,7 +408,7 @@ export default function SharePage() {
               <button
                 type="submit"
                 disabled={!canSubmit || isGenerating}
-                className="w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:bg-white transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
+                className="w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:opacity-80 transition-opacity disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 {isGenerating ? t.generating : t.button}
               </button>
@@ -448,7 +448,7 @@ export default function SharePage() {
               <button
                 type="button"
                 onClick={handleCopy}
-                className="w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:bg-white transition-colors mb-6"
+                className="w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:opacity-80 transition-opacity mb-6"
               >
                 {copied ? t.copied : t.copy}
               </button>
