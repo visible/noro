@@ -1,5 +1,7 @@
 # noro
 
+> For AI agents: Documentation is bundled at `node_modules/noro/docs/`. Search with grep or read files directly.
+
 One-time secret sharing CLI for env vars.
 
 ## Overview

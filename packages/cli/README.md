@@ -66,4 +66,10 @@
 > license?
 
   mit
+
+> ai agents?
+
+  docs bundled at node_modules/noro/docs/
+  grep -r "share" node_modules/noro/docs/
+  cat node_modules/noro/docs/llms.txt
 ```
