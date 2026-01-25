@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { getprevnext } from "./config";
 
 const linkIcon = (
@@ -114,7 +114,24 @@ export function Codeinline({ children, className = "" }: { children: string; cla
 
 export function Prevnext() {
 	const pathname = usePathname();
+	const router = useRouter();
 	const { prev, next } = getprevnext(pathname);
+
+	useEffect(() => {
+		const handlekey = (e: KeyboardEvent) => {
+			if (e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement) return;
+			if (e.metaKey || e.ctrlKey || e.altKey || e.shiftKey) return;
+
+			if (e.key === "ArrowLeft" && prev) {
+				router.push(prev.href);
+			} else if (e.key === "ArrowRight" && next) {
+				router.push(next.href);
+			}
+		};
+
+		window.addEventListener("keydown", handlekey);
+		return () => window.removeEventListener("keydown", handlekey);
+	}, [prev, next, router]);
 
 	return (
 		<div className="flex items-center justify-between pt-8 border-t border-black/10">
