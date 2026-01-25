@@ -7,27 +7,28 @@ import "./globals.css";
 const _jetbrainsMono = JetBrains_Mono({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "noro - Share secrets securely",
-  description:
-    "CLI tool for sharing environment variables securely with one-time self-destructing links",
-  generator: "v0.app",
-  icons: {
-    icon: [
-      {
-        url: "/icon-light-32x32.png",
-        media: "(prefers-color-scheme: light)",
-      },
-      {
-        url: "/icon-dark-32x32.png",
-        media: "(prefers-color-scheme: dark)",
-      },
-      {
-        url: "/icon.svg",
-        type: "image/svg+xml",
-      },
-    ],
-    apple: "/apple-icon.png",
+  title: { default: "noro", template: "%s | noro" },
+  description: "one-time secret sharing for env vars",
+  keywords: ["secrets", "env", "encryption", "cli", "security", "one-time"],
+  authors: [{ name: "visible" }],
+  creator: "visible",
+  metadataBase: new URL("https://noro.sh"),
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    url: "https://noro.sh",
+    siteName: "noro",
+    title: "noro",
+    description: "one-time secret sharing for env vars",
+    images: [{ url: "/og.png", width: 1200, height: 630, alt: "noro" }],
   },
+  twitter: {
+    card: "summary_large_image",
+    title: "noro",
+    description: "one-time secret sharing for env vars",
+    images: ["/og.png"],
+  },
+  robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
 };
 
 export default function RootLayout({
