@@ -15,11 +15,21 @@ export const navigation = [
 		],
 	},
 	{
-		title: "Usage",
-		section: "usage",
+		title: "CLI",
+		section: "cli",
 		items: [
-			{ title: "CLI", href: "/docs/cli" },
-			{ title: "Web", href: "/docs/web" },
+			{ title: "Install", href: "/docs/cli" },
+			{ title: "Share", href: "/docs/cli/share" },
+			{ title: "Claim", href: "/docs/cli/claim" },
+			{ title: "Push", href: "/docs/cli/push" },
+			{ title: "Manage", href: "/docs/cli/manage" },
+		],
+	},
+	{
+		title: "Web",
+		section: "web",
+		items: [
+			{ title: "Overview", href: "/docs/web" },
 		],
 	},
 	{
