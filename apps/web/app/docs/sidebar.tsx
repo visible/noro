@@ -31,7 +31,7 @@ export function Sidebar() {
 											<Link
 												ref={isactive ? activeRef : null}
 												href={item.href}
-												className={`block px-3 py-2 text-sm rounded-lg transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C53D43] ${
+												className={`block px-3 py-2 text-sm rounded-lg transition-all outline-none ${
 													isactive
 														? "bg-[#C53D43] text-white font-medium"
 														: "text-black/50 hover:text-black hover:bg-black/5"
