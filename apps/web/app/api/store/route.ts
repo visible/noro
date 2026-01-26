@@ -1,5 +1,6 @@
 import { Redis } from "@upstash/redis";
 import { NextResponse } from "next/server";
+import { storelimit, getip } from "@/lib/ratelimit";
 
 const redis = new Redis({
   url: process.env.KV_REST_API_URL!,
@@ -16,9 +17,10 @@ const ttls: Record<string, number> = {
 
 function generateid(): string {
   const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
+  const bytes = crypto.getRandomValues(new Uint8Array(6));
   let id = "";
   for (let i = 0; i < 6; i++) {
-    id += chars[Math.floor(Math.random() * chars.length)];
+    id += chars[bytes[i] % chars.length];
   }
   return id;
 }
@@ -36,6 +38,11 @@ interface StorePayload {
 const maxsize = 5 * 1024 * 1024;
 
 export async function POST(req: Request) {
+  const ip = getip(req);
+  const { success } = await storelimit.limit(ip);
+  if (!success) {
+    return NextResponse.json({ error: "rate limited" }, { status: 429 });
+  }
   try {
     const body: StorePayload = await req.json();
     const { data, ttl, type = "text", filename, mimetype, views = 1, peek = false } = body;

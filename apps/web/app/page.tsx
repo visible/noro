@@ -1,9 +1,14 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useState } from "react";
-import { BackgroundBeams } from "@/components/background-beams";
 import { Dock } from "@/components/dock";
+
+const BackgroundBeams = dynamic(
+  () => import("@/components/background-beams").then((mod) => mod.BackgroundBeams),
+  { ssr: false }
+);
 
 type Language = "en" | "jp";
 

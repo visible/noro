@@ -1,5 +1,6 @@
 import { Redis } from "@upstash/redis";
 import { NextResponse } from "next/server";
+import { claimlimit, getip } from "@/lib/ratelimit";
 
 const redis = new Redis({
   url: process.env.KV_REST_API_URL!,
@@ -23,6 +24,11 @@ export async function GET(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const ip = getip(req);
+  const { success } = await claimlimit.limit(ip);
+  if (!success) {
+    return NextResponse.json({ error: "rate limited" }, { status: 429 });
+  }
   const randomdelay = 100 + Math.random() * 200;
   await delay(randomdelay);
 
@@ -42,7 +48,7 @@ export async function GET(
     if (secret.viewed >= secret.views) {
       await redis.del(id);
     } else {
-      await redis.set(id, JSON.stringify(secret), { keepttl: true });
+      await redis.set(id, JSON.stringify(secret), { keepTtl: true });
     }
     const remaining = Math.max(0, secret.views - secret.viewed);
     return NextResponse.json({

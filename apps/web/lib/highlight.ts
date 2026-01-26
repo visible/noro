@@ -1,3 +1,9 @@
+const whitespace = /\s/;
+const punctuation = /[{}[\],:\.]/;
+const keycolon = /^\s*:/;
+const digitstart = /[\d-]/;
+const digitbody = /[\d.eE+-]/;
+
 export function isjson(text: string): boolean {
   try {
     JSON.parse(text);
@@ -16,16 +22,16 @@ function tokenize(text: string): Token[] {
   const tokens: Token[] = [];
   let i = 0;
   while (i < text.length) {
-    if (/\s/.test(text[i])) {
+    if (whitespace.test(text[i])) {
       let ws = "";
-      while (i < text.length && /\s/.test(text[i])) {
+      while (i < text.length && whitespace.test(text[i])) {
         ws += text[i];
         i++;
       }
       tokens.push({ type: "punctuation", value: ws });
       continue;
     }
-    if (/[{}[\],:.]/.test(text[i])) {
+    if (punctuation.test(text[i])) {
       tokens.push({ type: "punctuation", value: text[i] });
       i++;
       continue;
@@ -47,7 +53,7 @@ function tokenize(text: string): Token[] {
         str += '"';
         i++;
       }
-      const nextnonws = text.slice(i).match(/^\s*:/);
+      const nextnonws = text.slice(i).match(keycolon);
       if (nextnonws) {
         tokens.push({ type: "key", value: str });
       } else {
@@ -55,9 +61,9 @@ function tokenize(text: string): Token[] {
       }
       continue;
     }
-    if (/[\d-]/.test(text[i])) {
+    if (digitstart.test(text[i])) {
       let num = "";
-      while (i < text.length && /[\d.eE+-]/.test(text[i])) {
+      while (i < text.length && digitbody.test(text[i])) {
         num += text[i];
         i++;
       }

@@ -1,5 +1,6 @@
 import { Redis } from "@upstash/redis";
 import { NextResponse } from "next/server";
+import { peeklimit, getip } from "@/lib/ratelimit";
 
 const redis = new Redis({
   url: process.env.KV_REST_API_URL!,
@@ -24,6 +25,11 @@ export async function GET(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const ip = getip(req);
+  const { success } = await peeklimit.limit(ip);
+  if (!success) {
+    return NextResponse.json({ error: "rate limited" }, { status: 429 });
+  }
   const randomdelay = 100 + Math.random() * 200;
   await delay(randomdelay);
 
