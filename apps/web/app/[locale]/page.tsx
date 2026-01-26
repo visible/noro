@@ -27,12 +27,12 @@ export default function Home() {
         <Logo />
       </Link>
 
-      <section className="absolute inset-0 flex items-start pt-[35vh] px-8 md:px-16 z-10">
+      <section className="absolute inset-0 flex items-start pt-[35vh] px-4 sm:px-8 md:px-16 z-10 pr-16 sm:pr-20 md:pr-8">
         <div>
-          <h1 className="text-[18vw] md:text-[12vw] leading-none font-bold tracking-tighter border-b-4 border-[#FF6B00]">
+          <h1 className="text-[15vw] sm:text-[18vw] md:text-[12vw] leading-none font-bold tracking-tighter border-b-4 border-[#FF6B00]">
             {t("title")}
           </h1>
-          <p className="mt-8 text-lg md:text-xl leading-relaxed max-w-xl text-white/60">
+          <p className="mt-4 sm:mt-8 text-sm sm:text-lg md:text-xl leading-relaxed max-w-xs sm:max-w-xl text-white/60">
             {t("tagline")}
           </p>
         </div>
