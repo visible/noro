@@ -5,7 +5,8 @@ on:
     branches: [main]
 
 jobs:
-  test:
+  web:
+    name: web
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -15,12 +16,24 @@ jobs:
       - run: bun test
         working-directory: apps/web
 
-  build:
+  cli:
+    name: cli
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: oven-sh/setup-bun@v2
-      - run: bun install && bun run build
+      - run: bun install
         working-directory: packages/cli
-      - run: bun install && bun run build
+      - run: bun run build
+        working-directory: packages/cli
+
+  sdk:
+    name: sdk
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install
+        working-directory: packages/sdk
+      - run: bun run build
         working-directory: packages/sdk

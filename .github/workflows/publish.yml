@@ -5,7 +5,8 @@ on:
     branches: [main]
 
 jobs:
-  publish-cli:
+  cli:
+    name: cli
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -16,29 +17,30 @@ jobs:
           registry-url: https://registry.npmjs.org
       - run: bun install && bun run build
         working-directory: packages/cli
-      - name: check version
+      - name: check
         id: check
         working-directory: packages/cli
         run: |
           LOCAL=$(node -p "require('./package.json').version")
           REMOTE=$(npm view noro version 2>/dev/null || echo "0.0.0")
           if [ "$LOCAL" != "$REMOTE" ]; then
-            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "publish=true" >> $GITHUB_OUTPUT
             echo "version=$LOCAL" >> $GITHUB_OUTPUT
           fi
       - name: publish
-        if: steps.check.outputs.changed == 'true'
+        if: steps.check.outputs.publish == 'true'
         working-directory: packages/cli
         run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
       - name: release
-        if: steps.check.outputs.changed == 'true'
+        if: steps.check.outputs.publish == 'true'
         run: gh release create v${{ steps.check.outputs.version }} --title "v${{ steps.check.outputs.version }}" --generate-notes
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-  publish-sdk:
+  sdk:
+    name: sdk
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -49,17 +51,17 @@ jobs:
           registry-url: https://registry.npmjs.org
       - run: bun install && bun run build
         working-directory: packages/sdk
-      - name: check version
+      - name: check
         id: check
         working-directory: packages/sdk
         run: |
           LOCAL=$(node -p "require('./package.json').version")
           REMOTE=$(npm view @noro-sh/sdk version 2>/dev/null || echo "0.0.0")
           if [ "$LOCAL" != "$REMOTE" ]; then
-            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "publish=true" >> $GITHUB_OUTPUT
           fi
       - name: publish
-        if: steps.check.outputs.changed == 'true'
+        if: steps.check.outputs.publish == 'true'
         working-directory: packages/sdk
         run: npm publish --access public
         env:
