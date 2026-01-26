@@ -41,7 +41,7 @@ export default function Home() {
       range.setEnd(text, end);
       setLineWidth(range.getBoundingClientRect().width);
     };
-    measure();
+    document.fonts.ready.then(measure);
     window.addEventListener("resize", measure);
     return () => window.removeEventListener("resize", measure);
   }, []);
