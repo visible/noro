@@ -29,7 +29,7 @@ export default function Home() {
 
       <section className="absolute inset-0 z-10">
         <div className="h-1/2 flex flex-col justify-end px-4 sm:px-8 md:px-16 pr-16 sm:pr-20 md:pr-8">
-          <h1 className="text-[12vw] md:text-[10vw] leading-none font-bold tracking-tighter border-b-4 border-[#FF6B00] w-fit pr-[200px] md:pr-52">
+          <h1 className="text-[12vw] md:text-[10vw] leading-none font-bold tracking-tighter border-b-4 border-[#FF6B00] w-fit pr-[200px] md:pr-56">
             {t("title")}
           </h1>
         </div>
