@@ -3,8 +3,8 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { encrypt } from "@/lib/crypto";
+import type { Language } from "@/lib/types";
 
-type Language = "en" | "jp";
 type Mode = "text" | "file";
 
 const content = {

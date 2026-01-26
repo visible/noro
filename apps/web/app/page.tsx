@@ -4,13 +4,12 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { Dock } from "@/components/dock";
+import type { Language } from "@/lib/types";
 
 const BackgroundBeams = dynamic(
   () => import("@/components/background-beams").then((mod) => mod.BackgroundBeams),
   { ssr: false }
 );
-
-type Language = "en" | "jp";
 
 const content = {
   en: {

@@ -1,8 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
-type Language = "en" | "jp";
+import type { Language } from "@/lib/types";
 
 const items = [
   {

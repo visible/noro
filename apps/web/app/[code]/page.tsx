@@ -4,8 +4,8 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import { decrypt } from "@/lib/crypto";
 import { highlight } from "@/lib/highlight";
+import type { Language } from "@/lib/types";
 
-type Language = "en" | "jp";
 type Status =
   | "loading"
   | "confirm"
