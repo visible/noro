@@ -13,7 +13,11 @@ export interface TocItem {
 }
 
 export const toc: Record<string, TocItem[]> = {
-	"/docs": [],
+	"/docs": [
+		{ id: "overview", title: "Overview", level: 2 },
+		{ id: "features", title: "Features", level: 2 },
+		{ id: "next-steps", title: "Next steps", level: 2 },
+	],
 	"/docs/cli": [
 		{ id: "run-with-npx", title: "Run with npx", level: 2 },
 		{ id: "global-install", title: "Global install", level: 2 },
