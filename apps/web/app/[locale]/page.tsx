@@ -28,8 +28,8 @@ export default function Home() {
       </Link>
 
       <section className="absolute inset-0 z-10">
-        <div className="absolute top-1/2 left-4 sm:left-8 md:left-16 right-16 sm:right-20 md:right-8">
-          <h1 className="-translate-y-full text-[15vw] sm:text-[18vw] md:text-[12vw] leading-none font-bold tracking-tighter border-b-4 border-[#FF6B00]">
+        <div className="absolute top-1/2 left-4 sm:left-8 md:left-16 pr-16 sm:pr-20 md:pr-8 -translate-y-[calc(100%+1rem)] sm:-translate-y-[calc(100%+2rem)]">
+          <h1 className="text-[15vw] sm:text-[18vw] md:text-[12vw] leading-none font-bold tracking-tighter border-b-4 border-[#FF6B00] inline-block">
             {t("title")}
           </h1>
           <p className="mt-4 sm:mt-8 text-sm sm:text-lg md:text-xl leading-relaxed max-w-xs sm:max-w-xl text-white/60">
