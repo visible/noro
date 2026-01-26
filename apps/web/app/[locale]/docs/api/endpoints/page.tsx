@@ -23,6 +23,34 @@ export default function Endpoints() {
 				<Code>https://noro.sh/api/v1</Code>
 			</Section>
 
+			<Section id="health" title="GET /health">
+				<p className="text-black/60 mb-4 max-w-2xl">
+					check API and database health status.
+				</p>
+				<h4 className="text-sm font-semibold text-black/50 mt-4 mb-2">response</h4>
+				<Code>{`{
+  "status": "healthy",
+  "redis": "connected",
+  "latency": 42,
+  "timestamp": 1706000000000
+}`}</Code>
+			</Section>
+
+			<Section id="get-key" title="GET /keys">
+				<p className="text-black/60 mb-4 max-w-2xl">
+					get your API key info. requires authentication.
+				</p>
+				<h4 className="text-sm font-semibold text-black/50 mb-2">request headers</h4>
+				<Code>Authorization: Bearer noro_...</Code>
+				<h4 className="text-sm font-semibold text-black/50 mt-4 mb-2">response</h4>
+				<Code>{`{
+  "hint": "noro_****ab12",
+  "webhook": "https://example.com/webhook",
+  "created": 1706000000000,
+  "expires": 1714000000000
+}`}</Code>
+			</Section>
+
 			<Section id="create-key" title="POST /keys">
 				<p className="text-black/60 mb-4 max-w-2xl">
 					generate a new API key. keys expire after 90 days.

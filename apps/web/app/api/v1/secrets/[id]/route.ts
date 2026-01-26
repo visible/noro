@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
 import { redis, type StoredSecret } from "@/lib/redis";
-import { validate, extractkey, apilimit } from "@/lib/apikey";
+import { validate, extractkey, checklimit } from "@/lib/apikey";
 import { send } from "@/lib/webhook";
+import { json, error } from "@/lib/response";
 
 export async function GET(
   req: Request,
@@ -9,21 +9,21 @@ export async function GET(
 ) {
   const key = extractkey(req);
   if (!key) {
-    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+    return error("unauthorized", 401);
   }
   const apikey = await validate(key);
   if (!apikey) {
-    return NextResponse.json({ error: "invalid api key" }, { status: 401 });
+    return error("invalid api key", 401);
   }
-  const { success } = await apilimit.limit(key);
-  if (!success) {
-    return NextResponse.json({ error: "rate limited" }, { status: 429 });
+  const limit = await checklimit(key);
+  if (!limit.success) {
+    return error("rate limited", 429, limit);
   }
   try {
     const { id } = await params;
     const raw = await redis.get<string>(id);
     if (!raw) {
-      return NextResponse.json({ error: "not found" }, { status: 404 });
+      return error("not found", 404, limit);
     }
     let secret: StoredSecret;
     try {
@@ -44,15 +44,15 @@ export async function GET(
         await send(apikey.webhook, "secret.viewed", id);
       }
     }
-    return NextResponse.json({
+    return json({
       data: secret.data,
       type: secret.type,
       filename: secret.filename,
       mimetype: secret.mimetype,
       remaining,
-    });
+    }, 200, limit);
   } catch {
-    return NextResponse.json({ error: "failed" }, { status: 500 });
+    return error("failed", 500, limit);
   }
 }
 
@@ -62,25 +62,25 @@ export async function DELETE(
 ) {
   const key = extractkey(req);
   if (!key) {
-    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+    return error("unauthorized", 401);
   }
   const apikey = await validate(key);
   if (!apikey) {
-    return NextResponse.json({ error: "invalid api key" }, { status: 401 });
+    return error("invalid api key", 401);
   }
-  const { success } = await apilimit.limit(key);
-  if (!success) {
-    return NextResponse.json({ error: "rate limited" }, { status: 429 });
+  const limit = await checklimit(key);
+  if (!limit.success) {
+    return error("rate limited", 429, limit);
   }
   try {
     const { id } = await params;
     const exists = await redis.exists(id);
     if (!exists) {
-      return NextResponse.json({ error: "not found" }, { status: 404 });
+      return error("not found", 404, limit);
     }
     await redis.del(id);
-    return NextResponse.json({ deleted: true });
+    return json({ deleted: true }, 200, limit);
   } catch {
-    return NextResponse.json({ error: "failed" }, { status: 500 });
+    return error("failed", 500, limit);
   }
 }

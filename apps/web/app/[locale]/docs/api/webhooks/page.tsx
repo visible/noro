@@ -71,23 +71,32 @@ export default function Webhooks() {
 				<p className="text-black/60 mb-4 max-w-2xl">
 					webhook requests include a signature header for verification:
 				</p>
-				<Code>x-noro-signature: 5d41402abc4b2a76b9719d911017c592...</Code>
+				<Code>x-noro-signature: t=1706000000000,v1=5d41402abc4b...</Code>
 				<p className="text-black/60 mt-4 max-w-2xl">
-					the signature is an HMAC-SHA256 of the request body.
+					the header contains a timestamp (<code className="text-[#C53D43]">t</code>) and signature (<code className="text-[#C53D43]">v1</code>). the signature is HMAC-SHA256 of <code className="text-[#C53D43]">timestamp.body</code>.
 				</p>
 			</Section>
 
 			<Section id="verification" title="Verification">
 				<p className="text-black/60 mb-4 max-w-2xl">
-					verify the signature to ensure the webhook is from noro:
+					verify the signature and check timestamp to prevent replay attacks:
 				</p>
 				<Code>{`const crypto = require("crypto");
 
-function verify(body, signature, secret) {
+function verify(body, header, secret) {
+  const [tPart, vPart] = header.split(",");
+  const timestamp = tPart.split("=")[1];
+  const signature = vPart.split("=")[1];
+
+  // reject if older than 5 minutes
+  const age = Date.now() - parseInt(timestamp);
+  if (age > 300000) return false;
+
   const expected = crypto
     .createHmac("sha256", secret)
-    .update(body)
+    .update(timestamp + "." + body)
     .digest("hex");
+
   return crypto.timingSafeEqual(
     Buffer.from(signature),
     Buffer.from(expected)

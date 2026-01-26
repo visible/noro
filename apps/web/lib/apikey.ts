@@ -67,11 +67,28 @@ export async function remove(key: string): Promise<boolean> {
   return deleted > 0;
 }
 
-export const apilimit = new Ratelimit({
+const ratelimiter = new Ratelimit({
   redis,
   limiter: Ratelimit.slidingWindow(100, "1 m"),
   prefix: "ratelimit:api",
 });
+
+export interface RateLimitResult {
+  success: boolean;
+  limit: number;
+  remaining: number;
+  reset: number;
+}
+
+export async function checklimit(key: string): Promise<RateLimitResult> {
+  const result = await ratelimiter.limit(key);
+  return {
+    success: result.success,
+    limit: result.limit,
+    remaining: result.remaining,
+    reset: result.reset,
+  };
+}
 
 export function extractkey(req: Request): string | null {
   const auth = req.headers.get("authorization");

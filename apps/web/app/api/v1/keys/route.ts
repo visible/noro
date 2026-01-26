@@ -1,8 +1,29 @@
-import { NextResponse } from "next/server";
-import { create, validate, update, remove, extractkey, apilimit } from "@/lib/apikey";
+import { create, validate, update, remove, extractkey, checklimit } from "@/lib/apikey";
+import { json, error } from "@/lib/response";
 
 interface KeysPayload {
   webhook?: string;
+}
+
+export async function GET(req: Request) {
+  const key = extractkey(req);
+  if (!key) {
+    return error("unauthorized", 401);
+  }
+  const apikey = await validate(key);
+  if (!apikey) {
+    return error("invalid api key", 401);
+  }
+  const limit = await checklimit(key);
+  if (!limit.success) {
+    return error("rate limited", 429, limit);
+  }
+  return json({
+    hint: `noro_****${key.slice(-4)}`,
+    webhook: apikey.webhook || null,
+    created: apikey.created,
+    expires: apikey.expires,
+  }, 200, limit);
 }
 
 export async function POST(req: Request) {
@@ -10,62 +31,62 @@ export async function POST(req: Request) {
     const body: KeysPayload = await req.json().catch(() => ({}));
     const { webhook } = body;
     if (webhook && !isvalidurl(webhook)) {
-      return NextResponse.json({ error: "invalid webhook url" }, { status: 400 });
+      return error("invalid webhook url", 400);
     }
     const { key, expires } = await create(webhook);
-    return NextResponse.json({ key, expires });
+    return json({ key, expires });
   } catch {
-    return NextResponse.json({ error: "failed" }, { status: 500 });
+    return error("failed", 500);
   }
 }
 
 export async function PATCH(req: Request) {
   const key = extractkey(req);
   if (!key) {
-    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+    return error("unauthorized", 401);
   }
   const apikey = await validate(key);
   if (!apikey) {
-    return NextResponse.json({ error: "invalid api key" }, { status: 401 });
+    return error("invalid api key", 401);
   }
-  const { success } = await apilimit.limit(key);
-  if (!success) {
-    return NextResponse.json({ error: "rate limited" }, { status: 429 });
+  const limit = await checklimit(key);
+  if (!limit.success) {
+    return error("rate limited", 429, limit);
   }
   try {
     const body: KeysPayload = await req.json().catch(() => ({}));
     const { webhook } = body;
-    if (webhook !== undefined && webhook !== null && !isvalidurl(webhook)) {
-      return NextResponse.json({ error: "invalid webhook url" }, { status: 400 });
+    if (webhook !== undefined && webhook !== null && webhook !== "" && !isvalidurl(webhook)) {
+      return error("invalid webhook url", 400, limit);
     }
     const updates: { webhook?: string } = {};
     if (webhook !== undefined) {
       updates.webhook = webhook || undefined;
     }
     await update(key, updates);
-    return NextResponse.json({ updated: true });
+    return json({ updated: true }, 200, limit);
   } catch {
-    return NextResponse.json({ error: "failed" }, { status: 500 });
+    return error("failed", 500, limit);
   }
 }
 
 export async function DELETE(req: Request) {
   const key = extractkey(req);
   if (!key) {
-    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+    return error("unauthorized", 401);
   }
   const apikey = await validate(key);
   if (!apikey) {
-    return NextResponse.json({ error: "invalid api key" }, { status: 401 });
+    return error("invalid api key", 401);
   }
   try {
     const deleted = await remove(key);
     if (!deleted) {
-      return NextResponse.json({ error: "failed" }, { status: 500 });
+      return error("failed", 500);
     }
-    return NextResponse.json({ deleted: true });
+    return json({ deleted: true });
   } catch {
-    return NextResponse.json({ error: "failed" }, { status: 500 });
+    return error("failed", 500);
   }
 }
 

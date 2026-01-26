@@ -1,7 +1,7 @@
-import { NextResponse } from "next/server";
 import { redis } from "@/lib/redis";
-import { validate, extractkey, apilimit } from "@/lib/apikey";
+import { validate, extractkey, checklimit } from "@/lib/apikey";
 import { send } from "@/lib/webhook";
+import { json, error } from "@/lib/response";
 
 const ttls: Record<string, number> = {
   "1h": 3600,
@@ -35,25 +35,25 @@ const maxsize = 5 * 1024 * 1024;
 export async function POST(req: Request) {
   const key = extractkey(req);
   if (!key) {
-    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
+    return error("unauthorized", 401);
   }
   const apikey = await validate(key);
   if (!apikey) {
-    return NextResponse.json({ error: "invalid api key" }, { status: 401 });
+    return error("invalid api key", 401);
   }
-  const { success } = await apilimit.limit(key);
-  if (!success) {
-    return NextResponse.json({ error: "rate limited" }, { status: 429 });
+  const limit = await checklimit(key);
+  if (!limit.success) {
+    return error("rate limited", 429, limit);
   }
   try {
     const body: CreatePayload = await req.json();
     const { data, ttl, type = "text", filename, mimetype, views = 1 } = body;
     if (!data || typeof data !== "string") {
-      return NextResponse.json({ error: "invalid data" }, { status: 400 });
+      return error("invalid data", 400, limit);
     }
     const decodedsize = Math.ceil(data.length * 0.75);
     if (decodedsize > maxsize) {
-      return NextResponse.json({ error: "file too large" }, { status: 413 });
+      return error("file too large", 413, limit);
     }
     const clampedviews = Math.min(Math.max(views, 1), 5);
     const id = generateid();
@@ -71,8 +71,8 @@ export async function POST(req: Request) {
       await send(apikey.webhook, "secret.created", id);
     }
     const baseurl = process.env.NEXT_PUBLIC_APP_URL || "https://noro.sh";
-    return NextResponse.json({ id, url: `${baseurl}/${id}` });
+    return json({ id, url: `${baseurl}/${id}` }, 200, limit);
   } catch {
-    return NextResponse.json({ error: "failed" }, { status: 500 });
+    return error("failed", 500, limit);
   }
 }

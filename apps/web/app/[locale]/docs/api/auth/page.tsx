@@ -53,7 +53,12 @@ export default function Auth() {
 				<p className="text-black/60 mb-4 max-w-2xl">
 					API keys expire after <strong className="text-black">90 days</strong> by default. the <code className="text-[#C53D43]">expires</code> field in the response is a unix timestamp in milliseconds.
 				</p>
-				<p className="text-black/60 max-w-2xl">
+				<p className="text-black/60 mb-4 max-w-2xl">
+					check your key&apos;s expiration date:
+				</p>
+				<Code>{`curl https://noro.sh/api/v1/keys \\
+  -H "Authorization: Bearer noro_..."`}</Code>
+				<p className="text-black/60 mt-4 max-w-2xl">
 					generate a new key before expiration to avoid service interruption.
 				</p>
 			</Section>
@@ -130,6 +135,13 @@ export default function Auth() {
 						<span>returns <code className="text-[#C53D43]">429</code> when exceeded</span>
 					</li>
 				</ul>
+				<p className="text-black/60 mt-4 mb-4 max-w-2xl">
+					responses include rate limit headers:
+				</p>
+				<Code>{`x-ratelimit-limit: 100
+x-ratelimit-remaining: 99
+x-ratelimit-reset: 1706000060000
+x-request-id: req_abc123...`}</Code>
 			</Section>
 
 			<Prevnext />

@@ -18,25 +18,27 @@ export async function send(url: string, event: WebhookEvent, id: string): Promis
   if (!qstash) {
     return;
   }
+  const timestamp = Date.now();
   const payload: WebhookPayload = {
     event,
-    timestamp: Date.now(),
+    timestamp,
     data: { id },
   };
   const body = JSON.stringify(payload);
-  const signature = await sign(body);
+  const signature = await sign(timestamp, body);
   await qstash.publishJSON({
     url,
     body: payload,
     headers: {
-      "x-noro-signature": signature,
+      "x-noro-signature": `t=${timestamp},v1=${signature}`,
     },
   });
 }
 
-async function sign(body: string): Promise<string> {
+async function sign(timestamp: number, body: string): Promise<string> {
   const secret = process.env.WEBHOOK_SECRET || "default";
   const encoder = new TextEncoder();
+  const message = `${timestamp}.${body}`;
   const key = await crypto.subtle.importKey(
     "raw",
     encoder.encode(secret),
@@ -44,7 +46,7 @@ async function sign(body: string): Promise<string> {
     false,
     ["sign"]
   );
-  const signature = await crypto.subtle.sign("HMAC", key, encoder.encode(body));
+  const signature = await crypto.subtle.sign("HMAC", key, encoder.encode(message));
   return Array.from(new Uint8Array(signature))
     .map((b) => b.toString(16).padStart(2, "0"))
     .join("");
