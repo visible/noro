@@ -14,11 +14,14 @@ export const viewport: Viewport = {
 	themeColor: "#F5F3EF",
 };
 
+const sidebarscript = `(function(){var s=document.querySelector('[data-sidebar]');var a=document.querySelector('[data-sidebar] [data-active]');if(s&&a){a.scrollIntoView({block:'nearest',behavior:'instant'})}})()`;
+
 export default function DocsLayout({
 	children,
 }: { children: React.ReactNode }) {
 	return (
 		<div className="h-screen bg-[#F5F3EF] flex flex-col overflow-hidden">
+			<script dangerouslySetInnerHTML={{ __html: sidebarscript }} />
 
 			<header className="shrink-0 bg-transparent">
 				<div className="flex items-center justify-between py-6 px-6 md:px-12">

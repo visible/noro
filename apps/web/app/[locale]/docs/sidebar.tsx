@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { navigation } from "./config";
@@ -10,23 +10,22 @@ export function Sidebar() {
 	const sidebarRef = useRef<HTMLElement>(null);
 	const activeRef = useRef<HTMLAnchorElement>(null);
 	const mounted = useRef(false);
-	const [ready, setReady] = useState(false);
 
 	useEffect(() => {
-		const behavior = mounted.current ? "smooth" : "instant";
-		const isInitial = !mounted.current;
-		mounted.current = true;
-		if (pathname === "/docs") {
-			sidebarRef.current?.scrollTo({ top: 0, behavior });
-		} else {
-			activeRef.current?.scrollIntoView({ block: "nearest", behavior });
+		if (!mounted.current) {
+			mounted.current = true;
+			return;
 		}
-		if (isInitial) setReady(true);
+		if (pathname === "/docs") {
+			sidebarRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+		} else {
+			activeRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+		}
 	}, [pathname]);
 
 	return (
-		<aside ref={sidebarRef} className="hidden md:block w-56 shrink-0 border-r border-black/5 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-			<nav className={`p-6 transition-[opacity,visibility] duration-150 ${ready ? "visible opacity-100" : "invisible opacity-0"}`}>
+		<aside ref={sidebarRef} data-sidebar className="hidden md:block w-56 shrink-0 border-r border-black/5 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+			<nav className="p-6">
 				<div className="space-y-8">
 					{navigation.map((group) => (
 						<div key={group.title}>
@@ -42,6 +41,7 @@ export function Sidebar() {
 											<Link
 												ref={isactive ? activeRef : null}
 												href={item.href}
+												data-active={isactive ? "" : undefined}
 												className={`block px-3 py-2 text-sm rounded-lg transition-all outline-none ${
 													isactive
 														? "bg-[#C53D43] text-white font-medium"
