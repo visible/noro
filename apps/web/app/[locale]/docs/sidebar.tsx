@@ -9,12 +9,15 @@ export function Sidebar() {
 	const pathname = usePathname();
 	const sidebarRef = useRef<HTMLElement>(null);
 	const activeRef = useRef<HTMLAnchorElement>(null);
+	const mounted = useRef(false);
 
 	useEffect(() => {
+		const behavior = mounted.current ? "smooth" : "instant";
+		mounted.current = true;
 		if (pathname === "/docs") {
-			sidebarRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+			sidebarRef.current?.scrollTo({ top: 0, behavior });
 		} else {
-			activeRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+			activeRef.current?.scrollIntoView({ block: "nearest", behavior });
 		}
 	}, [pathname]);
 
