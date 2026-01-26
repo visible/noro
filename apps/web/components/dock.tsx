@@ -78,7 +78,7 @@ export function Dock() {
   const [hovered, setHovered] = useState<string | null>(null);
 
   return (
-    <nav className="fixed right-8 top-1/2 -translate-y-1/2 z-50 flex flex-col gap-6">
+    <nav className="fixed right-8 top-1/2 -translate-y-1/2 z-50 hidden md:flex flex-col gap-6">
       {items.map((item) => {
         const isExternal = item.href.startsWith("http");
         const linkProps = isExternal
