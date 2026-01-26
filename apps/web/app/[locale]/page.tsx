@@ -29,17 +29,17 @@ export default function Home() {
 
       <section className="absolute inset-0 z-10">
         <div className="h-1/2 flex flex-col justify-end px-4 sm:px-8 md:px-16 pr-16 sm:pr-20 md:pr-8">
-          <div className="w-fit border-b-4 border-[#FF6B00]">
-            <h1 className="text-[12vw] md:text-[10vw] leading-none font-bold tracking-tighter">
+          <div className="w-fit">
+            <h1 className="w-full text-[12vw] md:text-[10vw] leading-none font-bold tracking-tighter border-b-4 border-[#FF6B00]">
               {t("title")}
             </h1>
-            <p className="mt-4 sm:mt-8 text-[3.5vw] md:text-[1.5vw] leading-relaxed text-white/60 line-clamp-1 invisible">
+            <p className="text-[3.5vw] md:text-[1.5vw] leading-relaxed text-white/60 line-clamp-1 invisible h-0">
               {t("tagline")}
             </p>
           </div>
         </div>
-        <div className="px-4 sm:px-8 md:px-16 pr-16 sm:pr-20 md:pr-8 -mt-[calc(3.5vw+1rem)] md:-mt-[calc(1.5vw+2rem)]">
-          <p className="text-[3.5vw] md:text-[1.5vw] leading-relaxed text-white/60">
+        <div className="px-4 sm:px-8 md:px-16 pr-16 sm:pr-20 md:pr-8">
+          <p className="mt-4 sm:mt-8 text-[3.5vw] md:text-[1.5vw] leading-relaxed text-white/60">
             {t("tagline")}
           </p>
         </div>
