@@ -1,5 +1,5 @@
 {
-  "name": "noro-sdk",
+  "name": "@noro-sh/sdk",
   "version": "0.0.0",
   "description": "sdk for noro one-time secret sharing",
   "type": "module",

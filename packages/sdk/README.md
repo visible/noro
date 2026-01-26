@@ -1,17 +1,17 @@
-# noro-sdk
+# @noro-sh/sdk
 
 sdk for [noro](https://noro.sh) one-time secret sharing.
 
 ## install
 
 ```bash
-npm install noro-sdk
+npm install @noro-sh/sdk
 ```
 
 ## usage
 
 ```typescript
-import Noro, { createkey } from "noro-sdk";
+import Noro, { createkey } from "@noro-sh/sdk";
 
 // create an api key (only needed once)
 const { key } = await createkey();
