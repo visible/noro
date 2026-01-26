@@ -17,7 +17,7 @@ const BackgroundBeams = dynamic(
 export default function Home() {
   const t = useTranslations("home");
   const bioRef = useRef<HTMLParagraphElement>(null);
-  const [lineWidth, setLineWidth] = useState(0);
+  const [lineWidth, setLineWidth] = useState<number | null>(null);
 
   useEffect(() => {
     const measure = () => {
@@ -64,11 +64,14 @@ export default function Home() {
             <h1 className="text-[12vw] md:text-[10vw] leading-none font-bold tracking-tighter">
               {t("title")}
             </h1>
-            <motion.div
-              className="h-1 bg-[#FF6B00] mt-1"
-              animate={{ width: lineWidth }}
-              transition={{ type: "spring", stiffness: 300, damping: 30 }}
-            />
+            {lineWidth !== null && (
+              <motion.div
+                className="h-1 bg-[#FF6B00] mt-1"
+                initial={{ width: lineWidth }}
+                animate={{ width: lineWidth }}
+                transition={{ type: "spring", stiffness: 300, damping: 30 }}
+              />
+            )}
           </div>
         </div>
         <div className="px-4 sm:px-8 md:px-16 pr-16 sm:pr-20 md:pr-8">
