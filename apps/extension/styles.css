@@ -1,15 +1,28 @@
+@font-face {
+	font-family: "JetBrains Mono";
+	src: url("./fonts/jetbrains.woff2") format("woff2");
+	font-weight: 400;
+	font-style: normal;
+	font-display: swap;
+}
+
 * {
 	margin: 0;
 	padding: 0;
 	box-sizing: border-box;
 }
 
+::selection {
+	background: #ff6b00;
+	color: #000;
+}
+
 body {
 	width: 320px;
-	font-family: system-ui, -apple-system, sans-serif;
-	font-size: 14px;
-	background: #0c0a09;
-	color: #fafaf9;
+	font-family: "JetBrains Mono", ui-monospace, monospace;
+	font-size: 13px;
+	background: oklch(0.145 0 0);
+	color: oklch(0.985 0 0);
 }
 
 main {
@@ -21,12 +34,18 @@ header {
 	align-items: center;
 	gap: 8px;
 	margin-bottom: 16px;
-	color: #a8a29e;
+}
+
+header svg {
+	color: #ff6b00;
 }
 
 header span {
-	font-weight: 600;
-	color: #fafaf9;
+	font-size: 11px;
+	font-weight: 700;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: rgba(255, 255, 255, 0.6);
 }
 
 .view {
@@ -39,23 +58,24 @@ header span {
 
 textarea {
 	width: 100%;
-	padding: 12px;
-	border: 1px solid #292524;
-	border-radius: 8px;
-	background: #1c1917;
-	color: #fafaf9;
+	padding: 12px 16px;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 10px;
+	background: transparent;
+	color: oklch(0.985 0 0);
 	font-family: inherit;
-	font-size: 14px;
+	font-size: 13px;
 	resize: none;
+	transition: border-color 0.15s;
 }
 
 textarea:focus {
 	outline: none;
-	border-color: #78716c;
+	border-color: #ff6b00;
 }
 
 textarea::placeholder {
-	color: #78716c;
+	color: rgba(255, 255, 255, 0.2);
 }
 
 .options {
@@ -66,56 +86,71 @@ textarea::placeholder {
 
 select {
 	flex: 1;
-	padding: 8px 12px;
-	border: 1px solid #292524;
-	border-radius: 6px;
-	background: #1c1917;
-	color: #fafaf9;
-	font-size: 13px;
+	padding: 10px 12px;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 10px;
+	background: transparent;
+	color: oklch(0.985 0 0);
+	font-family: inherit;
+	font-size: 12px;
 	cursor: pointer;
+	transition: border-color 0.15s;
+	appearance: none;
+	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.4)' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+	background-repeat: no-repeat;
+	background-position: right 12px center;
 }
 
 select:focus {
 	outline: none;
-	border-color: #78716c;
+	border-color: #ff6b00;
+}
+
+select option {
+	background: oklch(0.145 0 0);
+	color: oklch(0.985 0 0);
 }
 
 button {
 	width: 100%;
-	padding: 10px 16px;
+	padding: 12px 16px;
 	margin-top: 12px;
 	border: none;
-	border-radius: 6px;
-	background: #fafaf9;
-	color: #0c0a09;
-	font-weight: 500;
-	font-size: 14px;
+	border-radius: 10px;
+	background: #ff6b00;
+	color: #000;
+	font-family: inherit;
+	font-weight: 700;
+	font-size: 11px;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
 	cursor: pointer;
 	transition: opacity 0.15s;
 }
 
 button:hover {
-	opacity: 0.9;
+	opacity: 0.8;
 }
 
 button:disabled {
-	opacity: 0.5;
+	opacity: 0.3;
 	cursor: not-allowed;
 }
 
 input[type="text"] {
 	width: 100%;
-	padding: 12px;
-	border: 1px solid #292524;
-	border-radius: 8px;
-	background: #1c1917;
-	color: #fafaf9;
-	font-family: ui-monospace, monospace;
+	padding: 12px 16px;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 10px;
+	background: transparent;
+	color: oklch(0.985 0 0);
+	font-family: inherit;
 	font-size: 12px;
 }
 
 input[type="text"]:focus {
 	outline: none;
+	border-color: #ff6b00;
 }
 
 .actions {
@@ -129,23 +164,28 @@ input[type="text"]:focus {
 
 .actions button:last-child {
 	background: transparent;
-	border: 1px solid #292524;
-	color: #fafaf9;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	color: rgba(255, 255, 255, 0.4);
+}
+
+.actions button:last-child:hover {
+	border-color: rgba(255, 255, 255, 0.3);
+	color: rgba(255, 255, 255, 0.6);
 }
 
 #recents {
 	margin-top: 20px;
 	padding-top: 16px;
-	border-top: 1px solid #292524;
+	border-top: 1px solid rgba(255, 255, 255, 0.1);
 	display: block !important;
 }
 
 #recents h3 {
-	font-size: 12px;
-	font-weight: 500;
-	color: #78716c;
+	font-size: 10px;
+	font-weight: 700;
+	color: rgba(255, 255, 255, 0.4);
 	text-transform: uppercase;
-	letter-spacing: 0.05em;
+	letter-spacing: 0.1em;
 	margin-bottom: 12px;
 }
 
@@ -157,8 +197,8 @@ input[type="text"]:focus {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding: 8px 0;
-	border-bottom: 1px solid #292524;
+	padding: 10px 0;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 #list li:last-child {
@@ -166,14 +206,14 @@ input[type="text"]:focus {
 }
 
 #list li.empty {
-	color: #78716c;
-	font-size: 13px;
+	color: rgba(255, 255, 255, 0.3);
+	font-size: 12px;
 }
 
 #list .preview {
 	flex: 1;
-	font-size: 13px;
-	color: #a8a29e;
+	font-size: 12px;
+	color: rgba(255, 255, 255, 0.5);
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
@@ -183,14 +223,15 @@ input[type="text"]:focus {
 #list button {
 	width: auto;
 	margin: 0;
-	padding: 4px 10px;
-	font-size: 12px;
+	padding: 6px 12px;
+	font-size: 10px;
 	background: transparent;
-	border: 1px solid #292524;
-	color: #a8a29e;
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	color: rgba(255, 255, 255, 0.4);
 }
 
 #list button:hover {
-	border-color: #78716c;
-	color: #fafaf9;
+	border-color: #ff6b00;
+	color: #ff6b00;
+	opacity: 1;
 }
