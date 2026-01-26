@@ -16,15 +16,22 @@ interface StoredSecret {
   peek?: boolean;
 }
 
+async function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export async function GET(
   req: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
+  const randomdelay = 100 + Math.random() * 200;
+  await delay(randomdelay);
+
   try {
     const { id } = await params;
     const raw = await redis.get<string>(id);
     if (!raw) {
-      return NextResponse.json({ error: "not found" }, { status: 404 });
+      return NextResponse.json({ exists: false });
     }
     let secret: StoredSecret;
     try {
@@ -50,6 +57,6 @@ export async function GET(
       viewed: secret.viewed,
     });
   } catch {
-    return NextResponse.json({ error: "failed" }, { status: 500 });
+    return NextResponse.json({ exists: false });
   }
 }

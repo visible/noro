@@ -131,15 +131,15 @@ export default function ClaimPage({
           return;
         }
         const res = await fetch(`/api/peek/${code}`);
-        if (res.status === 404) {
+        if (!res.ok) {
           setStatus("notfound");
           return;
         }
-        if (!res.ok) {
-          setStatus("error");
+        const data = await res.json();
+        if (!data.exists) {
+          setStatus("notfound");
           return;
         }
-        const data = await res.json();
         setPeekdata({ type: data.type, filename: data.filename });
         setStatus("confirm");
       } catch {
@@ -155,15 +155,16 @@ export default function ClaimPage({
       const { code } = await params;
       const key = window.location.hash.slice(1);
       const res = await fetch(`/api/claim/${code}`);
-      if (res.status === 404) {
+      if (!res.ok) {
         setStatus("notfound");
         return;
       }
-      if (!res.ok) {
-        setStatus("error");
+      const json = await res.json();
+      if (!json.exists) {
+        setStatus("notfound");
         return;
       }
-      const { data, type, filename, mimetype, remaining } = await res.json();
+      const { data, type, filename, mimetype, remaining } = json;
       const decrypted = await decrypt(data, key);
       if (type === "file") {
         setSecret({
@@ -325,30 +326,19 @@ export default function ClaimPage({
             <div
               className="absolute inset-0 space-y-6 transition-opacity duration-300"
               style={{
-                opacity: status === "notfound" ? 1 : 0,
-                pointerEvents: status === "notfound" ? "auto" : "none",
+                opacity: status === "notfound" || status === "error" ? 1 : 0,
+                pointerEvents: status === "notfound" || status === "error" ? "auto" : "none",
               }}
             >
-              <p className="text-white/40 text-sm">{t.notfound}</p>
+              <div className="space-y-2">
+                <p className="text-white text-sm">{t.notfound}</p>
+                <p className="text-white/30 text-xs">
+                  {lang === "en" ? "the link may have expired, been viewed, or never existed" : "リンクが期限切れか、閲覧済みか、存在しない可能性があります"}
+                </p>
+              </div>
               <Link
                 href="/share"
-                className="inline-block border border-white/10 px-6 py-3 text-sm tracking-widest text-white/40 hover:text-white hover:border-white/30 transition-colors"
-              >
-                {t.create}
-              </Link>
-            </div>
-
-            <div
-              className="absolute inset-0 space-y-6 transition-opacity duration-300"
-              style={{
-                opacity: status === "error" ? 1 : 0,
-                pointerEvents: status === "error" ? "auto" : "none",
-              }}
-            >
-              <p className="text-red-400 text-sm">{t.error}</p>
-              <Link
-                href="/share"
-                className="inline-block border border-white/10 px-6 py-3 text-sm tracking-widest text-white/40 hover:text-white hover:border-white/30 transition-colors"
+                className="block w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:opacity-80 transition-opacity text-center"
               >
                 {t.create}
               </Link>
