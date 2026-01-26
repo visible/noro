@@ -1,0 +1,70 @@
+{
+  "home": {
+    "title": "noro",
+    "tagline": "シークレットを安全に共有。取得後に自動削除。"
+  },
+  "share": {
+    "title": "共有",
+    "subtitle": "ワンタイムシークレットリンクを作成",
+    "text": "テキスト",
+    "file": "ファイル",
+    "labelLabel": "ラベル（任意）",
+    "labelPlaceholder": "例: API_KEY",
+    "secretLabel": "シークレット",
+    "secretPlaceholder": "ここにシークレットを貼り付け...",
+    "fileLabel": "ファイル",
+    "dropzone": "クリックまたはドロップ",
+    "maxsize": "最大5mb",
+    "views": "最大閲覧数",
+    "expires": "有効期限",
+    "button": "リンクを生成",
+    "generating": "暗号化中...",
+    "success": "リンク作成完了",
+    "copy": "コピー",
+    "copied": "コピー済",
+    "expiresNote": "閲覧後にリンクは無効化",
+    "clipboardNote": "30秒後にクリップボードをクリア",
+    "newLink": "新規作成",
+    "security": {
+      "encrypted": "エンドツーエンド暗号化",
+      "server": "サーバーはデータを見れない",
+      "destruct": "閲覧後に自動削除"
+    }
+  },
+  "claim": {
+    "loading": "確認中...",
+    "confirm": "シークレットが届いています",
+    "confirmWarning": "表示後、このシークレットは完全に削除されます",
+    "extensionWarning": "最大限のセキュリティにはシークレットモードを使用",
+    "confirmButton": "シークレットを表示",
+    "claiming": "復号中...",
+    "notfound": "このシークレットは期限切れか既に閲覧済みです",
+    "notfoundDetail": "リンクが期限切れか、閲覧済みか、存在しない可能性があります",
+    "error": "シークレットの取得に失敗",
+    "label": "ラベル",
+    "value": "値",
+    "filename": "ファイル",
+    "copy": "コピー",
+    "copied": "コピー済",
+    "download": "ダウンロード",
+    "show": "表示",
+    "hide": "隠す",
+    "warning": "このシークレットは完全に削除されました",
+    "remaining": "残り閲覧回数",
+    "create": "新規作成"
+  },
+  "titles": {
+    "loading": "読み込み中",
+    "confirm": "確認",
+    "claiming": "復号中",
+    "success": "シークレット",
+    "notfound": "見つかりません",
+    "error": "エラー"
+  },
+  "dock": {
+    "share": "シェア",
+    "github": "ギットハブ",
+    "docs": "ドキュメント",
+    "npm": "npm"
+  }
+}
