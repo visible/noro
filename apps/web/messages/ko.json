@@ -1,0 +1,70 @@
+{
+  "home": {
+    "title": "noro",
+    "tagline": "비밀을 안전하게 공유하세요. 자동 삭제되는 일회용 링크."
+  },
+  "share": {
+    "title": "공유",
+    "subtitle": "일회용 비밀 링크 생성",
+    "text": "텍스트",
+    "file": "파일",
+    "labelLabel": "라벨 (선택)",
+    "labelPlaceholder": "예: API_KEY",
+    "secretLabel": "비밀",
+    "secretPlaceholder": "비밀을 여기에 붙여넣으세요...",
+    "fileLabel": "파일",
+    "dropzone": "클릭하거나 파일을 드롭하세요",
+    "maxsize": "최대 5mb",
+    "views": "최대 조회수",
+    "expires": "만료 시간",
+    "button": "링크 생성",
+    "generating": "암호화 중...",
+    "success": "링크 생성됨",
+    "copy": "복사",
+    "copied": "복사됨",
+    "expiresNote": "조회 후 링크가 만료됩니다",
+    "clipboardNote": "클립보드가 30초 후 지워집니다",
+    "newLink": "새로 만들기",
+    "security": {
+      "encrypted": "종단간 암호화",
+      "server": "서버는 데이터를 볼 수 없습니다",
+      "destruct": "조회 후 자동 삭제"
+    }
+  },
+  "claim": {
+    "loading": "확인 중...",
+    "confirm": "비밀이 기다리고 있습니다",
+    "confirmWarning": "열람하면 이 비밀은 영구적으로 삭제됩니다",
+    "extensionWarning": "최대 보안을 위해 시크릿 모드를 사용하세요",
+    "confirmButton": "비밀 열람",
+    "claiming": "복호화 중...",
+    "notfound": "이 비밀은 만료되었거나 이미 열람되었습니다",
+    "notfoundDetail": "링크가 만료되었거나, 열람되었거나, 존재하지 않습니다",
+    "error": "비밀을 가져오는데 실패했습니다",
+    "label": "라벨",
+    "value": "값",
+    "filename": "파일",
+    "copy": "복사",
+    "copied": "복사됨",
+    "download": "다운로드",
+    "show": "보기",
+    "hide": "숨기기",
+    "warning": "이 비밀은 영구적으로 삭제되었습니다",
+    "remaining": "남은 조회수",
+    "create": "직접 만들기"
+  },
+  "titles": {
+    "loading": "로딩",
+    "confirm": "확인",
+    "claiming": "복호화",
+    "success": "비밀",
+    "notfound": "찾을 수 없음",
+    "error": "오류"
+  },
+  "dock": {
+    "share": "공유",
+    "github": "깃허브",
+    "docs": "문서",
+    "npm": "npm"
+  }
+}
