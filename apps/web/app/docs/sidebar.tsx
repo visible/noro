@@ -7,14 +7,19 @@ import { navigation } from "./config";
 
 export function Sidebar() {
 	const pathname = usePathname();
+	const sidebarRef = useRef<HTMLElement>(null);
 	const activeRef = useRef<HTMLAnchorElement>(null);
 
 	useEffect(() => {
-		activeRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+		if (pathname === "/docs") {
+			sidebarRef.current?.scrollTo({ top: 0, behavior: "smooth" });
+		} else {
+			activeRef.current?.scrollIntoView({ block: "nearest", behavior: "smooth" });
+		}
 	}, [pathname]);
 
 	return (
-		<aside className="hidden md:block w-56 shrink-0 border-r border-black/5 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+		<aside ref={sidebarRef} className="hidden md:block w-56 shrink-0 border-r border-black/5 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
 			<nav className="p-6">
 				<div className="space-y-8">
 					{navigation.map((group) => (
