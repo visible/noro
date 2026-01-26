@@ -63,7 +63,7 @@ export function Toc() {
 		return first ? [first.id] : [];
 	});
 	const [svg, setSvg] = useState<{ path: string; width: number; height: number } | null>(null);
-	const [thumb, setThumb] = useState<{ top: number; height: number }>({ top: 0, height: 0 });
+	const [thumb, setThumb] = useState<{ top: number; height: number } | null>(null);
 	const [copied, setCopied] = useState(false);
 	const [linkCopied, setLinkCopied] = useState(false);
 	const [showTop, setShowTop] = useState(false);
@@ -294,7 +294,7 @@ export function Toc() {
 					<span className="text-xs uppercase tracking-wider text-black/30 font-medium">On this page</span>
 				</div>
 
-				<nav className="relative">
+				<nav data-toc className="relative">
 					{svg && (
 						<div
 							className="absolute left-0 top-0 animate-in fade-in duration-200"
@@ -308,7 +308,10 @@ export function Toc() {
 						>
 							<div
 								className="absolute w-full bg-[#C53D43] transition-[top,height] duration-150"
-								style={{ top: thumb.top, height: thumb.height }}
+								style={{
+									top: thumb?.top ?? "var(--toc-thumb-top, 0)",
+									height: thumb?.height ?? "var(--toc-thumb-height, 0)"
+								}}
 							/>
 						</div>
 					)}
@@ -324,6 +327,7 @@ export function Toc() {
 								<a
 									key={item.id}
 									href={`#${item.id}`}
+									data-toc-item={i === 0 ? "first" : ""}
 									onClick={(e) => {
 										e.preventDefault();
 										scrollTo(item.id);

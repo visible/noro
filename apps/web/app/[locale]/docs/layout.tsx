@@ -16,6 +16,8 @@ export const viewport: Viewport = {
 
 const sidebarscript = `(function(){var s=document.querySelector('[data-sidebar]');var a=document.querySelector('[data-sidebar] [data-active]');if(s&&a){a.scrollIntoView({block:'nearest',behavior:'instant'})}})()`;
 
+const tocscript = `(function(){var n=document.querySelector('[data-toc]');var f=document.querySelector('[data-toc-item="first"]');if(n&&f){var s=getComputedStyle(f);var t=f.offsetTop+parseFloat(s.paddingTop);var h=f.clientHeight-parseFloat(s.paddingTop)-parseFloat(s.paddingBottom);n.style.setProperty('--toc-thumb-top',t+'px');n.style.setProperty('--toc-thumb-height',h+'px')}})()`;
+
 export default function DocsLayout({
 	children,
 }: { children: React.ReactNode }) {
@@ -38,6 +40,7 @@ export default function DocsLayout({
 						{children}
 					</main>
 					<Toc />
+					<script dangerouslySetInnerHTML={{ __html: tocscript }} />
 				</div>
 			</div>
 		</div>
