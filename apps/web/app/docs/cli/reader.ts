@@ -1,12 +1,13 @@
 import { readFileSync } from "fs";
 import { join } from "path";
+import { cache } from "react";
 
 const docsPath = join(process.cwd(), "..", "..", "packages", "cli", "docs");
 const whitespace = /\s+/g;
 
-export function readdoc(name: string): string {
+export const readdoc = cache((name: string): string => {
 	return readFileSync(join(docsPath, `${name}.md`), "utf-8");
-}
+});
 
 interface Section {
 	id: string;
