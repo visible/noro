@@ -1,0 +1,23 @@
+{
+  "name": "noro xbox",
+  "background": "#0e0e0e",
+  "foreground": "#ffffff",
+  "cursorColor": "#107C10",
+  "selectionBackground": "#107C1080",
+  "black": "#0e0e0e",
+  "red": "#D04242",
+  "green": "#3CDB4E",
+  "yellow": "#ECDB33",
+  "blue": "#40CCD0",
+  "purple": "#9b59b6",
+  "cyan": "#40CCD0",
+  "white": "#ffffff",
+  "brightBlack": "#444444",
+  "brightRed": "#e74c3c",
+  "brightGreen": "#4ade80",
+  "brightYellow": "#fef08a",
+  "brightBlue": "#67e8f9",
+  "brightPurple": "#c084fc",
+  "brightCyan": "#67e8f9",
+  "brightWhite": "#ffffff"
+}
