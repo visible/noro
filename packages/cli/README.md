@@ -88,6 +88,14 @@
 
   https://noro.sh
 
+> api?
+
+  https://noro.sh/docs/api
+  → public api with webhooks
+
+  npm install @noro-sh/sdk
+  → typescript sdk
+
 > ai agents?
 
   docs bundled at node_modules/noro/docs/
