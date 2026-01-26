@@ -26,7 +26,7 @@ export function Sidebar() {
 
 	return (
 		<aside ref={sidebarRef} className="hidden md:block w-56 shrink-0 border-r border-black/5 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-			<nav className={`p-6 transition-opacity duration-150 ${ready ? "opacity-100" : "opacity-0"}`}>
+			<nav className={`p-6 transition-[opacity,visibility] duration-150 ${ready ? "visible opacity-100" : "invisible opacity-0"}`}>
 				<div className="space-y-8">
 					{navigation.map((group) => (
 						<div key={group.title}>
