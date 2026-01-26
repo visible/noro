@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { Dock } from "@/components/dock";
@@ -14,38 +14,59 @@ const BackgroundBeams = dynamic(
   { ssr: false }
 );
 
+function measureFirstLine(element: HTMLElement | null): number {
+  if (!element) return 0;
+  const text = element.firstChild;
+  if (!text || !text.textContent) return 0;
+
+  const range = document.createRange();
+  range.setStart(text, 0);
+  const fullText = text.textContent;
+  const lineHeight = parseFloat(getComputedStyle(element).lineHeight);
+  const firstLineBottom = element.getBoundingClientRect().top + lineHeight;
+
+  let end = fullText.length;
+  for (let i = 1; i <= fullText.length; i++) {
+    range.setEnd(text, i);
+    if (range.getBoundingClientRect().bottom > firstLineBottom) {
+      end = i - 1;
+      break;
+    }
+  }
+  range.setEnd(text, end);
+  return range.getBoundingClientRect().width;
+}
+
 export default function Home() {
   const t = useTranslations("home");
   const bioRef = useRef<HTMLParagraphElement>(null);
-  const [lineWidth, setLineWidth] = useState<number | null>(null);
+  const [lineWidth, setLineWidth] = useState(200);
+  const [ready, setReady] = useState(false);
+  const tagline = t("tagline");
+
+  const measure = useCallback(() => {
+    const width = measureFirstLine(bioRef.current);
+    if (width > 0) {
+      setLineWidth(width);
+      setReady(true);
+    }
+  }, []);
 
   useEffect(() => {
-    const measure = () => {
-      if (!bioRef.current) return;
-      const range = document.createRange();
-      const text = bioRef.current.firstChild;
-      if (!text) return;
-      range.setStart(text, 0);
-      const fullText = text.textContent || "";
-      let end = fullText.length;
-      range.setEnd(text, end);
-      const lineHeight = parseFloat(getComputedStyle(bioRef.current).lineHeight);
-      const firstLineBottom = bioRef.current.getBoundingClientRect().top + lineHeight;
-      for (let i = 1; i <= fullText.length; i++) {
-        range.setEnd(text, i);
-        const rect = range.getBoundingClientRect();
-        if (rect.bottom > firstLineBottom) {
-          end = i - 1;
-          break;
-        }
-      }
-      range.setEnd(text, end);
-      setLineWidth(range.getBoundingClientRect().width);
+    const runMeasure = () => {
+      requestAnimationFrame(() => {
+        requestAnimationFrame(measure);
+      });
     };
-    document.fonts.ready.then(measure);
+
+    if (document.fonts.check("1em sans-serif")) {
+      runMeasure();
+    }
+    document.fonts.ready.then(runMeasure);
+
     window.addEventListener("resize", measure);
     return () => window.removeEventListener("resize", measure);
-  }, [t]);
+  }, [measure, tagline]);
 
   return (
     <BackgroundBeams className="text-white selection:bg-[#FF6B00] selection:text-black">
@@ -64,14 +85,12 @@ export default function Home() {
             <h1 className="text-[12vw] md:text-[10vw] leading-none font-bold tracking-tighter">
               {t("title")}
             </h1>
-            {lineWidth !== null && (
-              <motion.div
-                className="h-1 bg-[#FF6B00] mt-1"
-                initial={{ width: lineWidth }}
-                animate={{ width: lineWidth }}
-                transition={{ type: "spring", stiffness: 300, damping: 30 }}
-              />
-            )}
+            <motion.div
+              className="h-1 bg-[#FF6B00] mt-1"
+              initial={false}
+              animate={{ width: lineWidth }}
+              transition={ready ? { type: "spring", stiffness: 400, damping: 35 } : { duration: 0 }}
+            />
           </div>
         </div>
         <div className="px-4 sm:px-8 md:px-16 pr-16 sm:pr-20 md:pr-8">
@@ -79,7 +98,7 @@ export default function Home() {
             ref={bioRef}
             className="mt-4 sm:mt-8 text-[3.5vw] md:text-[1.5vw] leading-relaxed text-white/60"
           >
-            {t("tagline")}
+            {tagline}
           </p>
         </div>
       </section>
