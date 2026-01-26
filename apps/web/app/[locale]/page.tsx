@@ -1,8 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { useCallback, useEffect, useRef, useState } from "react";
-import { motion } from "motion/react";
+import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Dock } from "@/components/dock";
 import { Link } from "@/i18n/navigation";
@@ -14,47 +13,34 @@ const BackgroundBeams = dynamic(
   { ssr: false }
 );
 
-function measureFirstLine(element: HTMLElement | null): number {
-  if (!element) return 0;
-  const text = element.firstChild;
-  if (!text) return 0;
-
-  const range = document.createRange();
-  range.selectNodeContents(text);
-  const rects = range.getClientRects();
-
-  if (rects.length === 0) return 0;
-  return rects[0].width;
-}
-
 export default function Home() {
   const t = useTranslations("home");
   const bioRef = useRef<HTMLParagraphElement>(null);
-  const [lineWidth, setLineWidth] = useState<number | null>(null);
+  const [lineWidth, setLineWidth] = useState(0);
+  const [animate, setAnimate] = useState(false);
   const tagline = t("tagline");
 
-  const measure = useCallback(() => {
-    const width = measureFirstLine(bioRef.current);
-    if (width > 0) {
-      setLineWidth(width);
-    }
-  }, []);
-
   useEffect(() => {
-    const runMeasure = () => {
-      requestAnimationFrame(() => {
-        requestAnimationFrame(measure);
-      });
+    const measure = () => {
+      if (!bioRef.current) return;
+      const text = bioRef.current.firstChild;
+      if (!text) return;
+      const range = document.createRange();
+      range.selectNodeContents(text);
+      const rects = range.getClientRects();
+      if (rects.length > 0 && rects[0].width > 0) {
+        setLineWidth(rects[0].width);
+      }
     };
 
-    if (document.fonts.check("1em sans-serif")) {
-      runMeasure();
-    }
-    document.fonts.ready.then(runMeasure);
+    document.fonts.ready.then(() => {
+      measure();
+      setTimeout(() => setAnimate(true), 50);
+    });
 
     window.addEventListener("resize", measure);
     return () => window.removeEventListener("resize", measure);
-  }, [measure, tagline]);
+  }, [tagline]);
 
   return (
     <BackgroundBeams className="text-white selection:bg-[#FF6B00] selection:text-black">
@@ -73,14 +59,10 @@ export default function Home() {
             <h1 className="text-[12vw] md:text-[10vw] leading-none font-bold tracking-tighter">
               {t("title")}
             </h1>
-            {lineWidth && (
-              <motion.div
-                className="h-1 bg-[#FF6B00] mt-1"
-                initial={{ width: lineWidth }}
-                animate={{ width: lineWidth }}
-                transition={{ type: "spring", stiffness: 400, damping: 35 }}
-              />
-            )}
+            <div
+              className={`h-1 bg-[#FF6B00] mt-1 ${animate ? "transition-[width] duration-300 ease-out" : ""}`}
+              style={{ width: lineWidth > 0 ? lineWidth : "auto" }}
+            />
           </div>
         </div>
         <div className="px-4 sm:px-8 md:px-16 pr-16 sm:pr-20 md:pr-8">
