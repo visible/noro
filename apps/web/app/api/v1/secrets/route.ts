@@ -66,7 +66,7 @@ export async function POST(req: Request) {
       views: clampedviews,
       viewed: 0,
     });
-    await redis.set(`secret:${id}`, payload, { ex });
+    await redis.set(id, payload, { ex });
     if (apikey.webhook) {
       await send(apikey.webhook, "secret.created", id);
     }

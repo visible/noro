@@ -21,7 +21,7 @@ export async function GET(
   }
   try {
     const { id } = await params;
-    const raw = await redis.get<string>(`secret:${id}`);
+    const raw = await redis.get<string>(id);
     if (!raw) {
       return NextResponse.json({ error: "not found" }, { status: 404 });
     }
@@ -34,12 +34,12 @@ export async function GET(
     secret.viewed += 1;
     const remaining = Math.max(0, secret.views - secret.viewed);
     if (secret.viewed >= secret.views) {
-      await redis.del(`secret:${id}`);
+      await redis.del(id);
       if (apikey.webhook) {
         await send(apikey.webhook, "secret.expired", id);
       }
     } else {
-      await redis.set(`secret:${id}`, JSON.stringify(secret), { keepTtl: true });
+      await redis.set(id, JSON.stringify(secret), { keepTtl: true });
       if (apikey.webhook) {
         await send(apikey.webhook, "secret.viewed", id);
       }
@@ -74,11 +74,11 @@ export async function DELETE(
   }
   try {
     const { id } = await params;
-    const exists = await redis.exists(`secret:${id}`);
+    const exists = await redis.exists(id);
     if (!exists) {
       return NextResponse.json({ error: "not found" }, { status: 404 });
     }
-    await redis.del(`secret:${id}`);
+    await redis.del(id);
     return NextResponse.json({ deleted: true });
   } catch {
     return NextResponse.json({ error: "failed" }, { status: 500 });
