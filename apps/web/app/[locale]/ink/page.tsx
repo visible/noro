@@ -6,6 +6,7 @@ import { Dock } from "@/components/dock";
 import { Link } from "@/i18n/navigation";
 import { Logo } from "@/components/logo";
 import { LanguageToggle } from "@/components/languagetoggle";
+import { Controller } from "@/components/controller";
 
 const BackgroundBeams = dynamic(
 	() => import("@/components/background-beams").then((mod) => mod.BackgroundBeams),
@@ -184,20 +185,18 @@ export default function Ink() {
 
 					<div className="mt-12 max-w-2xl">
 						<h2 className="text-xs tracking-widest text-white/30 uppercase mb-4">streaming</h2>
+						<div className="p-6 rounded-xl bg-white/5 mb-4">
+							<div className="w-64 mx-auto">
+								<Controller accent={theme.accent} colors={theme.colors} />
+							</div>
+						</div>
 						<a
 							href={`https://gamepadviewer.com/?p=1&s=1&editcss=https://noro.sh/themes/noro-gamepad.css`}
 							target="_blank"
 							rel="noopener noreferrer"
 							className="flex items-center justify-between px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors group"
 						>
-							<span className="text-sm text-white/70 group-hover:text-white flex items-center gap-2">
-								<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
-									<rect x="2" y="6" width="20" height="12" rx="2" />
-									<circle cx="8" cy="12" r="2" />
-									<path d="M15 9h2M15 15h2M18 12h-4" />
-								</svg>
-								gamepad viewer
-							</span>
+							<span className="text-sm text-white/70 group-hover:text-white">gamepad viewer</span>
 							<span className="text-xs text-white/30">obs overlay</span>
 						</a>
 						<p className="mt-3 text-xs text-white/20">
