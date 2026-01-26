@@ -27,7 +27,7 @@ export default function Home() {
         <Logo />
       </Link>
 
-      <section className="absolute inset-0 flex items-center px-8 md:px-16 z-10 pb-32">
+      <section className="absolute inset-0 flex items-start pt-[35vh] px-8 md:px-16 z-10">
         <div>
           <h1 className="text-[18vw] md:text-[12vw] leading-none font-bold tracking-tighter border-b-4 border-[#FF6B00]">
             {t("title")}
