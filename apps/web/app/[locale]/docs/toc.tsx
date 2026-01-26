@@ -283,7 +283,14 @@ export function Toc() {
 					<span className="text-xs uppercase tracking-wider text-black/30 font-medium">On this page</span>
 				</div>
 
-				{items.length === 0 ? null : (
+				{items.length === 0 ? (
+				<div className="flex flex-col gap-2">
+					<div className="h-4 w-32 bg-black/5 rounded animate-pulse" />
+					<div className="h-4 w-24 bg-black/5 rounded animate-pulse" />
+					<div className="h-4 w-28 bg-black/5 rounded animate-pulse" />
+					<div className="h-4 w-20 bg-black/5 rounded animate-pulse" />
+				</div>
+			) : (
 				<nav className={`relative transition-opacity duration-200 ${ready ? "opacity-100" : "opacity-0"}`}>
 					{svg && (
 						<div
