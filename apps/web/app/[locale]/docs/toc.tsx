@@ -275,8 +275,6 @@ export function Toc() {
 		setTimeout(() => setLinkCopied(false), 2000);
 	}, []);
 
-	if (items.length === 0) return null;
-
 	return (
 		<aside className="hidden xl:block w-56 shrink-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
 			<div className="py-6 pr-6">
@@ -285,6 +283,7 @@ export function Toc() {
 					<span className="text-xs uppercase tracking-wider text-black/30 font-medium">On this page</span>
 				</div>
 
+				{items.length === 0 ? null : (
 				<nav className={`relative transition-opacity duration-200 ${ready ? "opacity-100" : "opacity-0"}`}>
 					{svg && (
 						<div
@@ -352,6 +351,7 @@ export function Toc() {
 						})}
 					</div>
 				</nav>
+				)}
 
 				<div className="flex items-center gap-1 mt-6 pt-6 border-t border-black/10">
 					<button
