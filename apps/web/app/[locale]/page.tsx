@@ -60,8 +60,8 @@ export default function Home() {
       <section className="absolute inset-0 z-10">
         <div className="h-1/2 flex flex-col justify-end px-4 sm:px-8 md:px-16 pr-16 sm:pr-20 md:pr-8">
           <h1
-            className="text-[12vw] md:text-[10vw] leading-none font-bold tracking-tighter border-b-4 border-[#FF6B00]"
-            style={{ width: lineWidth ? `${lineWidth}px` : "fit-content" }}
+            className="text-[12vw] md:text-[10vw] leading-none font-bold tracking-tighter border-b-4 border-[#FF6B00] transition-all duration-300"
+            style={{ width: lineWidth ? `${lineWidth}px` : "fit-content", opacity: lineWidth ? 1 : 0 }}
           >
             {t("title")}
           </h1>
@@ -69,7 +69,8 @@ export default function Home() {
         <div className="px-4 sm:px-8 md:px-16 pr-16 sm:pr-20 md:pr-8">
           <p
             ref={bioRef}
-            className="mt-4 sm:mt-8 text-[3.5vw] md:text-[1.5vw] leading-relaxed text-white/60"
+            className="mt-4 sm:mt-8 text-[3.5vw] md:text-[1.5vw] leading-relaxed text-white/60 transition-opacity duration-300"
+            style={{ opacity: lineWidth ? 1 : 0 }}
           >
             {t("tagline")}
           </p>
