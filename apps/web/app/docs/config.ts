@@ -58,14 +58,19 @@ export const pages = navigation.flatMap((group) =>
 	}))
 );
 
+const pagemap = new Map(pages.map((p) => [p.href, p]));
+const pageindex = new Map(pages.map((p, i) => [p.href, i]));
+
+const defaultpage = { title: "Docs", href: "/docs", section: "start", sectionTitle: "Get Started" };
+
 export function getpage(pathname: string) {
-	return pages.find((p) => p.href === pathname) ?? { title: "Docs", href: "/docs", section: "start", sectionTitle: "Get Started" };
+	return pagemap.get(pathname) ?? defaultpage;
 }
 
 export function getprevnext(pathname: string) {
-	const index = pages.findIndex((p) => p.href === pathname);
+	const index = pageindex.get(pathname) ?? -1;
 	return {
 		prev: index > 0 ? pages[index - 1] : null,
-		next: index < pages.length - 1 ? pages[index + 1] : null,
+		next: index >= 0 && index < pages.length - 1 ? pages[index + 1] : null,
 	};
 }
