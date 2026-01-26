@@ -38,7 +38,8 @@ export default function Auth() {
 					response:
 				</p>
 				<Code>{`{
-  "key": "noro_a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6"
+  "key": "noro_a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6",
+  "expires": 1714000000000
 }`}</Code>
 				<p className="text-black/60 mt-4 max-w-2xl">
 					optionally, include a webhook URL to receive notifications:
@@ -46,6 +47,36 @@ export default function Auth() {
 				<Code className="mt-4">{`curl -X POST https://noro.sh/api/v1/keys \\
   -H "Content-Type: application/json" \\
   -d '{"webhook":"https://example.com/webhook"}'`}</Code>
+			</Section>
+
+			<Section id="expiration" title="Key expiration">
+				<p className="text-black/60 mb-4 max-w-2xl">
+					API keys expire after <strong className="text-black">90 days</strong> by default. the <code className="text-[#C53D43]">expires</code> field in the response is a unix timestamp in milliseconds.
+				</p>
+				<p className="text-black/60 max-w-2xl">
+					generate a new key before expiration to avoid service interruption.
+				</p>
+			</Section>
+
+			<Section id="revoke" title="Revoke a key">
+				<p className="text-black/60 mb-4 max-w-2xl">
+					delete your API key if it&apos;s compromised or no longer needed:
+				</p>
+				<Code>{`curl -X DELETE https://noro.sh/api/v1/keys \\
+  -H "Authorization: Bearer noro_..."`}</Code>
+			</Section>
+
+			<Section id="update" title="Update webhook">
+				<p className="text-black/60 mb-4 max-w-2xl">
+					change or remove the webhook URL for your key:
+				</p>
+				<Code>{`curl -X PATCH https://noro.sh/api/v1/keys \\
+  -H "Authorization: Bearer noro_..." \\
+  -H "Content-Type: application/json" \\
+  -d '{"webhook":"https://new-url.com/webhook"}'`}</Code>
+				<p className="text-black/60 mt-4 max-w-2xl">
+					set webhook to empty string to remove it.
+				</p>
 			</Section>
 
 			<Section id="usage" title="Using your key">

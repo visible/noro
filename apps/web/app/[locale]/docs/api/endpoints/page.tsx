@@ -25,7 +25,7 @@ export default function Endpoints() {
 
 			<Section id="create-key" title="POST /keys">
 				<p className="text-black/60 mb-4 max-w-2xl">
-					generate a new API key.
+					generate a new API key. keys expire after 90 days.
 				</p>
 				<h4 className="text-sm font-semibold text-black/50 mb-2">request body</h4>
 				<Code>{`{
@@ -33,7 +33,36 @@ export default function Endpoints() {
 }`}</Code>
 				<h4 className="text-sm font-semibold text-black/50 mt-4 mb-2">response</h4>
 				<Code>{`{
-  "key": "noro_a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6"
+  "key": "noro_a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6",
+  "expires": 1714000000000
+}`}</Code>
+			</Section>
+
+			<Section id="update-key" title="PATCH /keys">
+				<p className="text-black/60 mb-4 max-w-2xl">
+					update your API key settings. requires authentication.
+				</p>
+				<h4 className="text-sm font-semibold text-black/50 mb-2">request headers</h4>
+				<Code>Authorization: Bearer noro_...</Code>
+				<h4 className="text-sm font-semibold text-black/50 mt-4 mb-2">request body</h4>
+				<Code>{`{
+  "webhook": "https://new-url.com/webhook"  // set to "" to remove
+}`}</Code>
+				<h4 className="text-sm font-semibold text-black/50 mt-4 mb-2">response</h4>
+				<Code>{`{
+  "updated": true
+}`}</Code>
+			</Section>
+
+			<Section id="delete-key" title="DELETE /keys">
+				<p className="text-black/60 mb-4 max-w-2xl">
+					revoke your API key. requires authentication.
+				</p>
+				<h4 className="text-sm font-semibold text-black/50 mb-2">request headers</h4>
+				<Code>Authorization: Bearer noro_...</Code>
+				<h4 className="text-sm font-semibold text-black/50 mt-4 mb-2">response</h4>
+				<Code>{`{
+  "deleted": true
 }`}</Code>
 			</Section>
 
