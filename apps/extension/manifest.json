@@ -26,7 +26,7 @@
   },
   "browser_specific_settings": {
     "gecko": {
-      "id": "noro@noro.sh",
+      "id": "owl@noro.sh",
       "strict_min_version": "109.0"
     }
   }
