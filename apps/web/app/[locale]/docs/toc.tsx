@@ -297,7 +297,7 @@ export function Toc() {
 				<nav className="relative">
 					{svg && (
 						<div
-							className="absolute left-0 top-0"
+							className="absolute left-0 top-0 animate-in fade-in duration-200"
 							style={{
 								width: svg.width,
 								height: svg.height,
