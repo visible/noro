@@ -41,6 +41,16 @@ export const navigation = [
 		],
 	},
 	{
+		title: "API",
+		section: "api",
+		items: [
+			{ title: "Overview", href: "/docs/api" },
+			{ title: "Authentication", href: "/docs/api/auth" },
+			{ title: "Endpoints", href: "/docs/api/endpoints" },
+			{ title: "Webhooks", href: "/docs/api/webhooks" },
+		],
+	},
+	{
 		title: "Coming Soon",
 		section: "future",
 		items: [
