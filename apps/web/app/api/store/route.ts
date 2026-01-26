@@ -1,11 +1,6 @@
-import { Redis } from "@upstash/redis";
 import { NextResponse } from "next/server";
+import { redis } from "@/lib/redis";
 import { storelimit, getip } from "@/lib/ratelimit";
-
-const redis = new Redis({
-  url: process.env.KV_REST_API_URL!,
-  token: process.env.KV_REST_API_TOKEN!,
-});
 
 const ttls: Record<string, number> = {
   "1h": 3600,

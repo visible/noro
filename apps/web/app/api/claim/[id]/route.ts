@@ -1,24 +1,6 @@
-import { Redis } from "@upstash/redis";
 import { NextResponse } from "next/server";
+import { redis, delay, randomdelay, type StoredSecret } from "@/lib/redis";
 import { claimlimit, getip } from "@/lib/ratelimit";
-
-const redis = new Redis({
-  url: process.env.KV_REST_API_URL!,
-  token: process.env.KV_REST_API_TOKEN!,
-});
-
-interface StoredSecret {
-  data: string;
-  type: "text" | "file";
-  filename?: string;
-  mimetype?: string;
-  views: number;
-  viewed: number;
-}
-
-async function delay(ms: number) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
 
 export async function GET(
   req: Request,
@@ -29,8 +11,7 @@ export async function GET(
   if (!success) {
     return NextResponse.json({ error: "rate limited" }, { status: 429 });
   }
-  const randomdelay = 100 + Math.random() * 200;
-  await delay(randomdelay);
+  await delay(randomdelay());
 
   try {
     const { id } = await params;
