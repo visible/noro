@@ -34,7 +34,7 @@ export default function Home() {
           </h1>
         </div>
         <div className="px-4 sm:px-8 md:px-16 pr-16 sm:pr-20 md:pr-8">
-          <p className="mt-4 sm:mt-8 text-sm sm:text-lg md:text-xl leading-relaxed max-w-xs sm:max-w-xl text-white/60">
+          <p className="mt-4 sm:mt-8 text-[3.5vw] md:text-[1.5vw] leading-relaxed max-w-[80vw] md:max-w-[40vw] text-white/60">
             {t("tagline")}
           </p>
         </div>
