@@ -23,5 +23,11 @@
   "background": {
     "service_worker": "dist/background.js",
     "type": "module"
+  },
+  "browser_specific_settings": {
+    "gecko": {
+      "id": "noro@noro.sh",
+      "strict_min_version": "109.0"
+    }
   }
 }
