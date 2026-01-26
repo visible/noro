@@ -1,4 +1,3 @@
-import { Analytics } from "@vercel/analytics/next";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -25,17 +24,9 @@ export default async function LocaleLayout({ children, params }: Props) {
   setRequestLocale(locale);
 
   return (
-    <html lang={locale}>
-      <head>
-        <meta name="referrer" content="no-referrer" />
-      </head>
-      <body className="font-sans antialiased">
-        <NextIntlClientProvider>
-          {children}
-          <CommandPalette />
-        </NextIntlClientProvider>
-        <Analytics />
-      </body>
-    </html>
+    <NextIntlClientProvider>
+      {children}
+      <CommandPalette />
+    </NextIntlClientProvider>
   );
 }
