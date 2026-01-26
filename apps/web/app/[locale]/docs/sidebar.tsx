@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { navigation } from "./config";
@@ -10,20 +10,23 @@ export function Sidebar() {
 	const sidebarRef = useRef<HTMLElement>(null);
 	const activeRef = useRef<HTMLAnchorElement>(null);
 	const mounted = useRef(false);
+	const [ready, setReady] = useState(false);
 
 	useEffect(() => {
 		const behavior = mounted.current ? "smooth" : "instant";
+		const isInitial = !mounted.current;
 		mounted.current = true;
 		if (pathname === "/docs") {
 			sidebarRef.current?.scrollTo({ top: 0, behavior });
 		} else {
 			activeRef.current?.scrollIntoView({ block: "nearest", behavior });
 		}
+		if (isInitial) setReady(true);
 	}, [pathname]);
 
 	return (
 		<aside ref={sidebarRef} className="hidden md:block w-56 shrink-0 border-r border-black/5 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-			<nav className="p-6">
+			<nav className={`p-6 ${ready ? "opacity-100" : "opacity-0"}`}>
 				<div className="space-y-8">
 					{navigation.map((group) => (
 						<div key={group.title}>
