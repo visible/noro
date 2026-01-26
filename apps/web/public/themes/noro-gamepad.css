@@ -1,0 +1,125 @@
+/*
+ * noro dark theme for gamepadviewer.com
+ *
+ * usage:
+ * https://gamepadviewer.com/?p=1&s=1&editcss=https://noro.sh/themes/noro-gamepad.css
+ *
+ * s=1 is xbox one controller
+ */
+
+.controller.edit.disconnected {
+  opacity: 0 !important;
+  transition: opacity 0.3s ease-out;
+}
+
+.controller.edit {
+  filter:
+    brightness(0.15)
+    contrast(1.2);
+  transition: opacity 0.3s ease-in;
+}
+
+.edit .trigger {
+  filter:
+    sepia(1)
+    saturate(5)
+    hue-rotate(-15deg)
+    brightness(1.2);
+}
+
+.edit .bumper {
+  filter:
+    sepia(1)
+    saturate(5)
+    hue-rotate(-15deg)
+    brightness(1.2);
+}
+
+.edit .button.a {
+  filter:
+    sepia(1)
+    saturate(3)
+    hue-rotate(70deg)
+    brightness(1.2);
+}
+
+.edit .button.b {
+  filter:
+    sepia(1)
+    saturate(3)
+    hue-rotate(-30deg)
+    brightness(1.1);
+}
+
+.edit .button.x {
+  filter:
+    sepia(1)
+    saturate(3)
+    hue-rotate(140deg)
+    brightness(1.2);
+}
+
+.edit .button.y {
+  filter:
+    sepia(1)
+    saturate(3)
+    hue-rotate(10deg)
+    brightness(1.3);
+}
+
+.edit .stick {
+  filter:
+    sepia(1)
+    saturate(5)
+    hue-rotate(-15deg)
+    brightness(0.9);
+}
+
+.edit .stick.pressed {
+  filter:
+    sepia(1)
+    saturate(5)
+    hue-rotate(-15deg)
+    brightness(1.3);
+}
+
+.edit .face {
+  filter:
+    sepia(1)
+    saturate(5)
+    hue-rotate(-15deg)
+    brightness(1);
+}
+
+.edit .face.pressed {
+  filter:
+    sepia(1)
+    saturate(5)
+    hue-rotate(-15deg)
+    brightness(1.4);
+}
+
+.edit .back,
+.edit .start {
+  filter:
+    sepia(1)
+    saturate(3)
+    hue-rotate(-15deg)
+    brightness(0.8);
+}
+
+.edit .back.pressed,
+.edit .start.pressed {
+  filter:
+    sepia(1)
+    saturate(5)
+    hue-rotate(-15deg)
+    brightness(1.3);
+}
+
+.edit .quadrant {
+  filter:
+    sepia(1)
+    saturate(5)
+    hue-rotate(-15deg);
+}
