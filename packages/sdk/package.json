@@ -1,0 +1,38 @@
+{
+  "name": "noro-sdk",
+  "version": "0.0.0",
+  "description": "sdk for noro one-time secret sharing",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --format esm --dts",
+    "dev": "tsup src/index.ts --format esm --dts --watch"
+  },
+  "devDependencies": {
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2"
+  },
+  "keywords": [
+    "noro",
+    "secrets",
+    "one-time",
+    "encryption",
+    "api"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/visible/noro"
+  },
+  "homepage": "https://noro.sh",
+  "license": "MIT"
+}
