@@ -17,9 +17,9 @@ const ttls: Record<string, number> = {
 
 function generateid(): string {
   const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-  const bytes = crypto.getRandomValues(new Uint8Array(6));
+  const bytes = crypto.getRandomValues(new Uint8Array(8));
   let id = "";
-  for (let i = 0; i < 6; i++) {
+  for (let i = 0; i < 8; i++) {
     id += chars[bytes[i] % chars.length];
   }
   return id;

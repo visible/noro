@@ -2,6 +2,10 @@
 
 import { Section, Code } from "../components";
 
+const orderedlist = /^\d+\.\s/;
+const listitem = /^[-\d.]\s*/;
+const inlinecode = /`([^`]+)`/;
+
 interface MarkdownProps {
 	sections: {
 		id: string;
@@ -34,8 +38,8 @@ function parseContent(content: string) {
 
 		if (line.startsWith("- ") || line.startsWith("1. ")) {
 			const listItems: string[] = [];
-			while (i < lines.length && (lines[i].startsWith("- ") || /^\d+\.\s/.test(lines[i]))) {
-				listItems.push(lines[i].replace(/^[-\d.]\s*/, ""));
+			while (i < lines.length && (lines[i].startsWith("- ") || orderedlist.test(lines[i]))) {
+				listItems.push(lines[i].replace(listitem, ""));
 				i++;
 			}
 			const isOrdered = line.startsWith("1.");
@@ -85,7 +89,7 @@ function parseInline(text: string): React.ReactNode {
 	let key = 0;
 
 	while (remaining.length > 0) {
-		const codeMatch = remaining.match(/`([^`]+)`/);
+		const codeMatch = remaining.match(inlinecode);
 		if (codeMatch && codeMatch.index !== undefined) {
 			if (codeMatch.index > 0) {
 				parts.push(remaining.slice(0, codeMatch.index));

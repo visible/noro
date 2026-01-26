@@ -2,6 +2,7 @@ import { readFileSync } from "fs";
 import { join } from "path";
 
 const docsPath = join(process.cwd(), "..", "..", "packages", "cli", "docs");
+const whitespace = /\s+/g;
 
 export function readdoc(name: string): string {
 	return readFileSync(join(docsPath, `${name}.md`), "utf-8");
@@ -33,7 +34,7 @@ export function parsedoc(markdown: string): ParsedDoc {
 			if (current) sections.push(current);
 			const sectionTitle = line.replace(/^##\s+/, "");
 			current = {
-				id: sectionTitle.toLowerCase().replace(/\s+/g, "-"),
+				id: sectionTitle.toLowerCase().replace(whitespace, "-"),
 				title: sectionTitle,
 				content: "",
 			};
