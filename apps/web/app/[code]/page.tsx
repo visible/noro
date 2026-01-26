@@ -15,7 +15,6 @@ type Status =
 
 const content = {
   en: {
-    title: "view",
     loading: "checking...",
     confirm: "a secret is waiting for you",
     confirmWarning: "once revealed, this secret will be permanently deleted",
@@ -36,7 +35,6 @@ const content = {
     create: "create your own",
   },
   jp: {
-    title: "表示",
     loading: "確認中...",
     confirm: "シークレットが届いています",
     confirmWarning: "表示後、このシークレットは完全に削除されます",
@@ -121,6 +119,20 @@ export default function ClaimPage({
 
   const t = content[lang];
 
+  const titles = {
+    loading: { en: "loading", jp: "読み込み中" },
+    confirm: { en: "confirm", jp: "確認" },
+    claiming: { en: "decrypting", jp: "復号中" },
+    success: { en: "secret", jp: "シークレット" },
+    notfound: { en: "not found", jp: "見つかりません" },
+    error: { en: "error", jp: "エラー" },
+  };
+
+  useEffect(() => {
+    const title = titles[status][lang];
+    document.title = `${title} | noro`;
+  }, [status, lang]);
+
   useEffect(() => {
     async function peek() {
       try {
@@ -181,6 +193,7 @@ export default function ClaimPage({
         setSecret({ type: "text", ...parsed, remaining });
       }
       setStatus("success");
+      window.history.replaceState(null, "", window.location.pathname);
     } catch {
       setStatus("error");
     }
@@ -264,22 +277,24 @@ export default function ClaimPage({
           <div className="mb-8 sm:mb-16">
             <div className="relative">
               <h1 className="text-3xl sm:text-4xl font-bold tracking-tighter border-b-4 border-[#FF6B00] inline-block invisible">
-                {content.en.title}
+                {titles[status].en}
               </h1>
               <h1
                 className="absolute top-0 left-0 text-3xl sm:text-4xl font-bold tracking-tighter border-b-4 border-[#FF6B00] transition-opacity duration-200"
                 style={{ opacity: lang === "en" ? 1 : 0 }}
               >
-                {content.en.title}
+                {titles[status].en}
               </h1>
               <h1
                 className="absolute top-0 left-0 text-3xl sm:text-4xl font-bold tracking-tighter border-b-4 border-[#FF6B00] transition-opacity duration-200"
                 style={{ opacity: lang === "jp" ? 1 : 0 }}
               >
-                {content.jp.title}
+                {titles[status].jp}
               </h1>
             </div>
-            <div className="mt-4 h-5"></div>
+            <div className="relative mt-4">
+              <p className="text-white/40 text-sm invisible">placeholder</p>
+            </div>
           </div>
 
           <div className="relative min-h-[340px]">

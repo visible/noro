@@ -1,14 +1,14 @@
 "use client";
 
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 type Language = "en" | "jp";
 type Mode = "text" | "file";
 
 const content = {
   en: {
-    title: "new",
+    title: "share",
     subtitle: "create a one-time secret link",
     text: "text",
     file: "file",
@@ -35,7 +35,7 @@ const content = {
     ],
   },
   jp: {
-    title: "新規",
+    title: "共有",
     subtitle: "ワンタイムシークレットリンクを作成",
     text: "テキスト",
     file: "ファイル",
@@ -102,6 +102,10 @@ export default function SharePage() {
   const fileRef = useRef<HTMLInputElement>(null);
 
   const t = content[lang];
+
+  useEffect(() => {
+    document.title = lang === "en" ? "share | noro" : "共有 | noro";
+  }, [lang]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();

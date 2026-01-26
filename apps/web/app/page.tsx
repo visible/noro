@@ -2,7 +2,7 @@
 
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Dock } from "@/components/dock";
 
 const BackgroundBeams = dynamic(
@@ -26,6 +26,10 @@ const content = {
 export default function Home() {
   const [lang, setLang] = useState<Language>("en");
   const _t = content[lang];
+
+  useEffect(() => {
+    document.title = "noro";
+  }, []);
 
   return (
     <BackgroundBeams className="text-white selection:bg-[#FF6B00] selection:text-black">
