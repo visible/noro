@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scheme name="noro dark" version="142" parent_scheme="Darcula">
+  <colors>
+    <option name="CARET_COLOR" value="ff6b00"/>
+    <option name="CARET_ROW_COLOR" value="292524"/>
+    <option name="SELECTION_BACKGROUND" value="ff6b0040"/>
+    <option name="GUTTER_BACKGROUND" value="0c0a09"/>
+    <option name="LINE_NUMBERS_COLOR" value="57534e"/>
+    <option name="RIGHT_MARGIN_COLOR" value="292524"/>
+    <option name="INDENT_GUIDE" value="292524"/>
+    <option name="ADDED_LINES_COLOR" value="22c55e"/>
+    <option name="MODIFIED_LINES_COLOR" value="3b82f6"/>
+    <option name="DELETED_LINES_COLOR" value="ef4444"/>
+  </colors>
+  <attributes>
+    <option name="TEXT">
+      <value>
+        <option name="FOREGROUND" value="fafaf9"/>
+        <option name="BACKGROUND" value="1c1917"/>
+      </value>
+    </option>
+    <option name="DEFAULT_KEYWORD">
+      <value>
+        <option name="FOREGROUND" value="ff6b00"/>
+      </value>
+    </option>
+    <option name="DEFAULT_STRING">
+      <value>
+        <option name="FOREGROUND" value="a8a29e"/>
+      </value>
+    </option>
+    <option name="DEFAULT_NUMBER">
+      <value>
+        <option name="FOREGROUND" value="fbbf24"/>
+      </value>
+    </option>
+    <option name="DEFAULT_COMMENT">
+      <value>
+        <option name="FOREGROUND" value="57534e"/>
+        <option name="FONT_TYPE" value="2"/>
+      </value>
+    </option>
+    <option name="DEFAULT_FUNCTION_DECLARATION">
+      <value>
+        <option name="FOREGROUND" value="fafaf9"/>
+      </value>
+    </option>
+    <option name="DEFAULT_CLASS_NAME">
+      <value>
+        <option name="FOREGROUND" value="fbbf24"/>
+      </value>
+    </option>
+  </attributes>
+</scheme>

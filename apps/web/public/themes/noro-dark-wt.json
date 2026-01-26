@@ -1,0 +1,23 @@
+{
+  "name": "noro dark",
+  "background": "#0C0A09",
+  "foreground": "#FAFAF9",
+  "cursorColor": "#FF6B00",
+  "selectionBackground": "#FF6B00",
+  "black": "#1C1917",
+  "brightBlack": "#57534E",
+  "red": "#EF4444",
+  "brightRed": "#F87171",
+  "green": "#22C55E",
+  "brightGreen": "#4ADE80",
+  "yellow": "#EAB308",
+  "brightYellow": "#FACC15",
+  "blue": "#3B82F6",
+  "brightBlue": "#60A5FA",
+  "purple": "#A855F7",
+  "brightPurple": "#C084FC",
+  "cyan": "#06B6D4",
+  "brightCyan": "#22D3EE",
+  "white": "#D6D3D1",
+  "brightWhite": "#FAFAF9"
+}

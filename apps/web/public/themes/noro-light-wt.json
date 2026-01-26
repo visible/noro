@@ -1,0 +1,23 @@
+{
+  "name": "noro light",
+  "background": "#F5F3EF",
+  "foreground": "#1C1917",
+  "cursorColor": "#C53D43",
+  "selectionBackground": "#C53D43",
+  "black": "#1C1917",
+  "brightBlack": "#57534E",
+  "red": "#DC2626",
+  "brightRed": "#EF4444",
+  "green": "#16A34A",
+  "brightGreen": "#22C55E",
+  "yellow": "#CA8A04",
+  "brightYellow": "#EAB308",
+  "blue": "#2563EB",
+  "brightBlue": "#3B82F6",
+  "purple": "#9333EA",
+  "brightPurple": "#A855F7",
+  "cyan": "#0891B2",
+  "brightCyan": "#06B6D4",
+  "white": "#F5F3EF",
+  "brightWhite": "#FAFAF9"
+}

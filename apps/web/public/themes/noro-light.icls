@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scheme name="noro light" version="142" parent_scheme="Default">
+  <colors>
+    <option name="CARET_COLOR" value="c53d43"/>
+    <option name="CARET_ROW_COLOR" value="ebe8e3"/>
+    <option name="SELECTION_BACKGROUND" value="c53d4340"/>
+    <option name="GUTTER_BACKGROUND" value="ebe8e3"/>
+    <option name="LINE_NUMBERS_COLOR" value="a8a29e"/>
+    <option name="RIGHT_MARGIN_COLOR" value="e7e5e4"/>
+    <option name="INDENT_GUIDE" value="e7e5e4"/>
+    <option name="ADDED_LINES_COLOR" value="16a34a"/>
+    <option name="MODIFIED_LINES_COLOR" value="2563eb"/>
+    <option name="DELETED_LINES_COLOR" value="dc2626"/>
+  </colors>
+  <attributes>
+    <option name="TEXT">
+      <value>
+        <option name="FOREGROUND" value="1c1917"/>
+        <option name="BACKGROUND" value="f5f3ef"/>
+      </value>
+    </option>
+    <option name="DEFAULT_KEYWORD">
+      <value>
+        <option name="FOREGROUND" value="c53d43"/>
+      </value>
+    </option>
+    <option name="DEFAULT_STRING">
+      <value>
+        <option name="FOREGROUND" value="57534e"/>
+      </value>
+    </option>
+    <option name="DEFAULT_NUMBER">
+      <value>
+        <option name="FOREGROUND" value="b45309"/>
+      </value>
+    </option>
+    <option name="DEFAULT_COMMENT">
+      <value>
+        <option name="FOREGROUND" value="a8a29e"/>
+        <option name="FONT_TYPE" value="2"/>
+      </value>
+    </option>
+    <option name="DEFAULT_FUNCTION_DECLARATION">
+      <value>
+        <option name="FOREGROUND" value="1c1917"/>
+      </value>
+    </option>
+    <option name="DEFAULT_CLASS_NAME">
+      <value>
+        <option name="FOREGROUND" value="b45309"/>
+      </value>
+    </option>
+  </attributes>
+</scheme>
