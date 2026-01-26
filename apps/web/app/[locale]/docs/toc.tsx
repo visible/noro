@@ -2,13 +2,7 @@
 
 import { useEffect, useState, useCallback, useRef } from "react";
 import { usePathname } from "next/navigation";
-import { version } from "./config";
-
-interface TocItem {
-	id: string;
-	text: string;
-	level: number;
-}
+import { version, gettoc, type TocItem } from "./config";
 
 function getLineOffset(depth: number): number {
 	return depth >= 3 ? 10 : 0;
@@ -62,43 +56,29 @@ const versionIcon = (
 );
 
 export function Toc() {
-	const [items, setItems] = useState<TocItem[]>([]);
-	const [activeIds, setActiveIds] = useState<string[]>([]);
+	const pathname = usePathname();
+	const items = gettoc(pathname);
+	const [activeIds, setActiveIds] = useState<string[]>(() => {
+		const first = items[0];
+		return first ? [first.id] : [];
+	});
 	const [svg, setSvg] = useState<{ path: string; width: number; height: number } | null>(null);
 	const [thumb, setThumb] = useState<{ top: number; height: number }>({ top: 0, height: 0 });
 	const [copied, setCopied] = useState(false);
 	const [linkCopied, setLinkCopied] = useState(false);
 	const [showTop, setShowTop] = useState(false);
 	const [showVersions, setShowVersions] = useState(false);
-	const [ready, setReady] = useState(false);
 	const containerRef = useRef<HTMLDivElement>(null);
 	const mainRef = useRef<HTMLElement | null>(null);
-	const pathname = usePathname();
 
 	useEffect(() => {
-		setReady(false);
-
-		const headings = Array.from(
-			document.querySelectorAll("article h2[id], article h3[id]")
-		) as HTMLElement[];
-
-		const tocItems = headings.map((heading) => ({
-			id: heading.id,
-			text: heading.textContent || "",
-			level: parseInt(heading.tagName[1] ?? "2"),
-		}));
-
-		setItems(tocItems);
 		mainRef.current = document.querySelector("main");
-
-		const first = tocItems[0];
+		const first = items[0];
 		if (first) {
 			setActiveIds([first.id]);
 		}
 		setShowTop(false);
-
-		requestAnimationFrame(() => setReady(true));
-	}, [pathname]);
+	}, [items]);
 
 	useEffect(() => {
 		if (items.length === 0) return;
@@ -275,6 +255,37 @@ export function Toc() {
 		setTimeout(() => setLinkCopied(false), 2000);
 	}, []);
 
+	if (items.length === 0) {
+		return (
+			<aside className="hidden xl:block w-56 shrink-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+				<div className="py-6 pr-6">
+					<div className="flex items-center gap-1 mt-6 pt-6 border-t border-black/10">
+						<button
+							onClick={copyLink}
+							className={`p-2 rounded-md transition-all ${
+								linkCopied
+									? "text-[#C53D43] bg-[#C53D43]/10"
+									: "text-black/40 hover:text-black/70 hover:bg-black/5"
+							}`}
+							title="Copy link"
+						>
+							{linkCopied ? checkIcon : linkIcon}
+						</button>
+						<a
+							href={`https://github.com/visible/noro/issues/new?title=Docs feedback: ${pathname}&body=Page: ${pathname}%0A%0AFeedback:%0A`}
+							target="_blank"
+							rel="noopener noreferrer"
+							className="p-2 rounded-md transition-all text-black/40 hover:text-black/70 hover:bg-black/5"
+							title="Send feedback"
+						>
+							{feedbackIcon}
+						</a>
+					</div>
+				</div>
+			</aside>
+		);
+	}
+
 	return (
 		<aside className="hidden xl:block w-56 shrink-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
 			<div className="py-6 pr-6">
@@ -283,15 +294,7 @@ export function Toc() {
 					<span className="text-xs uppercase tracking-wider text-black/30 font-medium">On this page</span>
 				</div>
 
-				{items.length === 0 ? (
-				<div className="flex flex-col gap-2">
-					<div className="h-4 w-32 bg-black/5 rounded animate-pulse" />
-					<div className="h-4 w-24 bg-black/5 rounded animate-pulse" />
-					<div className="h-4 w-28 bg-black/5 rounded animate-pulse" />
-					<div className="h-4 w-20 bg-black/5 rounded animate-pulse" />
-				</div>
-			) : (
-				<nav className={`relative transition-opacity duration-200 ${ready ? "opacity-100" : "opacity-0"}`}>
+				<nav className="relative">
 					{svg && (
 						<div
 							className="absolute left-0 top-0"
@@ -352,13 +355,12 @@ export function Toc() {
 										} ${offset !== lowerOffset ? "bottom-1.5" : ""}`}
 										style={{ left: offset }}
 									/>
-									{item.text}
+									{item.title}
 								</a>
 							);
 						})}
 					</div>
 				</nav>
-				)}
 
 				<div className="flex items-center gap-1 mt-6 pt-6 border-t border-black/10">
 					<button
