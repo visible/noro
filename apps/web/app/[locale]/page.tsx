@@ -2,6 +2,7 @@
 
 import dynamic from "next/dynamic";
 import { useEffect, useRef, useState } from "react";
+import { motion } from "motion/react";
 import { useTranslations } from "next-intl";
 import { Dock } from "@/components/dock";
 import { Link } from "@/i18n/navigation";
@@ -16,7 +17,7 @@ const BackgroundBeams = dynamic(
 export default function Home() {
   const t = useTranslations("home");
   const bioRef = useRef<HTMLParagraphElement>(null);
-  const [lineWidth, setLineWidth] = useState<number | null>(null);
+  const [lineWidth, setLineWidth] = useState(0);
 
   useEffect(() => {
     const measure = () => {
@@ -44,7 +45,7 @@ export default function Home() {
     document.fonts.ready.then(measure);
     window.addEventListener("resize", measure);
     return () => window.removeEventListener("resize", measure);
-  }, []);
+  }, [t]);
 
   return (
     <BackgroundBeams className="text-white selection:bg-[#FF6B00] selection:text-black">
@@ -59,12 +60,16 @@ export default function Home() {
 
       <section className="absolute inset-0 z-10">
         <div className="h-1/2 flex flex-col justify-end px-4 sm:px-8 md:px-16 pr-16 sm:pr-20 md:pr-8">
-          <h1
-            className="text-[12vw] md:text-[10vw] leading-none font-bold tracking-tighter border-b-4 border-[#FF6B00] transition-[width] duration-500 ease-out"
-            style={{ width: lineWidth ? `${lineWidth}px` : "fit-content" }}
-          >
-            {t("title")}
-          </h1>
+          <div className="relative">
+            <h1 className="text-[12vw] md:text-[10vw] leading-none font-bold tracking-tighter">
+              {t("title")}
+            </h1>
+            <motion.div
+              className="h-1 bg-[#FF6B00] mt-1"
+              animate={{ width: lineWidth }}
+              transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            />
+          </div>
         </div>
         <div className="px-4 sm:px-8 md:px-16 pr-16 sm:pr-20 md:pr-8">
           <p
