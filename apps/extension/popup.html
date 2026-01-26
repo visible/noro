@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>noro</title>
+		<link rel="stylesheet" href="styles.css" />
+	</head>
+	<body>
+		<main>
+			<header>
+				<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+					<path d="M12 2L2 7l10 5 10-5-10-5z" />
+					<path d="M2 17l10 5 10-5" />
+					<path d="M2 12l10 5 10-5" />
+				</svg>
+				<span>noro</span>
+			</header>
+
+			<div id="create" class="view active">
+				<textarea id="secret" placeholder="enter secret to share..." rows="4"></textarea>
+				<div class="options">
+					<select id="ttl">
+						<option value="1h">1 hour</option>
+						<option value="6h">6 hours</option>
+						<option value="12h">12 hours</option>
+						<option value="1d" selected>1 day</option>
+						<option value="7d">7 days</option>
+					</select>
+					<select id="views">
+						<option value="1">1 view</option>
+						<option value="2">2 views</option>
+						<option value="3">3 views</option>
+						<option value="5">5 views</option>
+					</select>
+				</div>
+				<button id="share" type="button">share</button>
+			</div>
+
+			<div id="result" class="view">
+				<input id="url" type="text" readonly />
+				<div class="actions">
+					<button id="copy" type="button">copy</button>
+					<button id="new" type="button">new</button>
+				</div>
+			</div>
+
+			<div id="recents" class="view">
+				<h3>recent</h3>
+				<ul id="list"></ul>
+			</div>
+		</main>
+		<script type="module" src="dist/popup.js"></script>
+	</body>
+</html>

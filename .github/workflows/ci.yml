@@ -37,3 +37,14 @@ jobs:
         working-directory: packages/sdk
       - run: bun run build
         working-directory: packages/sdk
+
+  extension:
+    name: extension
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: oven-sh/setup-bun@v2
+      - run: bun install
+        working-directory: apps/extension
+      - run: bun run build
+        working-directory: apps/extension
