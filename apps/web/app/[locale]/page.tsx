@@ -17,24 +17,14 @@ const BackgroundBeams = dynamic(
 function measureFirstLine(element: HTMLElement | null): number {
   if (!element) return 0;
   const text = element.firstChild;
-  if (!text || !text.textContent) return 0;
+  if (!text) return 0;
 
   const range = document.createRange();
-  range.setStart(text, 0);
-  const fullText = text.textContent;
-  const lineHeight = parseFloat(getComputedStyle(element).lineHeight);
-  const firstLineBottom = element.getBoundingClientRect().top + lineHeight;
+  range.selectNodeContents(text);
+  const rects = range.getClientRects();
 
-  let end = fullText.length;
-  for (let i = 1; i <= fullText.length; i++) {
-    range.setEnd(text, i);
-    if (range.getBoundingClientRect().bottom > firstLineBottom) {
-      end = i - 1;
-      break;
-    }
-  }
-  range.setEnd(text, end);
-  return range.getBoundingClientRect().width;
+  if (rects.length === 0) return 0;
+  return rects[0].width;
 }
 
 export default function Home() {
