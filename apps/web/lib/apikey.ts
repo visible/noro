@@ -1,7 +1,7 @@
 import { redis } from "@/lib/redis";
 import { Ratelimit } from "@upstash/ratelimit";
+import { chars } from "@/lib/chars";
 
-const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
 const defaultttl = 90 * 24 * 60 * 60;
 
 export interface ApiKey {

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
+import { chars } from "@/lib/chars";
 
 export function generateid(): string {
-  const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
   const bytes = crypto.getRandomValues(new Uint8Array(16));
   let id = "req_";
   for (let i = 0; i < 16; i++) {

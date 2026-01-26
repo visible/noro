@@ -1,24 +1,7 @@
 import { NextResponse } from "next/server";
 import { redis } from "@/lib/redis";
 import { storelimit, getip } from "@/lib/ratelimit";
-
-const ttls: Record<string, number> = {
-  "1h": 3600,
-  "6h": 21600,
-  "12h": 43200,
-  "1d": 86400,
-  "7d": 604800,
-};
-
-function generateid(): string {
-  const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-  const bytes = crypto.getRandomValues(new Uint8Array(8));
-  let id = "";
-  for (let i = 0; i < 8; i++) {
-    id += chars[bytes[i] % chars.length];
-  }
-  return id;
-}
+import { ttls, maxsize, generateid } from "@/lib/secret";
 
 interface StorePayload {
   data: string;
@@ -29,8 +12,6 @@ interface StorePayload {
   views?: number;
   peek?: boolean;
 }
-
-const maxsize = 5 * 1024 * 1024;
 
 export async function POST(req: Request) {
   const ip = getip(req);
