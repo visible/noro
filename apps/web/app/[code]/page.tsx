@@ -18,6 +18,7 @@ const content = {
     loading: "checking...",
     confirm: "a secret is waiting for you",
     confirmWarning: "once revealed, this secret will be permanently deleted",
+    extensionWarning: "for maximum security, use incognito mode",
     confirmButton: "reveal secret",
     claiming: "decrypting...",
     notfound: "this secret has expired or already been viewed",
@@ -38,6 +39,7 @@ const content = {
     loading: "確認中...",
     confirm: "シークレットが届いています",
     confirmWarning: "表示後、このシークレットは完全に削除されます",
+    extensionWarning: "最大限のセキュリティにはシークレットモードを使用",
     confirmButton: "シークレットを表示",
     claiming: "復号中...",
     notfound: "このシークレットは期限切れか既に閲覧済みです",
@@ -326,6 +328,7 @@ export default function ClaimPage({
               >
                 {t.confirmButton}
               </button>
+              <p className="text-white/20 text-xs text-center">{t.extensionWarning}</p>
             </div>
 
             <div

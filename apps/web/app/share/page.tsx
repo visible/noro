@@ -27,6 +27,7 @@ const content = {
     copy: "copy",
     copied: "copied",
     expiresNote: "link expires after viewing",
+    clipboardNote: "clipboard will clear in 30s",
     newLink: "create another",
     security: [
       "end-to-end encrypted",
@@ -54,6 +55,7 @@ const content = {
     copy: "コピー",
     copied: "コピー済",
     expiresNote: "閲覧後にリンクは無効化",
+    clipboardNote: "30秒後にクリップボードをクリア",
     newLink: "新規作成",
     security: [
       "エンドツーエンド暗号化",
@@ -162,6 +164,14 @@ export default function SharePage() {
     await navigator.clipboard.writeText(generatedLink);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+    setTimeout(async () => {
+      try {
+        const current = await navigator.clipboard.readText();
+        if (current === generatedLink) {
+          await navigator.clipboard.writeText("");
+        }
+      } catch {}
+    }, 30000);
   };
 
   const handleReset = () => {
@@ -480,13 +490,13 @@ export default function SharePage() {
               <button
                 type="button"
                 onClick={handleCopy}
-                className="w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:opacity-80 transition-opacity mb-6"
+                className="w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:opacity-80 transition-opacity mb-2"
               >
                 {copied ? t.copied : t.copy}
               </button>
 
-              <p className="text-xs text-white/30 text-center mb-6">
-                {t.expiresNote}
+              <p className="text-xs text-white/20 text-center mb-6">
+                {copied ? t.clipboardNote : t.expiresNote}
               </p>
 
               <button

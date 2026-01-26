@@ -1,14 +1,9 @@
-import dynamic from "next/dynamic";
+import { Analytics } from "@vercel/analytics/next";
 import type { Metadata } from "next";
 import { JetBrains_Mono } from "next/font/google";
 import type React from "react";
 import "./globals.css";
 import { CommandPalette } from "./cmdk";
-
-const Analytics = dynamic(
-  () => import("@vercel/analytics/next").then((mod) => mod.Analytics),
-  { ssr: false }
-);
 
 const _jetbrainsMono = JetBrains_Mono({ subsets: ["latin"] });
 
