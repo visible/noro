@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { encrypt } from "@/lib/crypto";
 
 type Language = "en" | "jp";
 type Mode = "text" | "file";
@@ -64,29 +65,6 @@ const content = {
     ],
   },
 };
-
-async function encrypt(data: Uint8Array, key: string): Promise<string> {
-  const keyData = new TextEncoder().encode(key.padEnd(32, "0").slice(0, 32));
-  const iv = crypto.getRandomValues(new Uint8Array(12));
-  const cryptoKey = await crypto.subtle.importKey(
-    "raw",
-    keyData,
-    "AES-GCM",
-    false,
-    ["encrypt"],
-  );
-  const encrypted = await crypto.subtle.encrypt(
-    { name: "AES-GCM", iv },
-    cryptoKey,
-    data,
-  );
-  const combined = new Uint8Array(iv.length + encrypted.byteLength);
-  combined.set(iv);
-  combined.set(new Uint8Array(encrypted), iv.length);
-  let binary = "";
-  combined.forEach((byte) => (binary += String.fromCharCode(byte)));
-  return btoa(binary).replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
-}
 
 export default function SharePage() {
   const [lang, setLang] = useState<Language>("en");

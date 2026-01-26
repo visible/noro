@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { decrypt } from "@/lib/crypto";
 import { highlight } from "@/lib/highlight";
 
 type Language = "en" | "jp";
@@ -57,34 +58,6 @@ const content = {
     create: "新規作成",
   },
 };
-
-async function decrypt(encrypted: string, key: string): Promise<Uint8Array> {
-  const base64 = encrypted.replace(/-/g, "+").replace(/_/g, "/");
-  const padding = (4 - (base64.length % 4)) % 4;
-  const padded = base64 + "=".repeat(padding);
-  const binary = atob(padded);
-  const bytes = new Uint8Array(binary.length);
-  for (let i = 0; i < binary.length; i++) {
-    bytes[i] = binary.charCodeAt(i);
-  }
-  const iv = bytes.slice(0, 12);
-  const data = bytes.slice(12);
-  const encoder = new TextEncoder();
-  const keyData = encoder.encode(key.padEnd(32, "0").slice(0, 32));
-  const cryptoKey = await crypto.subtle.importKey(
-    "raw",
-    keyData,
-    "AES-GCM",
-    false,
-    ["decrypt"],
-  );
-  const decrypted = await crypto.subtle.decrypt(
-    { name: "AES-GCM", iv },
-    cryptoKey,
-    data,
-  );
-  return new Uint8Array(decrypted);
-}
 
 function parse(text: string): { label?: string; value: string } {
   const idx = text.indexOf("=");
