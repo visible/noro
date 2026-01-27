@@ -19,16 +19,7 @@ export default function Home() {
     <BackgroundBeams className="text-white selection:bg-[#FF6B00] selection:text-black">
       <Dock />
       <LanguageToggle />
-      <nav className="fixed top-0 left-0 p-6 md:p-8 z-50 flex items-center gap-6">
-        <Link href="/" className="flex items-center gap-2 group">
-          <div className="w-8 h-8 rounded-lg bg-[#FF6B00] flex items-center justify-center">
-            <svg className="w-4 h-4 text-black" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
-              <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke="currentColor" strokeWidth="2" fill="none" />
-            </svg>
-          </div>
-          <span className="font-semibold text-white group-hover:text-[#FF6B00] transition-colors hidden sm:block">noro</span>
-        </Link>
-        <div className="h-4 w-px bg-white/20" />
+      <nav className="fixed top-0 left-0 p-6 md:p-8 z-50 flex items-center gap-4">
         <Link
           href="/login"
           className="text-sm font-medium text-white/70 hover:text-white transition-colors"
