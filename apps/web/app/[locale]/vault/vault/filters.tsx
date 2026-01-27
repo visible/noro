@@ -18,14 +18,14 @@ export function TypeFilters({ selected, onSelect, counts }: Props) {
 		<div className="flex gap-1.5 flex-wrap">
 			<button
 				onClick={() => onSelect(null)}
-				className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 transition-all duration-150 ${
+				className={`px-3 py-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 transition-all ${
 					selected === null
-						? "bg-[#FF6B00] text-white"
-						: "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white/80"
+						? "bg-orange-500/10 text-orange-500 border border-orange-500/20"
+						: "bg-zinc-800 text-zinc-400 border border-transparent hover:text-zinc-300"
 				}`}
 			>
 				all
-				<span className={`${selected === null ? "text-white/70" : "text-white/40"}`}>{total}</span>
+				<span className={`${selected === null ? "text-orange-500/70" : "text-zinc-500"}`}>{total}</span>
 			</button>
 			{types.map((type) => {
 				const count = counts[type] || 0;
@@ -35,15 +35,15 @@ export function TypeFilters({ selected, onSelect, counts }: Props) {
 					<button
 						key={type}
 						onClick={() => onSelect(isActive ? null : type)}
-						className={`px-3 py-1.5 rounded-full text-xs font-medium flex items-center gap-1.5 transition-all duration-150 ${
+						className={`px-3 py-1.5 rounded-md text-xs font-medium flex items-center gap-1.5 transition-all ${
 							isActive
-								? "bg-[#FF6B00] text-white"
-								: "bg-white/5 text-white/60 hover:bg-white/10 hover:text-white/80"
+								? "bg-orange-500/10 text-orange-500 border border-orange-500/20"
+								: "bg-zinc-800 text-zinc-400 border border-transparent hover:text-zinc-300"
 						}`}
 					>
-						<span className={`w-3.5 h-3.5 ${isActive ? "text-white" : "text-white/50"}`}>{typeIcons[type]}</span>
+						<span className={`w-3.5 h-3.5 ${isActive ? "text-orange-500" : "text-zinc-500"}`}>{typeIcons[type]}</span>
 						{typeLabels[type]}
-						<span className={`${isActive ? "text-white/70" : "text-white/40"}`}>{count}</span>
+						<span className={`${isActive ? "text-orange-500/70" : "text-zinc-500"}`}>{count}</span>
 					</button>
 				);
 			})}

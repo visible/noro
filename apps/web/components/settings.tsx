@@ -1,5 +1,7 @@
 "use client";
 
+import { useState, useRef, useEffect } from "react";
+
 interface RowProps {
 	label: string;
 	description?: string;
@@ -58,19 +60,50 @@ interface SelectProps {
 }
 
 export function Select({ label, description, value, options, onChange }: SelectProps) {
+	const [open, setOpen] = useState(false);
+	const ref = useRef<HTMLDivElement>(null);
+	const selected = options.find((o) => o.value === value);
+
+	useEffect(() => {
+		function handleClick(e: MouseEvent) {
+			if (ref.current && !ref.current.contains(e.target as Node)) {
+				setOpen(false);
+			}
+		}
+		document.addEventListener("mousedown", handleClick);
+		return () => document.removeEventListener("mousedown", handleClick);
+	}, []);
+
 	return (
 		<Row label={label} description={description}>
-			<select
-				value={value}
-				onChange={(e) => onChange(e.target.value)}
-				className="w-full sm:w-auto px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm focus:outline-none focus:ring-2 focus:ring-[#FF6B00]/20 focus:border-[#FF6B00] transition-colors"
-			>
-				{options.map((opt) => (
-					<option key={opt.value} value={opt.value} className="bg-stone-950 text-white">
-						{opt.label}
-					</option>
-				))}
-			</select>
+			<div ref={ref} className="relative">
+				<button
+					type="button"
+					onClick={() => setOpen(!open)}
+					className="w-full sm:w-40 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm text-left flex items-center justify-between gap-2 hover:bg-white/10 transition-colors"
+				>
+					<span>{selected?.label}</span>
+					<svg aria-hidden="true" className={`w-4 h-4 text-white/40 transition-transform ${open ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M19 9l-7 7-7-7" />
+					</svg>
+				</button>
+				{open && (
+					<div className="absolute right-0 top-full mt-1 w-full sm:w-40 bg-[#1a1a1a] border border-white/10 rounded-lg shadow-xl z-50 py-1 max-h-48 overflow-y-auto scrollbar-hidden">
+						{options.map((opt) => (
+							<button
+								key={opt.value}
+								type="button"
+								onClick={() => { onChange(opt.value); setOpen(false); }}
+								className={`w-full px-3 py-2 text-left text-sm transition-colors ${
+									opt.value === value ? "bg-[#FF6B00] text-white" : "text-white/80 hover:bg-white/5"
+								}`}
+							>
+								{opt.label}
+							</button>
+						))}
+					</div>
+				)}
+			</div>
 		</Row>
 	);
 }

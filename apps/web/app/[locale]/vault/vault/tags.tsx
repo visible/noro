@@ -13,14 +13,14 @@ export function TagFilter({ tags, selected, onSelect }: TagFilterProps) {
 
 	return (
 		<div className="flex gap-1.5 flex-wrap items-center">
-			<svg aria-hidden="true" className="w-3.5 h-3.5 text-white/30 shrink-0 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+			<svg aria-hidden="true" className="w-3.5 h-3.5 text-zinc-600 shrink-0 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 				<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
 				<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 6h.008v.008H6V6z" />
 			</svg>
 			{selected && (
 				<button
 					onClick={() => onSelect(null)}
-					className="px-2 py-1 text-xs text-white/40 hover:text-white/60 transition-colors duration-150"
+					className="px-2 py-1 text-xs text-zinc-500 hover:text-zinc-400 transition-colors"
 				>
 					clear
 				</button>
@@ -31,10 +31,10 @@ export function TagFilter({ tags, selected, onSelect }: TagFilterProps) {
 					<button
 						key={tag}
 						onClick={() => onSelect(isActive ? null : tag)}
-						className={`px-2.5 py-1 rounded-full text-xs font-medium transition-all duration-150 ${
+						className={`px-2.5 py-1 rounded-md text-xs font-medium transition-all ${
 							isActive
-								? "bg-[#FF6B00] text-white"
-								: "bg-white/5 text-white/50 hover:bg-white/10 hover:text-white/70"
+								? "bg-orange-500/10 text-orange-500 border border-orange-500/20"
+								: "bg-zinc-800 text-zinc-400 border border-transparent hover:text-zinc-300"
 						}`}
 					>
 						{tag}

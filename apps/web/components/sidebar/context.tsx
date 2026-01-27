@@ -15,6 +15,9 @@ type Callbacks = {
 interface SidebarContextValue {
 	open: boolean;
 	setOpen: (open: boolean) => void;
+	collapsed: boolean;
+	setCollapsed: (collapsed: boolean) => void;
+	toggleCollapsed: () => void;
 	register: (key: keyof Callbacks, fn: (() => void) | null) => void;
 	selectedItem: string | null;
 	setSelectedItem: (id: string | null) => void;
@@ -23,6 +26,9 @@ interface SidebarContextValue {
 const SidebarContext = createContext<SidebarContextValue>({
 	open: false,
 	setOpen: () => {},
+	collapsed: false,
+	setCollapsed: () => {},
+	toggleCollapsed: () => {},
 	register: () => {},
 	selectedItem: null,
 	setSelectedItem: () => {},
@@ -36,12 +42,17 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
 	const router = useRouter();
 	const pathname = usePathname();
 	const [open, setOpen] = useState(false);
+	const [collapsed, setCollapsed] = useState(false);
 	const [showHelp, setShowHelp] = useState(false);
 	const [selectedItem, setSelectedItem] = useState<string | null>(null);
 	const callbacks = useRef<Callbacks>({ new: null, search: null, copy: null, escape: null });
 
 	const register = useCallback((key: keyof Callbacks, fn: (() => void) | null) => {
 		callbacks.current[key] = fn;
+	}, []);
+
+	const toggleCollapsed = useCallback(() => {
+		setCollapsed((c) => !c);
 	}, []);
 
 	useShortcuts({
@@ -79,7 +90,7 @@ export function SidebarProvider({ children }: { children: React.ReactNode }) {
 	}, [pathname]);
 
 	return (
-		<SidebarContext.Provider value={{ open, setOpen, register, selectedItem, setSelectedItem }}>
+		<SidebarContext.Provider value={{ open, setOpen, collapsed, setCollapsed, toggleCollapsed, register, selectedItem, setSelectedItem }}>
 			{children}
 			<Shortcuts open={showHelp} onClose={() => setShowHelp(false)} />
 		</SidebarContext.Provider>

@@ -54,8 +54,8 @@ export default function Settings() {
 
 	if (loading) {
 		return (
-			<div className="min-h-screen bg-stone-950 -m-4 md:-m-8 p-4 md:p-8">
-				<div className="max-w-2xl mx-auto">
+			<div className="h-full overflow-y-auto scrollbar-hidden px-6 py-8">
+				<div className="max-w-2xl">
 					<div className="animate-pulse">
 						<div className="h-8 bg-white/10 rounded w-32 mb-2" />
 						<div className="h-4 bg-white/10 rounded w-64" />
@@ -66,9 +66,9 @@ export default function Settings() {
 	}
 
 	return (
-		<div className="min-h-screen bg-stone-950 -m-4 md:-m-8 p-4 md:p-8">
-			<div className="max-w-2xl mx-auto">
-				<header className="mb-8">
+		<div className="h-full overflow-y-auto scrollbar-hidden px-6 py-8">
+			<div className="max-w-2xl space-y-8">
+				<header>
 					<h1 className="text-2xl font-semibold text-white">settings</h1>
 					<p className="text-white/50 mt-1">manage your account and preferences</p>
 				</header>

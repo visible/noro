@@ -19,12 +19,12 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 		<ToastProvider>
 			<SidebarProvider>
 				<div className="h-screen bg-black text-white flex overflow-hidden">
-					<Suspense fallback={<div className="hidden md:block w-60 shrink-0 border-r border-white/5" />}>
+					<Suspense fallback={<div className="hidden md:block w-56 shrink-0 border-r border-white/5" />}>
 						<Sidebar user={session.user} />
 					</Suspense>
 					<div className="flex-1 flex flex-col min-w-0 h-screen">
 						<MobileHeader />
-						<main className="flex-1 p-4 md:p-6 pt-[72px] md:pt-6 overflow-y-auto scrollbar-hidden">{children}</main>
+						<main className="flex-1 pt-[56px] md:pt-0 overflow-hidden">{children}</main>
 					</div>
 				</div>
 				<CommandWrapper />

@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo, useRef, useCallback } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import type { ItemType } from "@/lib/generated/prisma/enums";
-import type { SpecialFolder } from "@/lib/types";
+import type { FolderData, SpecialFolder } from "@/lib/types";
 import type { VaultItem } from "./store";
 import type { LoginData } from "@/lib/types";
 import * as store from "./store";
@@ -12,6 +12,7 @@ import { TypeFilters } from "./filters";
 import { VaultTable } from "./table";
 import { ItemModal } from "./modal";
 import { TagFilter } from "./tags";
+import { Folders } from "@/components/folders";
 import { useSidebar } from "@/components/sidebar";
 
 const itemtypes: ItemType[] = ["login", "note", "card", "identity", "ssh", "api", "otp", "passkey"];
@@ -31,6 +32,100 @@ export default function Vault() {
 	const [editingItem, setEditingItem] = useState<VaultItem | null>(null);
 	const [defaulttype, setDefaulttype] = useState<ItemType | undefined>(undefined);
 	const searchRef = useRef<HTMLInputElement>(null);
+
+	const [folders, setFolders] = useState<FolderData[]>([]);
+	const [itemCounts, setItemCounts] = useState<Record<string, number>>({});
+	const [favoriteCount, setFavoriteCount] = useState(0);
+	const [trashCount, setTrashCount] = useState(0);
+	const [totalCount, setTotalCount] = useState(0);
+
+	useEffect(() => {
+		loadFolders();
+		loadCounts();
+	}, []);
+
+	async function loadFolders() {
+		try {
+			const res = await fetch("/api/v1/vault/folders");
+			const data = await res.json();
+			setFolders(data.folders || []);
+		} catch {
+			console.error("failed to load folders");
+		}
+	}
+
+	async function loadCounts() {
+		try {
+			const res = await fetch("/api/v1/vault/counts");
+			const data = await res.json();
+			setItemCounts(data.byFolder || {});
+			setFavoriteCount(data.favorites || 0);
+			setTrashCount(data.trash || 0);
+			setTotalCount(data.total || 0);
+		} catch {
+			console.error("failed to load counts");
+		}
+	}
+
+	async function handleCreateFolder(name: string, parentId: string | null) {
+		try {
+			const res = await fetch("/api/v1/vault/folders", {
+				method: "POST",
+				headers: { "content-type": "application/json" },
+				body: JSON.stringify({ name, parentId, icon: "folder" }),
+			});
+			const data = await res.json();
+			setFolders([...folders, data.folder]);
+		} catch {
+			console.error("failed to create folder");
+		}
+	}
+
+	async function handleRenameFolder(id: string, name: string) {
+		try {
+			await fetch(`/api/v1/vault/folders/${id}`, {
+				method: "PATCH",
+				headers: { "content-type": "application/json" },
+				body: JSON.stringify({ name }),
+			});
+			setFolders(folders.map((f) => (f.id === id ? { ...f, name } : f)));
+		} catch {
+			console.error("failed to rename folder");
+		}
+	}
+
+	async function handleDeleteFolder(id: string) {
+		try {
+			await fetch(`/api/v1/vault/folders/${id}`, { method: "DELETE" });
+			setFolders(folders.filter((f) => f.id !== id));
+			if (folder === id) {
+				router.push("/vault");
+			}
+		} catch {
+			console.error("failed to delete folder");
+		}
+	}
+
+	async function handleMoveItem(itemId: string, folderId: string | null) {
+		try {
+			await fetch(`/api/v1/vault/items/${itemId}`, {
+				method: "PATCH",
+				headers: { "content-type": "application/json" },
+				body: JSON.stringify({ folderId }),
+			});
+			loadCounts();
+		} catch {
+			console.error("failed to move item");
+		}
+	}
+
+	function handleSelectFolder(id: string | SpecialFolder) {
+		if (id === "all") {
+			router.push("/vault");
+		} else {
+			router.push(`/vault?folder=${id}`);
+		}
+	}
 
 	useEffect(() => {
 		setItems(store.filter(folder, typeFilter));
@@ -131,6 +226,7 @@ export default function Vault() {
 
 	function reload() {
 		setItems(store.filter(folder, typeFilter));
+		loadCounts();
 	}
 
 	function handleSave(data: { type: ItemType; title: string; data: Record<string, unknown>; tags: string[] }) {
@@ -173,20 +269,37 @@ export default function Vault() {
 
 	const isTrash = folder === "trash";
 	const titles: Record<string, { title: string; description: string }> = {
-		all: { title: "all items", description: "view and manage all your stored credentials" },
-		favorites: { title: "favorites", description: "quick access to your starred items" },
-		trash: { title: "trash", description: "deleted items are permanently removed after 30 days" },
+		all: { title: "All Items", description: "View and manage all your stored credentials" },
+		favorites: { title: "Favorites", description: "Quick access to your starred items" },
+		trash: { title: "Trash", description: "Deleted items are permanently removed after 30 days" },
 	};
-	const { title, description } = titles[folder] || { title: "vault", description: "secure storage for your credentials" };
+	const { title, description } = titles[folder] || { title: "Vault", description: "Secure storage for your credentials" };
 
 	return (
-		<div className="min-h-screen">
-			<div className="px-6 py-8">
-				<div className="mb-8">
-					<div className="flex items-start justify-between gap-4">
-						<div>
-							<h1 className="text-2xl font-semibold text-white">{title}</h1>
-							<p className="mt-1 text-sm text-white/50">{description}</p>
+		<div className="flex h-full">
+			<div className="hidden md:block w-56 shrink-0 border-r border-white/[0.06] h-full overflow-y-auto scrollbar-hidden">
+				<div className="p-4">
+					<Folders
+						folders={folders}
+						selected={folder}
+						onSelect={handleSelectFolder}
+						onCreate={handleCreateFolder}
+						onRename={handleRenameFolder}
+						onDelete={handleDeleteFolder}
+						onMove={handleMoveItem}
+						itemCounts={itemCounts}
+						favoriteCount={favoriteCount}
+						trashCount={trashCount}
+						totalCount={totalCount}
+					/>
+				</div>
+			</div>
+			<div className="flex-1 min-w-0 h-full overflow-y-auto scrollbar-hidden">
+				<div className="p-8 max-w-5xl space-y-6">
+					<header className="flex items-start justify-between gap-6">
+						<div className="space-y-1">
+							<h1 className="text-xl font-semibold text-white tracking-tight">{title}</h1>
+							<p className="text-sm text-white/50">{description}</p>
 						</div>
 						{!isTrash && (
 							<button
@@ -196,54 +309,54 @@ export default function Vault() {
 								<svg aria-hidden="true" className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
 								</svg>
-								add item
+								Add Item
 							</button>
 						)}
-					</div>
-				</div>
+					</header>
 
-				<div className="space-y-4 mb-6">
-					<SearchBar ref={searchRef} value={search} onChange={setSearch} />
-					<div className="flex flex-wrap items-center gap-3">
-						{!isTrash && <TypeFilters selected={typeFilter} onSelect={setTypeFilter} counts={counts} />}
-						{!isTrash && allTags.length > 0 && (
-							<>
-								<div className="w-px h-6 bg-white/10" />
-								<TagFilter tags={allTags} selected={tagFilter} onSelect={setTagFilter} />
-							</>
-						)}
-					</div>
-				</div>
-
-				{filtered.length === 0 ? (
-					<div className="text-center py-16 bg-white/5 rounded-xl border border-white/10">
-						<div className="w-12 h-12 mx-auto mb-4 rounded-full bg-white/10 flex items-center justify-center">
-							<svg aria-hidden="true" className="w-6 h-6 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-								<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-							</svg>
+					<div className="space-y-4">
+						<SearchBar ref={searchRef} value={search} onChange={setSearch} />
+						<div className="flex flex-wrap items-center gap-3">
+							{!isTrash && <TypeFilters selected={typeFilter} onSelect={setTypeFilter} counts={counts} />}
+							{!isTrash && allTags.length > 0 && (
+								<>
+									<div className="w-px h-5 bg-white/[0.08]" />
+									<TagFilter tags={allTags} selected={tagFilter} onSelect={setTagFilter} />
+								</>
+							)}
 						</div>
-						{items.length === 0 && !isTrash ? (
-							<>
-								<p className="text-white/80 font-medium mb-1">no items yet</p>
-								<p className="text-white/40 text-sm">add your first password, note, or card to get started</p>
-							</>
-						) : isTrash && items.length === 0 ? (
-							<p className="text-white/50">trash is empty</p>
-						) : (
-							<>
-								<p className="text-white/80 font-medium mb-1">no results found</p>
-								<p className="text-white/40 text-sm">try adjusting your search or filters</p>
-							</>
-						)}
 					</div>
-				) : (
-					<VaultTable
-						items={filtered}
-						onItemClick={(item) => { setEditingItem(item); setShowModal(true); }}
-						onFavorite={handleFavorite}
-						onTagClick={setTagFilter}
-					/>
-				)}
+
+					{filtered.length === 0 ? (
+						<div className="text-center py-16 rounded-xl border border-white/[0.06] bg-white/[0.02]">
+							<div className="w-12 h-12 mx-auto mb-4 rounded-full bg-white/[0.04] flex items-center justify-center">
+								<svg aria-hidden="true" className="w-6 h-6 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
+								</svg>
+							</div>
+							{items.length === 0 && !isTrash ? (
+								<>
+									<p className="text-white/70 font-medium mb-1">No items yet</p>
+									<p className="text-white/40 text-sm">Add your first password, note, or card to get started</p>
+								</>
+							) : isTrash && items.length === 0 ? (
+								<p className="text-white/40">Trash is empty</p>
+							) : (
+								<>
+									<p className="text-white/70 font-medium mb-1">No results found</p>
+									<p className="text-white/40 text-sm">Try adjusting your search or filters</p>
+								</>
+							)}
+						</div>
+					) : (
+						<VaultTable
+							items={filtered}
+							onItemClick={(item) => { setEditingItem(item); setShowModal(true); }}
+							onFavorite={handleFavorite}
+							onTagClick={setTagFilter}
+						/>
+					)}
+				</div>
 			</div>
 
 			{showModal && (

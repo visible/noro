@@ -32,14 +32,14 @@ export default function Health() {
 
 	if (loading) {
 		return (
-			<div className="min-h-screen bg-stone-950 px-6 py-12">
+			<div className="h-full overflow-y-auto scrollbar-hidden px-8 py-10">
 				<div className="max-w-4xl mx-auto">
-					<div className="mb-8">
+					<header className="text-center mb-12">
 						<h1 className="text-2xl font-semibold text-white">security health</h1>
-						<p className="text-white/50 mt-1">analyzing your vault...</p>
-					</div>
+						<p className="text-zinc-500 mt-1">analyzing your vault...</p>
+					</header>
 					<div className="flex items-center justify-center py-24">
-						<div className="w-8 h-8 border-2 border-white/10 border-t-[#FF6B00] rounded-full animate-spin" />
+						<div className="w-10 h-10 border-2 border-zinc-800 border-t-emerald-500 rounded-full animate-spin" />
 					</div>
 				</div>
 			</div>
@@ -48,14 +48,14 @@ export default function Health() {
 
 	if (!report) {
 		return (
-			<div className="min-h-screen bg-stone-950 px-6 py-12">
+			<div className="h-full overflow-y-auto scrollbar-hidden px-8 py-10">
 				<div className="max-w-4xl mx-auto">
-					<div className="mb-8">
+					<header className="text-center mb-12">
 						<h1 className="text-2xl font-semibold text-white">security health</h1>
-						<p className="text-white/50 mt-1">check the security of your passwords</p>
-					</div>
-					<div className="bg-white/5 rounded-xl p-8 text-center border border-white/10">
-						<p className="text-white/50">failed to analyze vault</p>
+						<p className="text-zinc-500 mt-1">check the security of your passwords</p>
+					</header>
+					<div className="bg-zinc-900 rounded-xl p-10 text-center">
+						<p className="text-zinc-500">failed to analyze vault</p>
 					</div>
 				</div>
 			</div>
@@ -63,21 +63,21 @@ export default function Health() {
 	}
 
 	return (
-		<div className="min-h-screen bg-stone-950 px-6 py-12">
+		<div className="h-full overflow-y-auto scrollbar-hidden px-8 py-10">
 			<div className="max-w-4xl mx-auto">
-				<div className="flex items-center justify-between mb-8">
+				<header className="flex items-center justify-between mb-12">
 					<div>
 						<h1 className="text-2xl font-semibold text-white">security health</h1>
-						<p className="text-white/50 mt-1">check the security of your passwords</p>
+						<p className="text-zinc-500 mt-1">check the security of your passwords</p>
 					</div>
 					<button
 						onClick={recheck}
 						disabled={checking}
-						className="px-4 py-2 text-sm font-medium text-white bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 transition-colors disabled:opacity-50"
+						className="px-4 py-2 text-sm font-medium text-white bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-colors disabled:opacity-50"
 					>
 						{checking ? "checking..." : "recheck"}
 					</button>
-				</div>
+				</header>
 
 				<Score value={report.score} total={report.totalPasswords} />
 				<Stats report={report} />
