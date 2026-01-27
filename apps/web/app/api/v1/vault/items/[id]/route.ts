@@ -2,6 +2,8 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { validateitemdata } from "@/lib/validate";
+import type { ItemType } from "@/lib/generated/prisma/enums";
 
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
 	try {
@@ -47,6 +49,13 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
 		}
 
 		const { title, data, tags, favorite } = await req.json();
+
+		if (data) {
+			const validation = validateitemdata(existing.type as ItemType, data);
+			if (!validation.valid) {
+				return NextResponse.json({ error: validation.error }, { status: 400 });
+			}
+		}
 
 		if (tags) {
 			await db.tag.deleteMany({ where: { itemId: id } });

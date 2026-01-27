@@ -1,5 +1,18 @@
 import type { ItemType } from "./generated/prisma/enums";
 
+export type FolderIcon = "folder" | "star" | "archive" | "lock" | "globe" | "code" | "key" | "user";
+
+export type FolderData = {
+	id: string;
+	name: string;
+	parentId: string | null;
+	icon: FolderIcon;
+	createdAt: string;
+	updatedAt: string;
+};
+
+export type SpecialFolder = "all" | "favorites" | "trash";
+
 export type LoginData = {
 	username?: string;
 	password?: string;
@@ -84,6 +97,7 @@ export type CreateItemInput<T extends ItemType> = {
 	data: ItemDataMap[T];
 	tags?: string[];
 	favorite?: boolean;
+	folderId?: string | null;
 };
 
 export type UpdateItemInput<T extends ItemType> = {
@@ -91,4 +105,5 @@ export type UpdateItemInput<T extends ItemType> = {
 	data?: Partial<ItemDataMap[T]>;
 	tags?: string[];
 	favorite?: boolean;
+	folderId?: string | null;
 };

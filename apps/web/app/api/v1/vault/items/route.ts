@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { validateitemdata, isvaliditemtype } from "@/lib/validate";
 
 export async function GET(req: Request) {
 	try {
@@ -58,6 +59,15 @@ export async function POST(req: Request) {
 
 		if (!type || !title || !data) {
 			return NextResponse.json({ error: "type, title, and data required" }, { status: 400 });
+		}
+
+		if (!isvaliditemtype(type)) {
+			return NextResponse.json({ error: "invalid item type" }, { status: 400 });
+		}
+
+		const validation = validateitemdata(type, data);
+		if (!validation.valid) {
+			return NextResponse.json({ error: validation.error }, { status: 400 });
 		}
 
 		const item = await db.item.create({
