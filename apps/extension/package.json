@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "bun run build --watch",
-    "build": "bun build src/popup.ts src/background.ts --outdir dist --minify"
+    "build": "bun build src/popup.ts src/background.ts src/content.ts --outdir dist --minify"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.287",

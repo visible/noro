@@ -3,8 +3,8 @@
   "name": "noro",
   "version": "0.1.0",
   "description": "one-time secret sharing with end-to-end encryption",
-  "permissions": ["contextMenus", "storage", "clipboardWrite", "notifications"],
-  "host_permissions": ["https://noro.sh/*"],
+  "permissions": ["contextMenus", "storage", "clipboardWrite", "notifications", "tabs"],
+  "host_permissions": ["https://noro.sh/*", "<all_urls>"],
   "action": {
     "default_popup": "popup.html",
     "default_icon": {
@@ -24,6 +24,13 @@
     "service_worker": "dist/background.js",
     "type": "module"
   },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["dist/content.js"],
+      "run_at": "document_idle"
+    }
+  ],
   "browser_specific_settings": {
     "gecko": {
       "id": "owl@noro.sh",
