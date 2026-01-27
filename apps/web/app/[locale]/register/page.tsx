@@ -119,7 +119,7 @@ export default function Register() {
 
 			<Link
 				href="/"
-				className="fixed bottom-0 right-0 p-8 z-50 hover:opacity-60 transition-opacity"
+				className="fixed top-0 left-0 p-8 z-50 hover:opacity-60 transition-opacity"
 			>
 				<Logo />
 			</Link>
