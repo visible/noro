@@ -1,0 +1,25 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+}
+
+:root {
+	--bg: #0c0a09;
+	--fg: #ffffff;
+	--accent: #ff6b00;
+	--border: rgba(255, 255, 255, 0.1);
+	--muted: rgba(255, 255, 255, 0.4);
+}
+
+body {
+	font-family: system-ui, -apple-system, sans-serif;
+	background: var(--bg);
+	color: var(--fg);
+	min-height: 100vh;
+}
+
+input,
+button {
+	font-family: inherit;
+}

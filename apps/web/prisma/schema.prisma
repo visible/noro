@@ -1,0 +1,132 @@
+generator client {
+	provider = "prisma-client"
+	output   = "../lib/generated/prisma"
+}
+
+datasource db {
+	provider = "postgresql"
+}
+
+model User {
+	id           String   @id @default(cuid())
+	email        String   @unique
+	name         String?
+	encryptedKey String
+	keyHash      String
+	salt         String
+	createdAt    DateTime @default(now())
+	updatedAt    DateTime @updatedAt
+
+	sessions  Session[]
+	vault     Vault?
+	apiKeys   ApiKey[]
+	auditLogs AuditLog[]
+
+	@@map("users")
+}
+
+model Session {
+	id        String   @id @default(cuid())
+	userId    String
+	token     String   @unique
+	expiresAt DateTime
+	createdAt DateTime @default(now())
+	ip        String?
+	userAgent String?
+
+	user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+	@@index([userId])
+	@@index([token])
+	@@map("sessions")
+}
+
+model Vault {
+	id        String   @id @default(cuid())
+	userId    String   @unique
+	blobKey   String
+	revision  Int      @default(0)
+	size      Int      @default(0)
+	createdAt DateTime @default(now())
+	updatedAt DateTime @updatedAt
+
+	user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+	items Item[]
+
+	@@map("vaults")
+}
+
+model Item {
+	id        String   @id @default(cuid())
+	vaultId   String
+	type      ItemType
+	title     String
+	data      String
+	revision  Int      @default(0)
+	favorite  Boolean  @default(false)
+	deleted   Boolean  @default(false)
+	createdAt DateTime @default(now())
+	updatedAt DateTime @updatedAt
+
+	vault Vault @relation(fields: [vaultId], references: [id], onDelete: Cascade)
+	tags  Tag[]
+
+	@@index([vaultId])
+	@@index([type])
+	@@map("items")
+}
+
+model Tag {
+	id     String @id @default(cuid())
+	name   String
+	itemId String
+
+	item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+	@@unique([itemId, name])
+	@@map("tags")
+}
+
+model ApiKey {
+	id        String    @id @default(cuid())
+	userId    String
+	keyHash   String    @unique
+	hint      String
+	webhook   String?
+	expiresAt DateTime?
+	createdAt DateTime  @default(now())
+	lastUsed  DateTime?
+
+	user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+	@@index([userId])
+	@@map("api_keys")
+}
+
+model AuditLog {
+	id        String   @id @default(cuid())
+	userId    String
+	action    String
+	details   String?
+	ip        String?
+	userAgent String?
+	createdAt DateTime @default(now())
+
+	user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+	@@index([userId])
+	@@index([action])
+	@@index([createdAt])
+	@@map("audit_logs")
+}
+
+enum ItemType {
+	login
+	note
+	card
+	identity
+	ssh
+	api
+	otp
+	passkey
+}
