@@ -19,6 +19,7 @@
 
 body {
 	width: 320px;
+	min-height: 400px;
 	font-family: "JetBrains Mono", ui-monospace, monospace;
 	font-size: 13px;
 	background: oklch(0.145 0 0);
@@ -27,13 +28,16 @@ body {
 
 main {
 	padding: 16px;
+	display: flex;
+	flex-direction: column;
+	min-height: 400px;
 }
 
 header {
 	display: flex;
 	align-items: center;
 	gap: 8px;
-	margin-bottom: 16px;
+	margin-bottom: 20px;
 }
 
 header svg {
@@ -50,13 +54,15 @@ header span {
 
 .view {
 	display: none;
+	flex-direction: column;
+	flex: 1;
 }
 
 .view.active {
-	display: block;
+	display: flex;
 }
 
-textarea {
+input {
 	width: 100%;
 	padding: 12px 16px;
 	border: 1px solid rgba(255, 255, 255, 0.1);
@@ -65,56 +71,37 @@ textarea {
 	color: oklch(0.985 0 0);
 	font-family: inherit;
 	font-size: 13px;
-	resize: none;
 	transition: border-color 0.15s;
 }
 
-textarea:focus {
+input:focus {
 	outline: none;
 	border-color: #ff6b00;
 }
 
-textarea::placeholder {
-	color: rgba(255, 255, 255, 0.2);
+input::placeholder {
+	color: rgba(255, 255, 255, 0.3);
 }
 
-.options {
-	display: flex;
-	gap: 8px;
-	margin-top: 12px;
+input.mono {
+	font-size: 11px;
+	letter-spacing: 0.02em;
 }
 
-select {
-	flex: 1;
-	padding: 10px 12px;
-	border: 1px solid rgba(255, 255, 255, 0.1);
-	border-radius: 10px;
-	background: transparent;
-	color: oklch(0.985 0 0);
-	font-family: inherit;
-	font-size: 12px;
-	cursor: pointer;
-	transition: border-color 0.15s;
-	appearance: none;
-	background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.4)' stroke-width='2'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
-	background-repeat: no-repeat;
-	background-position: right 12px center;
+#login input {
+	margin-bottom: 10px;
 }
 
-select:focus {
-	outline: none;
-	border-color: #ff6b00;
-}
-
-select option {
-	background: oklch(0.145 0 0);
-	color: oklch(0.985 0 0);
+.error {
+	color: #ef4444;
+	font-size: 11px;
+	min-height: 16px;
+	margin-bottom: 6px;
 }
 
 button {
 	width: 100%;
 	padding: 12px 16px;
-	margin-top: 12px;
 	border: none;
 	border-radius: 10px;
 	background: #ff6b00;
@@ -129,109 +116,248 @@ button {
 }
 
 button:hover {
-	opacity: 0.8;
+	opacity: 0.85;
 }
 
 button:disabled {
-	opacity: 0.3;
+	opacity: 0.4;
 	cursor: not-allowed;
 }
 
-input[type="text"] {
-	width: 100%;
-	padding: 12px 16px;
-	border: 1px solid rgba(255, 255, 255, 0.1);
-	border-radius: 10px;
-	background: transparent;
-	color: oklch(0.985 0 0);
-	font-family: inherit;
-	font-size: 12px;
-}
-
-input[type="text"]:focus {
-	outline: none;
-	border-color: #ff6b00;
-}
-
-.actions {
-	display: flex;
-	gap: 8px;
-}
-
-.actions button {
-	flex: 1;
-}
-
-.actions button:last-child {
+button.ghost {
 	background: transparent;
 	border: 1px solid rgba(255, 255, 255, 0.1);
+	color: rgba(255, 255, 255, 0.5);
+	padding: 8px 12px;
+	width: auto;
+}
+
+button.ghost:hover {
+	border-color: rgba(255, 255, 255, 0.2);
+	color: rgba(255, 255, 255, 0.7);
+	opacity: 1;
+}
+
+.link {
+	display: block;
+	text-align: center;
+	margin-top: 12px;
 	color: rgba(255, 255, 255, 0.4);
+	font-size: 11px;
+	text-decoration: none;
+	transition: color 0.15s;
 }
 
-.actions button:last-child:hover {
-	border-color: rgba(255, 255, 255, 0.3);
-	color: rgba(255, 255, 255, 0.6);
+.link:hover {
+	color: #ff6b00;
 }
 
-#recents {
-	margin-top: 20px;
-	padding-top: 16px;
-	border-top: 1px solid rgba(255, 255, 255, 0.1);
-	display: block !important;
-}
-
-#recents h3 {
-	font-size: 10px;
-	font-weight: 700;
-	color: rgba(255, 255, 255, 0.4);
-	text-transform: uppercase;
-	letter-spacing: 0.1em;
+.search {
+	position: relative;
 	margin-bottom: 12px;
 }
 
-#list {
-	list-style: none;
+.search svg {
+	position: absolute;
+	left: 14px;
+	top: 50%;
+	transform: translateY(-50%);
+	color: rgba(255, 255, 255, 0.3);
+	pointer-events: none;
 }
 
-#list li {
+.search input {
+	padding-left: 40px;
+}
+
+#items {
+	list-style: none;
+	flex: 1;
+	overflow-y: auto;
+	max-height: 240px;
+}
+
+#items li {
 	display: flex;
 	align-items: center;
-	justify-content: space-between;
-	padding: 10px 0;
-	border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+	gap: 12px;
+	padding: 10px 12px;
+	margin-bottom: 4px;
+	border-radius: 8px;
+	cursor: pointer;
+	transition: background 0.15s;
 }
 
-#list li:last-child {
-	border-bottom: none;
+#items li:hover {
+	background: rgba(255, 255, 255, 0.05);
 }
 
-#list li.empty {
+#items li .icon {
+	width: 32px;
+	height: 32px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(255, 107, 0, 0.15);
+	border-radius: 8px;
+	font-size: 14px;
+}
+
+#items li .info {
+	flex: 1;
+	min-width: 0;
+}
+
+#items li .title {
+	font-size: 13px;
+	font-weight: 500;
+	color: oklch(0.985 0 0);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+#items li .subtitle {
+	font-size: 11px;
+	color: rgba(255, 255, 255, 0.4);
+	white-space: nowrap;
+	overflow: hidden;
+	text-overflow: ellipsis;
+}
+
+#items li .star {
+	color: #ff6b00;
+	font-size: 12px;
+}
+
+#items .empty {
+	padding: 40px 20px;
+	text-align: center;
 	color: rgba(255, 255, 255, 0.3);
 	font-size: 12px;
 }
 
-#list .preview {
-	flex: 1;
-	font-size: 12px;
-	color: rgba(255, 255, 255, 0.5);
+.footer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding-top: 12px;
+	margin-top: auto;
+	border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.email {
+	font-size: 11px;
+	color: rgba(255, 255, 255, 0.4);
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
-	margin-right: 12px;
+	max-width: 160px;
 }
 
-#list button {
-	width: auto;
-	margin: 0;
-	padding: 6px 12px;
-	font-size: 10px;
-	background: transparent;
-	border: 1px solid rgba(255, 255, 255, 0.1);
+.back {
+	display: flex;
+	align-items: center;
+	gap: 6px;
+	margin-bottom: 16px;
+}
+
+.detailheader {
+	display: flex;
+	align-items: center;
+	gap: 12px;
+	margin-bottom: 20px;
+}
+
+.detailheader .icon {
+	width: 40px;
+	height: 40px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(255, 107, 0, 0.15);
+	border-radius: 10px;
+	font-size: 18px;
+}
+
+.detailheader h2 {
+	font-size: 15px;
+	font-weight: 600;
+}
+
+.detailheader .type {
+	font-size: 11px;
 	color: rgba(255, 255, 255, 0.4);
+	text-transform: lowercase;
 }
 
-#list button:hover {
-	border-color: #ff6b00;
+.fields {
+	display: flex;
+	flex-direction: column;
+	gap: 12px;
+}
+
+.field {
+	background: rgba(255, 255, 255, 0.03);
+	border: 1px solid rgba(255, 255, 255, 0.08);
+	border-radius: 10px;
+	padding: 12px 14px;
+}
+
+.field .label {
+	font-size: 10px;
+	color: rgba(255, 255, 255, 0.4);
+	text-transform: uppercase;
+	letter-spacing: 0.05em;
+	margin-bottom: 6px;
+}
+
+.field .value {
+	font-size: 13px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 8px;
+}
+
+.field .text {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.field .text.password {
+	font-family: inherit;
+	letter-spacing: 0.1em;
+}
+
+.field .actions {
+	display: flex;
+	gap: 4px;
+}
+
+.field button {
+	width: 28px;
+	height: 28px;
+	padding: 0;
+	border-radius: 6px;
+	background: rgba(255, 255, 255, 0.08);
+	color: rgba(255, 255, 255, 0.5);
+	font-size: 12px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.field button:hover {
+	background: rgba(255, 107, 0, 0.2);
 	color: #ff6b00;
 	opacity: 1;
+}
+
+.field button svg {
+	width: 14px;
+	height: 14px;
 }
