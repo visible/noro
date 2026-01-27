@@ -6,7 +6,6 @@ import { Dock } from "@/components/dock";
 import { Link } from "@/i18n/navigation";
 import { Logo } from "@/components/logo";
 import { LanguageToggle } from "@/components/languagetoggle";
-import { Controller } from "@/components/controller";
 
 const BackgroundBeams = dynamic(
 	() => import("@/components/background-beams").then((mod) => mod.BackgroundBeams),
@@ -185,10 +184,12 @@ export default function Ink() {
 
 					<div className="mt-12 max-w-2xl">
 						<h2 className="text-xs tracking-widest text-white/30 uppercase mb-4">streaming</h2>
-						<div className="p-6 rounded-xl bg-white/5 mb-4">
-							<div className="w-64 mx-auto">
-								<Controller accent={theme.accent} colors={theme.colors} />
-							</div>
+						<div className="rounded-xl overflow-hidden mb-4">
+							<iframe
+								src="/api/gamepad?s=1"
+								className="w-full h-48 border-0 scale-75 origin-center"
+								title="gamepad viewer"
+							/>
 						</div>
 						<a
 							href={`https://gamepadviewer.com/?p=1&s=1&editcss=https://noro.sh/themes/noro-gamepad.css`}
@@ -196,8 +197,8 @@ export default function Ink() {
 							rel="noopener noreferrer"
 							className="flex items-center justify-between px-4 py-3 rounded-lg bg-white/5 hover:bg-white/10 transition-colors group"
 						>
-							<span className="text-sm text-white/70 group-hover:text-white">gamepad viewer</span>
-							<span className="text-xs text-white/30">obs overlay</span>
+							<span className="text-sm text-white/70 group-hover:text-white">open in gamepad viewer</span>
+							<span className="text-xs text-white/30">for obs</span>
 						</a>
 						<p className="mt-3 text-xs text-white/20">
 							add as browser source in obs. controller hides when disconnected.
