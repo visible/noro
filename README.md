@@ -51,5 +51,5 @@
 
 > license?
 
-  mit
+  agpl-3.0
 ```
