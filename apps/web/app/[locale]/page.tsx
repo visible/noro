@@ -19,6 +19,20 @@ export default function Home() {
     <BackgroundBeams className="text-white selection:bg-[#FF6B00] selection:text-black">
       <Dock />
       <LanguageToggle />
+      <div className="fixed top-0 left-0 p-8 z-50 flex gap-4">
+        <Link
+          href="/login"
+          className="text-sm text-white/60 hover:text-white transition-colors"
+        >
+          login
+        </Link>
+        <Link
+          href="/register"
+          className="text-sm text-white/60 hover:text-white transition-colors"
+        >
+          register
+        </Link>
+      </div>
       <Link
         href="/"
         className="fixed bottom-0 right-0 p-8 z-50 hover:opacity-60 transition-opacity"
