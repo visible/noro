@@ -50,20 +50,6 @@ export default function Home() {
           <p className="mt-4 sm:mt-8 text-[3.5vw] md:text-[1.5vw] leading-relaxed text-white/60">
             {t("tagline")}
           </p>
-          <div className="mt-8 flex gap-4">
-            <Link
-              href="/login"
-              className="px-6 py-3 bg-[#FF6B00] text-black font-semibold rounded-lg hover:bg-[#FF6B00]/90 transition-colors"
-            >
-              sign in
-            </Link>
-            <Link
-              href="/register"
-              className="px-6 py-3 border border-white/20 text-white font-semibold rounded-lg hover:bg-white/5 transition-colors"
-            >
-              create account
-            </Link>
-          </div>
         </div>
       </section>
     </BackgroundBeams>
