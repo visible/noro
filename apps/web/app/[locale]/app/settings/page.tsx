@@ -1,6 +1,9 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { Section, Card, Row, Toggle, Select, ButtonRow } from "@/components/settings";
+import { DeleteModal } from "./delete";
+import { PasswordModal } from "./password";
 
 interface User {
 	id: string;
@@ -9,9 +12,35 @@ interface User {
 	createdAt: string;
 }
 
+const timeoutOptions = [
+	{ value: "5", label: "5 minutes" },
+	{ value: "15", label: "15 minutes" },
+	{ value: "30", label: "30 minutes" },
+	{ value: "60", label: "1 hour" },
+	{ value: "240", label: "4 hours" },
+	{ value: "1440", label: "24 hours" },
+];
+
+const clipboardOptions = [
+	{ value: "0", label: "never" },
+	{ value: "30", label: "30 seconds" },
+	{ value: "60", label: "1 minute" },
+	{ value: "120", label: "2 minutes" },
+	{ value: "300", label: "5 minutes" },
+];
+
 export default function Settings() {
 	const [user, setUser] = useState<User | null>(null);
 	const [loading, setLoading] = useState(true);
+
+	const [sessionTimeout, setSessionTimeout] = useState("30");
+	const [twoFactor, setTwoFactor] = useState(false);
+	const [autoLock, setAutoLock] = useState("15");
+	const [clearClipboard, setClearClipboard] = useState("30");
+	const [theme, setTheme] = useState("dark");
+
+	const [deleteModal, setDeleteModal] = useState(false);
+	const [passwordModal, setPasswordModal] = useState(false);
 
 	useEffect(() => {
 		async function load() {
@@ -28,6 +57,22 @@ export default function Settings() {
 		load();
 	}, []);
 
+	async function handleExport() {
+		try {
+			const res = await fetch("/api/v1/vault/export");
+			const data = await res.json();
+			const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+			const url = URL.createObjectURL(blob);
+			const a = document.createElement("a");
+			a.href = url;
+			a.download = `noro-export-${new Date().toISOString().split("T")[0]}.json`;
+			a.click();
+			URL.revokeObjectURL(url);
+		} catch {
+			console.error("failed to export");
+		}
+	}
+
 	if (loading) {
 		return <div className="text-white/40">loading...</div>;
 	}
@@ -36,63 +81,104 @@ export default function Settings() {
 		<div className="max-w-xl">
 			<h1 className="text-2xl font-bold mb-8">settings</h1>
 
-			<section className="mb-8">
-				<h2 className="text-lg font-semibold mb-4">account</h2>
-				<div className="bg-white/5 rounded-lg p-6 space-y-4">
-					<div>
-						<label className="block text-sm text-white/60 mb-1">email</label>
-						<p>{user?.email}</p>
-					</div>
-					<div>
-						<label className="block text-sm text-white/60 mb-1">name</label>
-						<p>{user?.name || "not set"}</p>
-					</div>
-					<div>
-						<label className="block text-sm text-white/60 mb-1">member since</label>
-						<p>{user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : "—"}</p>
-					</div>
+			<Section title="account">
+				<Card>
+					<Row label="email" description="your login email">
+						<span className="text-white/60">{user?.email}</span>
+					</Row>
+					<Row label="name">
+						<span className="text-white/60">{user?.name || "not set"}</span>
+					</Row>
+					<Row label="member since">
+						<span className="text-white/60">
+							{user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : "—"}
+						</span>
+					</Row>
+				</Card>
+				<div className="mt-3">
+					<ButtonRow
+						label="change password"
+						description="update your master password"
+						onClick={() => setPasswordModal(true)}
+					/>
 				</div>
-			</section>
+			</Section>
 
-			<section className="mb-8">
-				<h2 className="text-lg font-semibold mb-4">security</h2>
+			<Section title="security">
+				<Card>
+					<Select
+						label="session timeout"
+						description="auto logout after inactivity"
+						value={sessionTimeout}
+						options={timeoutOptions}
+						onChange={setSessionTimeout}
+					/>
+					<Toggle
+						label="two-factor authentication"
+						description="add an extra layer of security"
+						checked={twoFactor}
+						onChange={setTwoFactor}
+					/>
+				</Card>
+				<div className="mt-3 space-y-3">
+					<ButtonRow label="view recovery codes" description="regenerate your backup codes" onClick={() => {}} />
+					<ButtonRow label="active sessions" description="manage your logged in devices" onClick={() => {}} />
+				</div>
+			</Section>
+
+			<Section title="vault">
+				<Card>
+					<Select
+						label="auto-lock timer"
+						description="lock vault after inactivity"
+						value={autoLock}
+						options={timeoutOptions}
+						onChange={setAutoLock}
+					/>
+					<Select
+						label="clear clipboard"
+						description="auto-clear copied secrets"
+						value={clearClipboard}
+						options={clipboardOptions}
+						onChange={setClearClipboard}
+					/>
+				</Card>
+			</Section>
+
+			<Section title="appearance">
+				<Card>
+					<Select
+						label="theme"
+						description="choose your preferred theme"
+						value={theme}
+						options={[
+							{ value: "dark", label: "dark" },
+							{ value: "light", label: "light" },
+							{ value: "system", label: "system" },
+						]}
+						onChange={setTheme}
+					/>
+				</Card>
+			</Section>
+
+			<Section title="data">
 				<div className="space-y-3">
-					<button className="w-full px-4 py-3 bg-white/5 rounded-lg text-left hover:bg-white/10 transition-colors">
-						<p className="font-medium">change password</p>
-						<p className="text-sm text-white/40">update your master password</p>
-					</button>
-					<button className="w-full px-4 py-3 bg-white/5 rounded-lg text-left hover:bg-white/10 transition-colors">
-						<p className="font-medium">view recovery codes</p>
-						<p className="text-sm text-white/40">regenerate your recovery codes</p>
-					</button>
-					<button className="w-full px-4 py-3 bg-white/5 rounded-lg text-left hover:bg-white/10 transition-colors">
-						<p className="font-medium">active sessions</p>
-						<p className="text-sm text-white/40">manage your logged in devices</p>
-					</button>
+					<ButtonRow label="export vault" description="download your data as json" onClick={handleExport} />
+					<ButtonRow label="import data" description="import from 1password, bitwarden, etc" onClick={() => {}} />
 				</div>
-			</section>
+			</Section>
 
-			<section className="mb-8">
-				<h2 className="text-lg font-semibold mb-4">data</h2>
-				<div className="space-y-3">
-					<button className="w-full px-4 py-3 bg-white/5 rounded-lg text-left hover:bg-white/10 transition-colors">
-						<p className="font-medium">export vault</p>
-						<p className="text-sm text-white/40">download your data as json</p>
-					</button>
-					<button className="w-full px-4 py-3 bg-white/5 rounded-lg text-left hover:bg-white/10 transition-colors">
-						<p className="font-medium">import data</p>
-						<p className="text-sm text-white/40">import from 1password, bitwarden, etc</p>
-					</button>
-				</div>
-			</section>
+			<Section title="danger zone" variant="danger">
+				<ButtonRow
+					label="delete account"
+					description="permanently delete your account and all data"
+					variant="danger"
+					onClick={() => setDeleteModal(true)}
+				/>
+			</Section>
 
-			<section>
-				<h2 className="text-lg font-semibold mb-4 text-red-500">danger zone</h2>
-				<button className="w-full px-4 py-3 bg-red-500/10 border border-red-500/20 rounded-lg text-left text-red-500 hover:bg-red-500/20 transition-colors">
-					<p className="font-medium">delete account</p>
-					<p className="text-sm text-red-500/60">permanently delete your account and all data</p>
-				</button>
-			</section>
+			<DeleteModal open={deleteModal} onClose={() => setDeleteModal(false)} />
+			<PasswordModal open={passwordModal} onClose={() => setPasswordModal(false)} />
 		</div>
 	);
 }
