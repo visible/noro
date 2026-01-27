@@ -1,10 +1,11 @@
 import { NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
 	try {
-		const session = await getSession();
+		const session = await auth.api.getSession({ headers: await headers() });
 		if (!session) {
 			return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 		}
@@ -16,7 +17,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
 			include: { tags: true, vault: true },
 		});
 
-		if (!item || item.vault.userId !== session.userId) {
+		if (!item || item.vault.userId !== session.user.id) {
 			return NextResponse.json({ error: "item not found" }, { status: 404 });
 		}
 
@@ -29,7 +30,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
 
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
 	try {
-		const session = await getSession();
+		const session = await auth.api.getSession({ headers: await headers() });
 		if (!session) {
 			return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 		}
@@ -41,7 +42,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
 			include: { vault: true },
 		});
 
-		if (!existing || existing.vault.userId !== session.userId) {
+		if (!existing || existing.vault.userId !== session.user.id) {
 			return NextResponse.json({ error: "item not found" }, { status: 404 });
 		}
 
@@ -81,7 +82,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
 
 export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
 	try {
-		const session = await getSession();
+		const session = await auth.api.getSession({ headers: await headers() });
 		if (!session) {
 			return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 		}
@@ -93,7 +94,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
 			include: { vault: true },
 		});
 
-		if (!existing || existing.vault.userId !== session.userId) {
+		if (!existing || existing.vault.userId !== session.user.id) {
 			return NextResponse.json({ error: "item not found" }, { status: 404 });
 		}
 

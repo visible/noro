@@ -8,37 +8,70 @@ datasource db {
 }
 
 model User {
-	id           String   @id @default(cuid())
-	email        String   @unique
-	name         String?
-	encryptedKey String
-	keyHash      String
-	salt         String
-	createdAt    DateTime @default(now())
-	updatedAt    DateTime @updatedAt
+	id            String    @id
+	name          String
+	email         String    @unique
+	emailVerified Boolean   @default(false)
+	image         String?
+	createdAt     DateTime  @default(now())
+	updatedAt     DateTime  @updatedAt
+	encryptedKey  String?
+	keyHash       String?
+	salt          String?
 
 	sessions  Session[]
+	accounts  Account[]
 	vault     Vault?
 	apiKeys   ApiKey[]
 	auditLogs AuditLog[]
 
-	@@map("users")
+	@@map("user")
 }
 
 model Session {
-	id        String   @id @default(cuid())
-	userId    String
-	token     String   @unique
+	id        String   @id
 	expiresAt DateTime
+	token     String   @unique
 	createdAt DateTime @default(now())
-	ip        String?
+	updatedAt DateTime @updatedAt
+	ipAddress String?
 	userAgent String?
+	userId    String
 
 	user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-	@@index([userId])
-	@@index([token])
-	@@map("sessions")
+	@@map("session")
+}
+
+model Account {
+	id                    String    @id
+	accountId             String
+	providerId            String
+	userId                String
+	accessToken           String?
+	refreshToken          String?
+	idToken               String?
+	accessTokenExpiresAt  DateTime?
+	refreshTokenExpiresAt DateTime?
+	scope                 String?
+	password              String?
+	createdAt             DateTime  @default(now())
+	updatedAt             DateTime  @updatedAt
+
+	user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+	@@map("account")
+}
+
+model Verification {
+	id         String   @id
+	identifier String
+	value      String
+	expiresAt  DateTime
+	createdAt  DateTime @default(now())
+	updatedAt  DateTime @updatedAt
+
+	@@map("verification")
 }
 
 model Vault {
@@ -53,7 +86,7 @@ model Vault {
 	user  User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 	items Item[]
 
-	@@map("vaults")
+	@@map("vault")
 }
 
 model Item {
@@ -73,7 +106,7 @@ model Item {
 
 	@@index([vaultId])
 	@@index([type])
-	@@map("items")
+	@@map("item")
 }
 
 model Tag {
@@ -84,7 +117,7 @@ model Tag {
 	item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
 
 	@@unique([itemId, name])
-	@@map("tags")
+	@@map("tag")
 }
 
 model ApiKey {
@@ -100,7 +133,7 @@ model ApiKey {
 	user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
 	@@index([userId])
-	@@map("api_keys")
+	@@map("api_key")
 }
 
 model AuditLog {
@@ -117,7 +150,7 @@ model AuditLog {
 	@@index([userId])
 	@@index([action])
 	@@index([createdAt])
-	@@map("audit_logs")
+	@@map("audit_log")
 }
 
 enum ItemType {

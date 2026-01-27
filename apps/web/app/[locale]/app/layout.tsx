@@ -1,17 +1,20 @@
 import { redirect } from "next/navigation";
-import { getUser } from "@/lib/auth";
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
 import { Sidebar } from "./sidebar";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {
-	const user = await getUser();
+	const session = await auth.api.getSession({
+		headers: await headers(),
+	});
 
-	if (!user) {
+	if (!session) {
 		redirect("/login");
 	}
 
 	return (
 		<div className="min-h-screen bg-stone-950 text-white flex">
-			<Sidebar user={user} />
+			<Sidebar user={session.user} />
 			<main className="flex-1 p-8">{children}</main>
 		</div>
 	);

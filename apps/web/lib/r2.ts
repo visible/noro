@@ -7,14 +7,14 @@ import {
 
 const client = new S3Client({
 	region: "auto",
-	endpoint: process.env.R2_ENDPOINT,
+	endpoint: process.env.CLOUDFLARE_R2_ENDPOINT,
 	credentials: {
-		accessKeyId: process.env.R2_ACCESS_KEY_ID!,
-		secretAccessKey: process.env.R2_SECRET_ACCESS_KEY!,
+		accessKeyId: process.env.CLOUDFLARE_R2_ACCESS_KEY_ID!,
+		secretAccessKey: process.env.CLOUDFLARE_R2_SECRET_ACCESS_KEY!,
 	},
 });
 
-const bucket = process.env.R2_BUCKET_NAME || "noro-vaults";
+const bucket = process.env.CLOUDFLARE_R2_BUCKET_NAME || "noro-vaults";
 
 export async function upload(key: string, data: Buffer): Promise<void> {
 	await client.send(

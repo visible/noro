@@ -8,5 +8,8 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.3.12"
+  },
+  "dependencies": {
+    "better-auth": "^1.4.17"
   }
 }

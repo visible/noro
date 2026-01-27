@@ -3,11 +3,13 @@
 import { useRouter, usePathname } from "next/navigation";
 import { Link } from "@/i18n/navigation";
 import { Logo } from "@/components/logo";
+import { signOut } from "@/lib/client";
 
 interface User {
 	id: string;
 	email: string;
-	name: string | null;
+	name: string;
+	image?: string | null;
 }
 
 const navItems = [
@@ -21,7 +23,7 @@ export function Sidebar({ user }: { user: User }) {
 	const pathname = usePathname();
 
 	async function handleLogout() {
-		await fetch("/api/auth/logout", { method: "POST" });
+		await signOut();
 		router.push("/");
 	}
 

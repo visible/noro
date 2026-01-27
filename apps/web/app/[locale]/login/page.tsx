@@ -4,12 +4,12 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Link } from "@/i18n/navigation";
 import { Logo } from "@/components/logo";
+import { signIn } from "@/lib/client";
 
 export default function Login() {
 	const router = useRouter();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
-	const [secretKey, setSecretKey] = useState("");
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(false);
 
@@ -19,16 +19,10 @@ export default function Login() {
 		setLoading(true);
 
 		try {
-			const res = await fetch("/api/auth/login", {
-				method: "POST",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify({ email, password, secretKey }),
-			});
+			const result = await signIn.email({ email, password });
 
-			const data = await res.json();
-
-			if (!res.ok) {
-				setError(data.error || "login failed");
+			if (result.error) {
+				setError(result.error.message || "login failed");
 				return;
 			}
 
@@ -68,18 +62,6 @@ export default function Login() {
 							value={password}
 							onChange={(e) => setPassword(e.target.value)}
 							className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-[#FF6B00] transition-colors"
-							required
-						/>
-					</div>
-
-					<div>
-						<label className="block text-sm text-white/60 mb-2">secret key</label>
-						<input
-							type="text"
-							value={secretKey}
-							onChange={(e) => setSecretKey(e.target.value)}
-							placeholder="A3-XXXXXX-XXXXXX-XXXXX-XXXXX-XXXXX-XXXXX"
-							className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-[#FF6B00] transition-colors font-mono text-sm"
 							required
 						/>
 					</div>

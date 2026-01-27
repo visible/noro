@@ -1,17 +1,18 @@
 import { NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
+import { headers } from "next/headers";
+import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { download, upload, vaultkey } from "@/lib/r2";
 
 export async function GET() {
 	try {
-		const session = await getSession();
+		const session = await auth.api.getSession({ headers: await headers() });
 		if (!session) {
 			return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 		}
 
 		const vault = await db.vault.findUnique({
-			where: { userId: session.userId },
+			where: { userId: session.user.id },
 		});
 
 		if (!vault) {
@@ -35,7 +36,7 @@ export async function GET() {
 
 export async function PUT(req: Request) {
 	try {
-		const session = await getSession();
+		const session = await auth.api.getSession({ headers: await headers() });
 		if (!session) {
 			return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 		}
@@ -46,7 +47,7 @@ export async function PUT(req: Request) {
 		}
 
 		const vault = await db.vault.findUnique({
-			where: { userId: session.userId },
+			where: { userId: session.user.id },
 		});
 
 		if (!vault) {
