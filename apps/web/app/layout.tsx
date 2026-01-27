@@ -38,7 +38,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`font-sans antialiased`}>
+      <head>
+        <meta name="referrer" content="no-referrer" />
+      </head>
+      <body className="font-sans antialiased">
         {children}
         <Analytics />
       </body>

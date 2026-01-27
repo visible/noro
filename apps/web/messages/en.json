@@ -1,0 +1,70 @@
+{
+  "home": {
+    "title": "noro",
+    "tagline": "share secrets securely. one-time links that self-destruct."
+  },
+  "share": {
+    "title": "share",
+    "subtitle": "create a one-time secret link",
+    "text": "text",
+    "file": "file",
+    "labelLabel": "label (optional)",
+    "labelPlaceholder": "e.g. API_KEY",
+    "secretLabel": "secret",
+    "secretPlaceholder": "paste your secret here...",
+    "fileLabel": "file",
+    "dropzone": "click or drop file",
+    "maxsize": "max 5mb",
+    "views": "max views",
+    "expires": "expires after",
+    "button": "generate link",
+    "generating": "encrypting...",
+    "success": "link created",
+    "copy": "copy",
+    "copied": "copied",
+    "expiresNote": "link expires after viewing",
+    "clipboardNote": "clipboard will clear in 30s",
+    "newLink": "create another",
+    "security": {
+      "encrypted": "end-to-end encrypted",
+      "server": "server never sees your data",
+      "destruct": "self-destructs after viewing"
+    }
+  },
+  "claim": {
+    "loading": "checking...",
+    "confirm": "a secret is waiting for you",
+    "confirmWarning": "once revealed, this secret will be permanently deleted",
+    "extensionWarning": "for maximum security, use incognito mode",
+    "confirmButton": "reveal secret",
+    "claiming": "decrypting...",
+    "notfound": "this secret has expired or already been viewed",
+    "notfoundDetail": "the link may have expired, been viewed, or never existed",
+    "error": "failed to retrieve secret",
+    "label": "label",
+    "value": "value",
+    "filename": "file",
+    "copy": "copy",
+    "copied": "copied",
+    "download": "download",
+    "show": "show",
+    "hide": "hide",
+    "warning": "this secret has been permanently deleted",
+    "remaining": "views remaining",
+    "create": "create your own"
+  },
+  "titles": {
+    "loading": "loading",
+    "confirm": "confirm",
+    "claiming": "decrypting",
+    "success": "secret",
+    "notfound": "not found",
+    "error": "error"
+  },
+  "dock": {
+    "share": "share",
+    "github": "github",
+    "docs": "docs",
+    "npm": "npm"
+  }
+}

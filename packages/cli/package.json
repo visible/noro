@@ -1,13 +1,14 @@
 {
   "name": "noro",
-  "version": "0.0.3",
+  "version": "0.3.1",
   "description": "share env vars with one command",
   "type": "module",
   "bin": {
     "noro": "dist/index.js"
   },
   "files": [
-    "dist"
+    "dist",
+    "docs"
   ],
   "scripts": {
     "build": "tsup src/index.ts src/crypto.ts --format esm --dts",
@@ -15,6 +16,7 @@
     "test": "bun test"
   },
   "dependencies": {
+    "@clack/prompts": "^0.11.0",
     "dotenv": "^16.4.5"
   },
   "devDependencies": {

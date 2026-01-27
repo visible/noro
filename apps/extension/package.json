@@ -1,0 +1,13 @@
+{
+  "name": "@noro/extension",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "bun run build --watch",
+    "build": "bun build src/popup.ts src/background.ts --outdir dist --minify"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.287",
+    "typescript": "^5"
+  }
+}

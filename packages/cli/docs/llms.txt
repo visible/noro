@@ -1,0 +1,87 @@
+# noro
+
+> AI agents: docs at `node_modules/noro/docs/`
+
+One-time secret sharing CLI for env vars.
+
+## Commands
+
+```bash
+noro share API_KEY              # share variable
+noro share API_KEY DB_URL       # share multiple
+noro push                       # share .env file
+noro abc#key                    # claim secret
+noro peek abc#key               # preview keys
+noro list                       # active secrets
+noro revoke abc                 # delete secret
+noro config                     # view/set defaults
+```
+
+## Options
+
+```bash
+--ttl=1d      # expiry: 1h/6h/12h/1d/7d
+--views=2     # max views: 1-5
+--peek        # enable preview
+```
+
+## AI Workflow
+
+### Sender enables peek
+
+```bash
+noro share API_KEY DB_URL --peek
+```
+
+### AI previews keys (doesn't consume views)
+
+```bash
+noro peek abc#key --json
+```
+
+Output:
+```json
+{"keys":["API_KEY","DB_URL"],"views":1,"remaining":1}
+```
+
+### AI claims specific variables
+
+```bash
+noro abc#key --vars=API_KEY --output=.env
+```
+
+## Scripting Flags
+
+```bash
+--json        # json output
+--stdout      # key=value lines
+--output=     # save to file
+--vars=       # filter variables
+```
+
+## JSON Responses
+
+Claim:
+```json
+{"variables":[{"name":"API_KEY","value":"sk-1234"}],"remaining":0}
+```
+
+Peek:
+```json
+{"keys":["API_KEY","DB_URL"],"views":2,"remaining":2}
+```
+
+Errors:
+```json
+{"error":"invalid code"}
+{"error":"not found"}
+{"error":"peek not enabled"}
+{"error":"no matching variables"}
+```
+
+## Security
+
+- AES-256-GCM encryption
+- Key in URL fragment (never sent to server)
+- Deleted after max views reached
+- Zero-knowledge architecture

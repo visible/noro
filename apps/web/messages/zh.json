@@ -1,0 +1,70 @@
+{
+  "home": {
+    "title": "noro",
+    "tagline": "安全分享秘密。阅后即焚的一次性链接。"
+  },
+  "share": {
+    "title": "分享",
+    "subtitle": "创建一次性秘密链接",
+    "text": "文本",
+    "file": "文件",
+    "labelLabel": "标签（可选）",
+    "labelPlaceholder": "例如：API_KEY",
+    "secretLabel": "秘密",
+    "secretPlaceholder": "在此粘贴您的秘密...",
+    "fileLabel": "文件",
+    "dropzone": "点击或拖放文件",
+    "maxsize": "最大 5mb",
+    "views": "最大查看次数",
+    "expires": "过期时间",
+    "button": "生成链接",
+    "generating": "加密中...",
+    "success": "链接已创建",
+    "copy": "复制",
+    "copied": "已复制",
+    "expiresNote": "查看后链接将过期",
+    "clipboardNote": "剪贴板将在30秒后清空",
+    "newLink": "再创建一个",
+    "security": {
+      "encrypted": "端到端加密",
+      "server": "服务器无法查看您的数据",
+      "destruct": "查看后自动销毁"
+    }
+  },
+  "claim": {
+    "loading": "检查中...",
+    "confirm": "有一个秘密等待您查看",
+    "confirmWarning": "一旦查看，此秘密将被永久删除",
+    "extensionWarning": "为了最大安全性，请使用无痕模式",
+    "confirmButton": "查看秘密",
+    "claiming": "解密中...",
+    "notfound": "此秘密已过期或已被查看",
+    "notfoundDetail": "链接可能已过期、已被查看或从未存在",
+    "error": "获取秘密失败",
+    "label": "标签",
+    "value": "值",
+    "filename": "文件",
+    "copy": "复制",
+    "copied": "已复制",
+    "download": "下载",
+    "show": "显示",
+    "hide": "隐藏",
+    "warning": "此秘密已被永久删除",
+    "remaining": "剩余查看次数",
+    "create": "创建您自己的"
+  },
+  "titles": {
+    "loading": "加载中",
+    "confirm": "确认",
+    "claiming": "解密中",
+    "success": "秘密",
+    "notfound": "未找到",
+    "error": "错误"
+  },
+  "dock": {
+    "share": "分享",
+    "github": "github",
+    "docs": "文档",
+    "npm": "npm"
+  }
+}

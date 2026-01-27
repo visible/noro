@@ -1,27 +1,7 @@
-import { Redis } from "@upstash/redis";
 import { NextResponse } from "next/server";
-
-const redis = new Redis({
-  url: process.env.KV_REST_API_URL!,
-  token: process.env.KV_REST_API_TOKEN!,
-});
-
-const ttls: Record<string, number> = {
-  "1h": 3600,
-  "6h": 21600,
-  "12h": 43200,
-  "1d": 86400,
-  "7d": 604800,
-};
-
-function generateid(): string {
-  const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
-  let id = "";
-  for (let i = 0; i < 6; i++) {
-    id += chars[Math.floor(Math.random() * chars.length)];
-  }
-  return id;
-}
+import { redis } from "@/lib/redis";
+import { storelimit, getip } from "@/lib/ratelimit";
+import { ttls, maxsize, generateid } from "@/lib/secret";
 
 interface StorePayload {
   data: string;
@@ -30,14 +10,18 @@ interface StorePayload {
   filename?: string;
   mimetype?: string;
   views?: number;
+  peek?: boolean;
 }
 
-const maxsize = 5 * 1024 * 1024;
-
 export async function POST(req: Request) {
+  const ip = getip(req);
+  const { success } = await storelimit.limit(ip);
+  if (!success) {
+    return NextResponse.json({ error: "rate limited" }, { status: 429 });
+  }
   try {
     const body: StorePayload = await req.json();
-    const { data, ttl, type = "text", filename, mimetype, views = 1 } = body;
+    const { data, ttl, type = "text", filename, mimetype, views = 1, peek = false } = body;
     if (!data || typeof data !== "string") {
       return NextResponse.json({ error: "invalid data" }, { status: 400 });
     }
@@ -55,6 +39,7 @@ export async function POST(req: Request) {
       mimetype,
       views: clampedviews,
       viewed: 0,
+      peek,
     });
     await redis.set(id, payload, { ex });
     return NextResponse.json({ id });
