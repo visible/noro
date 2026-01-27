@@ -19,7 +19,6 @@ export function CommandPalette() {
 	const shortcuts: Shortcut[] = useMemo(() => [
 		{ keys: ["n"], label: "new secret", action: () => router.push("/share") },
 		{ keys: ["d"], label: "docs", action: () => router.push("/docs") },
-		{ keys: ["i"], label: "ink", action: () => router.push("/ink") },
 		{ keys: ["h"], label: "home", action: () => router.push("/") },
 		{ keys: ["g"], label: "github", action: () => window.open("https://github.com/visible/noro", "_blank") },
 		{ keys: ["esc"], label: "close", action: () => setOpen(false) },
