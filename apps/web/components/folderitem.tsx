@@ -60,9 +60,9 @@ export function FolderItem({ folder, depth, selected, onSelect, onRename, onDele
 	return (
 		<div>
 			<div
-				className={`group flex items-center gap-2 px-3 py-2.5 rounded-lg cursor-pointer transition-colors min-h-[44px] ${
-					selected ? "bg-white/10 text-white" : "text-white/60 hover:text-white hover:bg-white/5 active:bg-white/10"
-				} ${dragover ? "ring-2 ring-[#FF6B00]" : ""}`}
+				className={`group flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
+					selected ? "bg-orange-50 text-orange-600" : "text-stone-600 hover:text-stone-900 hover:bg-stone-100"
+				} ${dragover ? "ring-2 ring-orange-500" : ""}`}
 				style={{ paddingLeft: `${12 + depth * 16}px` }}
 				onClick={onSelect}
 				onDragOver={handleDragOver}
@@ -85,7 +85,7 @@ export function FolderItem({ folder, depth, selected, onSelect, onRename, onDele
 						<Icon name="chevron" className={`w-3 h-3 transition-transform ${expanded ? "rotate-90" : ""}`} />
 					</button>
 				)}
-				<Icon name={folder.icon} className="w-4 h-4 shrink-0" />
+				<Icon name={folder.icon} className={`w-4 h-4 shrink-0 ${selected ? "text-orange-500" : "text-stone-400"}`} />
 				{editing ? (
 					<input
 						ref={inputRef}
@@ -93,19 +93,19 @@ export function FolderItem({ folder, depth, selected, onSelect, onRename, onDele
 						onChange={(e) => setName(e.target.value)}
 						onBlur={saveEdit}
 						onKeyDown={handleKeyDown}
-						className="flex-1 bg-transparent border-b border-white/20 outline-none text-sm py-1"
+						className="flex-1 bg-transparent border-b border-stone-200 outline-none text-sm text-stone-900 py-1"
 						onClick={(e) => e.stopPropagation()}
 					/>
 				) : (
-					<span className="flex-1 text-sm truncate">{folder.name}</span>
+					<span className="flex-1 text-sm font-medium truncate">{folder.name}</span>
 				)}
-				{count > 0 && <span className="text-xs text-white/40">{count}</span>}
+				{count > 0 && <span className={`text-xs ${selected ? "text-orange-400" : "text-stone-400"}`}>{count}</span>}
 				<button
 					onClick={(e) => {
 						e.stopPropagation();
 						onDelete();
 					}}
-					className="opacity-0 group-hover:opacity-100 hover:text-red-400 active:text-red-400 p-2 -mr-1"
+					className="opacity-0 group-hover:opacity-100 hover:text-red-500 p-2 -mr-1 transition-opacity"
 					aria-label="delete folder"
 				>
 					<Icon name="close" className="w-3 h-3" />

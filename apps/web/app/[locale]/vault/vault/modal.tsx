@@ -1,0 +1,264 @@
+"use client";
+
+import { useState, useEffect, useRef } from "react";
+import type { ItemType } from "@/lib/generated/prisma/enums";
+import type { VaultItem } from "./store";
+import { fieldConfigs } from "./fields";
+import { typeIcons, typeIconsLarge, typeLabels, typeColors } from "./icons";
+import { PasswordFieldLight } from "./password";
+import { TagInputLight } from "./tags";
+
+interface Props {
+	item?: VaultItem | null;
+	defaulttype?: ItemType;
+	onSave: (data: { type: ItemType; title: string; data: Record<string, unknown>; tags: string[] }) => void;
+	onDelete?: () => void;
+	onRestore?: () => void;
+	onClose: () => void;
+	isTrash?: boolean;
+}
+
+const types: ItemType[] = ["login", "note", "card", "identity", "ssh", "api", "otp", "passkey"];
+
+export function ItemModal({ item, defaulttype, onSave, onDelete, onRestore, onClose, isTrash }: Props) {
+	const [type, setType] = useState<ItemType>(item?.type || defaulttype || "login");
+	const [title, setTitle] = useState(item?.title || "");
+	const [data, setData] = useState<Record<string, unknown>>(item?.data || {});
+	const [tags, setTags] = useState<string[]>(item?.tags || []);
+	const [isVisible, setIsVisible] = useState(false);
+	const titleRef = useRef<HTMLInputElement>(null);
+	const generatorFields = ["password", "passphrase", "totp"];
+
+	useEffect(() => {
+		requestAnimationFrame(() => setIsVisible(true));
+		titleRef.current?.focus();
+	}, []);
+
+	useEffect(() => {
+		if (!item) setData({});
+	}, [type, item]);
+
+	function handleClose() {
+		setIsVisible(false);
+		setTimeout(onClose, 200);
+	}
+
+	function handleBackdrop(e: React.MouseEvent) {
+		if (e.target === e.currentTarget) handleClose();
+	}
+
+	function handleKeyDown(e: React.KeyboardEvent) {
+		if (e.key === "Escape") handleClose();
+	}
+
+	function handleSubmit(e: React.FormEvent) {
+		e.preventDefault();
+		onSave({ type, title, data, tags });
+	}
+
+	const fields = fieldConfigs[type];
+	const readOnly = isTrash && item;
+
+	function renderFields() {
+		const result: React.ReactNode[] = [];
+		let i = 0;
+		while (i < fields.length) {
+			const field = fields[i];
+			const nextField = fields[i + 1];
+			if (field.half && nextField?.half) {
+				result.push(
+					<div key={`${field.name}-${nextField.name}`} className="grid grid-cols-2 gap-4">
+						{renderField(field)}
+						{renderField(nextField)}
+					</div>
+				);
+				i += 2;
+			} else {
+				result.push(<div key={field.name}>{renderField(field)}</div>);
+				i += 1;
+			}
+		}
+		return result;
+	}
+
+	function renderField(field: (typeof fields)[0]) {
+		const inputClass = "w-full bg-white border border-stone-200 rounded-xl px-4 py-3 text-base text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-orange-500/40 focus:border-orange-500 transition-all read-only:bg-stone-50 read-only:text-stone-500";
+
+		return (
+			<div>
+				<label className="block text-sm font-medium text-stone-600 mb-2">{field.label}</label>
+				{field.type === "textarea" ? (
+					<textarea
+						value={(data[field.name] as string) || ""}
+						onChange={(e) => setData({ ...data, [field.name]: e.target.value })}
+						required={field.required}
+						readOnly={!!readOnly}
+						rows={3}
+						className={`${inputClass} resize-none font-mono`}
+					/>
+				) : field.type === "password" ? (
+					<PasswordFieldLight
+						value={(data[field.name] as string) || ""}
+						onChange={(v) => setData({ ...data, [field.name]: v })}
+						required={field.required}
+						readOnly={!!readOnly}
+						showGenerator={generatorFields.includes(field.name)}
+					/>
+				) : (
+					<input
+						type={field.type}
+						value={(data[field.name] as string | number) || ""}
+						onChange={(e) => setData({ ...data, [field.name]: field.type === "number" ? Number(e.target.value) : e.target.value })}
+						required={field.required}
+						readOnly={!!readOnly}
+						className={`${inputClass} font-mono`}
+					/>
+				)}
+			</div>
+		);
+	}
+
+	return (
+		<div
+			role="dialog"
+			aria-modal="true"
+			onKeyDown={handleKeyDown}
+			className={`fixed inset-0 z-50 flex items-end sm:items-center justify-center transition-all duration-200 ${isVisible ? "bg-black/50 backdrop-blur-sm" : "bg-transparent"}`}
+			onClick={handleBackdrop}
+		>
+			<div
+				className={`bg-white rounded-t-3xl sm:rounded-2xl w-full sm:max-w-lg max-h-[90vh] sm:max-h-[85vh] flex flex-col shadow-2xl transition-all duration-200 ease-out ${isVisible ? "translate-y-0 opacity-100 sm:scale-100" : "translate-y-full sm:translate-y-0 sm:scale-95 opacity-0"}`}
+			>
+				<div className="flex items-center justify-between px-6 py-5 border-b border-stone-100">
+					<div className="flex items-center gap-4">
+						<div className={`w-11 h-11 rounded-xl flex items-center justify-center ${typeColors[type]}`}>
+							{typeIconsLarge[type]}
+						</div>
+						<div>
+							<h2 className="text-lg font-semibold text-stone-900">
+								{isTrash ? "view item" : item ? "edit item" : "new item"}
+							</h2>
+							<p className="text-sm text-stone-500">{typeLabels[type]}</p>
+						</div>
+					</div>
+					<button
+						type="button"
+						onClick={handleClose}
+						className="w-10 h-10 -mr-2 flex items-center justify-center text-stone-400 hover:text-stone-600 hover:bg-stone-100 rounded-xl transition-colors"
+						aria-label="close"
+					>
+						<svg aria-hidden="true" className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+							<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+						</svg>
+					</button>
+				</div>
+
+				<form onSubmit={handleSubmit} className="flex-1 overflow-y-auto overscroll-contain">
+					<div className="p-6 space-y-5">
+						{!item && (
+							<div>
+								<label className="block text-sm font-medium text-stone-600 mb-2">type</label>
+								<div className="flex flex-wrap gap-1.5 p-1.5 bg-stone-100 rounded-xl">
+									{types.map((t) => (
+										<button
+											key={t}
+											type="button"
+											onClick={() => setType(t)}
+											className={`flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+												type === t
+													? "bg-white text-stone-900 shadow-sm"
+													: "text-stone-500 hover:text-stone-700 hover:bg-stone-50"
+											}`}
+										>
+											{typeIcons[t]}
+											<span className="hidden sm:inline">{t}</span>
+										</button>
+									))}
+								</div>
+							</div>
+						)}
+
+						<div>
+							<label className="block text-sm font-medium text-stone-600 mb-2">title</label>
+							<input
+								ref={titleRef}
+								type="text"
+								value={title}
+								onChange={(e) => setTitle(e.target.value)}
+								placeholder={typeLabels[type]}
+								required
+								readOnly={!!readOnly}
+								className="w-full bg-white border border-stone-200 rounded-xl px-4 py-3 text-base text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-orange-500/40 focus:border-orange-500 transition-all read-only:bg-stone-50 read-only:text-stone-500"
+							/>
+						</div>
+
+						{renderFields()}
+
+						<div>
+							<label className="block text-sm font-medium text-stone-600 mb-2">tags</label>
+							<TagInputLight tags={tags} onChange={setTags} readOnly={!!readOnly} />
+						</div>
+					</div>
+				</form>
+
+				<div className="px-6 py-4 pb-safe bg-stone-50 border-t border-stone-100 flex flex-col-reverse sm:flex-row gap-3 rounded-b-3xl sm:rounded-b-2xl">
+					{isTrash && item ? (
+						<>
+							<button
+								type="button"
+								onClick={handleClose}
+								className="flex-1 px-4 py-3 text-stone-600 font-medium rounded-xl border border-stone-200 hover:bg-stone-100 active:bg-stone-200 transition-colors"
+							>
+								close
+							</button>
+							{onRestore && (
+								<button
+									type="button"
+									onClick={onRestore}
+									className="flex-1 px-4 py-3 bg-orange-500 text-white font-medium rounded-xl hover:bg-orange-600 active:bg-orange-700 transition-colors"
+								>
+									restore
+								</button>
+							)}
+							{onDelete && (
+								<button
+									type="button"
+									onClick={onDelete}
+									className="px-4 py-3 text-red-600 font-medium rounded-xl border border-red-200 bg-red-50 hover:bg-red-100 active:bg-red-200 transition-colors"
+								>
+									delete forever
+								</button>
+							)}
+						</>
+					) : (
+						<>
+							{item && onDelete && (
+								<button
+									type="button"
+									onClick={onDelete}
+									className="sm:mr-auto px-4 py-3 text-red-500 font-medium rounded-xl hover:bg-red-50 active:bg-red-100 transition-colors"
+								>
+									delete
+								</button>
+							)}
+							<button
+								type="button"
+								onClick={handleClose}
+								className="flex-1 sm:flex-initial px-5 py-3 text-stone-600 font-medium rounded-xl border border-stone-200 hover:bg-stone-100 active:bg-stone-200 transition-colors"
+							>
+								cancel
+							</button>
+							<button
+								type="submit"
+								onClick={handleSubmit}
+								className="flex-1 sm:flex-initial px-6 py-3 bg-orange-500 text-white font-medium rounded-xl hover:bg-orange-600 active:bg-orange-700 transition-colors"
+							>
+								save
+							</button>
+						</>
+					)}
+				</div>
+			</div>
+		</div>
+	);
+}

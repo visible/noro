@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useRef } from "react";
+import { Modal, ModalHeader, ModalContent, ModalFooter } from "@/components/ui/modal";
 import { decryptimport } from "@/lib/transfer";
 import { parseonepassword, parsebitwarden, parselastpass, parsechrome } from "@/lib/parsers";
 import type { ExportItem } from "@/lib/transfer";
@@ -13,6 +14,14 @@ interface Props {
 	onimport: (items: ExportItem[]) => void;
 }
 
+const sources: [Source, string][] = [
+	["noro", "noro"],
+	["onepassword", "1password"],
+	["bitwarden", "bitwarden"],
+	["lastpass", "lastpass"],
+	["chrome", "chrome"],
+];
+
 export function Import({ open, onclose, onimport }: Props) {
 	const [source, setSource] = useState<Source>("noro");
 	const [password, setPassword] = useState("");
@@ -22,14 +31,17 @@ export function Import({ open, onclose, onimport }: Props) {
 	const [content, setContent] = useState("");
 	const fileref = useRef<HTMLInputElement>(null);
 
-	if (!open) return null;
-
 	function reset() {
 		setPassword("");
 		setError("");
 		setPreview([]);
 		setContent("");
 		if (fileref.current) fileref.current.value = "";
+	}
+
+	function handleclose() {
+		reset();
+		onclose();
 	}
 
 	async function handlefile(e: React.ChangeEvent<HTMLInputElement>) {
@@ -94,23 +106,28 @@ export function Import({ open, onclose, onimport }: Props) {
 			return;
 		}
 		onimport(preview);
-		reset();
-		onclose();
+		handleclose();
 	}
 
-	const sources: [Source, string][] = [["noro", "noro"], ["onepassword", "1password"], ["bitwarden", "bitwarden"], ["lastpass", "lastpass"], ["chrome", "chrome"]];
-
 	return (
-		<div className="fixed inset-0 z-50 flex items-center justify-center">
-			<div className="absolute inset-0 bg-black/60" onClick={onclose} />
-			<div className="relative bg-[#0c0a09] border border-white/10 rounded-xl p-6 w-full max-w-md max-h-[80vh] overflow-y-auto">
-				<h2 className="text-xl font-medium mb-6">import passwords</h2>
-
+		<Modal open={open} onClose={handleclose}>
+			<ModalHeader onClose={handleclose}>import passwords</ModalHeader>
+			<ModalContent>
 				<div className="mb-6">
 					<label className="block text-sm text-white/60 mb-3">source</label>
 					<div className="flex flex-wrap gap-2">
 						{sources.map(([id, label]) => (
-							<button key={id} onClick={() => { setSource(id); reset(); }} className={`px-4 py-2 rounded-lg transition-colors text-sm ${source === id ? "bg-white/20 text-white" : "bg-white/5 text-white/40"}`}>
+							<button
+								key={id}
+								type="button"
+								onClick={() => {
+									setSource(id);
+									reset();
+								}}
+								className={`px-4 py-2 rounded-lg transition-colors text-sm ${
+									source === id ? "bg-white/20 text-white" : "bg-white/5 text-white/40"
+								}`}
+							>
 								{label}
 							</button>
 						))}
@@ -119,9 +136,7 @@ export function Import({ open, onclose, onimport }: Props) {
 
 				<div className="mb-6">
 					<label className="block text-sm text-white/60 mb-2">
-						{source === "noro" || source === "onepassword" || source === "bitwarden"
-							? "json file"
-							: "csv file"}
+						{source === "noro" || source === "onepassword" || source === "bitwarden" ? "json file" : "csv file"}
 					</label>
 					<input
 						ref={fileref}
@@ -144,6 +159,7 @@ export function Import({ open, onclose, onimport }: Props) {
 								className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-[#FF6B00]/50"
 							/>
 							<button
+								type="button"
 								onClick={handlepassword}
 								disabled={loading}
 								className="px-4 py-3 bg-white/10 rounded-lg hover:bg-white/20 transition-colors disabled:opacity-50"
@@ -157,7 +173,7 @@ export function Import({ open, onclose, onimport }: Props) {
 				{error && <p className="text-red-400 text-sm mb-4">{error}</p>}
 
 				{preview.length > 0 && (
-					<div className="mb-6">
+					<div>
 						<p className="text-sm text-white/60 mb-3">preview ({preview.length} items)</p>
 						<div className="bg-white/5 rounded-lg max-h-48 overflow-y-auto">
 							{preview.slice(0, 10).map((item, i) => (
@@ -166,30 +182,30 @@ export function Import({ open, onclose, onimport }: Props) {
 									<p className="text-xs text-white/40">{item.type}</p>
 								</div>
 							))}
-							{preview.length > 10 && <p className="px-4 py-3 text-sm text-white/40">and {preview.length - 10} more...</p>}
+							{preview.length > 10 && (
+								<p className="px-4 py-3 text-sm text-white/40">and {preview.length - 10} more...</p>
+							)}
 						</div>
 					</div>
 				)}
-
-				<div className="flex gap-3">
-					<button
-						onClick={() => {
-							reset();
-							onclose();
-						}}
-						className="flex-1 px-4 py-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors"
-					>
-						cancel
-					</button>
-					<button
-						onClick={handleimport}
-						disabled={!preview.length}
-						className="flex-1 px-4 py-3 bg-[#FF6B00] text-black rounded-lg hover:bg-[#FF6B00]/90 transition-colors font-medium disabled:opacity-50"
-					>
-						import {preview.length} items
-					</button>
-				</div>
-			</div>
-		</div>
+			</ModalContent>
+			<ModalFooter>
+				<button
+					type="button"
+					onClick={handleclose}
+					className="flex-1 px-4 py-2.5 bg-white/5 rounded-lg hover:bg-white/10 transition-colors"
+				>
+					cancel
+				</button>
+				<button
+					type="button"
+					onClick={handleimport}
+					disabled={!preview.length}
+					className="flex-1 px-4 py-2.5 bg-[#FF6B00] text-black rounded-lg hover:bg-[#FF6B00]/90 transition-colors font-medium disabled:opacity-50"
+				>
+					import {preview.length} items
+				</button>
+			</ModalFooter>
+		</Modal>
 	);
 }

@@ -3,8 +3,8 @@
 import { useState, useEffect, useCallback, useMemo, useRef } from "react";
 import { useRouter, usePathname } from "next/navigation";
 import type { ItemType } from "@/lib/generated/prisma/enums";
-import * as store from "@/app/[locale]/app/vault/store";
-import type { VaultItem } from "@/app/[locale]/app/vault/store";
+import * as store from "@/app/[locale]/vault/vault/store";
+import type { VaultItem } from "@/app/[locale]/vault/vault/store";
 import { type CommandDef, type Category, loadrecent, saverecent, fuzzy, score, icons, navicons } from "@/lib/command";
 
 interface Props {
@@ -24,7 +24,7 @@ export function Command({ onnewitem, onexport, onlock }: Props) {
 	const router = useRouter();
 	const pathname = usePathname();
 
-	const isinapp = pathname.includes("/app");
+	const isinapp = pathname.includes("/vault");
 
 	useEffect(() => {
 		setRecent(loadrecent());
@@ -41,16 +41,16 @@ export function Command({ onnewitem, onexport, onlock }: Props) {
 			{ id: "new-api", label: "new api key", category: "actions", icon: icons.api, action: () => onnewitem?.("api"), keywords: ["token", "secret"] },
 			{ id: "new-otp", label: "new otp", category: "actions", icon: icons.otp, action: () => onnewitem?.("otp"), keywords: ["2fa", "totp", "authenticator"] },
 			{ id: "new-passkey", label: "new passkey", category: "actions", icon: icons.passkey, action: () => onnewitem?.("passkey"), keywords: ["webauthn", "biometric"] },
-			{ id: "generator", label: "open generator", category: "actions", icon: navicons.generator, action: () => router.push("/app/generator"), keywords: ["password", "random", "generate"] },
-			{ id: "settings", label: "open settings", category: "actions", icon: navicons.settings, action: () => router.push("/app/settings"), keywords: ["preferences", "config"] },
-			{ id: "search", label: "search vault", category: "actions", icon: navicons.search, action: () => router.push("/app"), keywords: ["find", "lookup"] },
+			{ id: "generator", label: "open generator", category: "actions", icon: navicons.generator, action: () => router.push("/vault/generator"), keywords: ["password", "random", "generate"] },
+			{ id: "settings", label: "open settings", category: "actions", icon: navicons.settings, action: () => router.push("/vault/settings"), keywords: ["preferences", "config"] },
+			{ id: "search", label: "search vault", category: "actions", icon: navicons.search, action: () => router.push("/vault"), keywords: ["find", "lookup"] },
 			{ id: "export", label: "export vault", category: "actions", icon: navicons.export, action: () => onexport?.(), keywords: ["backup", "download"] },
 			{ id: "lock", label: "lock vault", category: "actions", icon: navicons.vault, action: () => onlock?.(), keywords: ["logout", "secure"] },
 		];
 		const nav: CommandDef[] = [
-			{ id: "nav-vault", label: "go to vault", category: "navigation", icon: navicons.vault, action: () => router.push("/app"), keywords: ["home", "main"] },
-			{ id: "nav-generator", label: "go to generator", category: "navigation", icon: navicons.generator, action: () => router.push("/app/generator"), keywords: ["password"] },
-			{ id: "nav-settings", label: "go to settings", category: "navigation", icon: navicons.settings, action: () => router.push("/app/settings"), keywords: ["preferences"] },
+			{ id: "nav-vault", label: "go to vault", category: "navigation", icon: navicons.vault, action: () => router.push("/vault"), keywords: ["home", "main"] },
+			{ id: "nav-generator", label: "go to generator", category: "navigation", icon: navicons.generator, action: () => router.push("/vault/generator"), keywords: ["password"] },
+			{ id: "nav-settings", label: "go to settings", category: "navigation", icon: navicons.settings, action: () => router.push("/vault/settings"), keywords: ["preferences"] },
 			{ id: "nav-docs", label: "go to docs", category: "navigation", icon: navicons.docs, action: () => router.push("/docs"), keywords: ["help", "documentation"] },
 			{ id: "nav-home", label: "go to home", category: "navigation", icon: navicons.home, action: () => router.push("/"), keywords: ["landing"] },
 		];
@@ -59,7 +59,7 @@ export function Command({ onnewitem, onexport, onlock }: Props) {
 			label: item.title,
 			category: "items" as Category,
 			icon: icons[item.type],
-			action: () => router.push(`/app?item=${item.id}`),
+			action: () => router.push(`/vault?item=${item.id}`),
 			keywords: item.tags,
 		}));
 		return [...base, ...nav, ...vaultitems];

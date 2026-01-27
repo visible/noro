@@ -6,7 +6,7 @@ import type { ItemType } from "@/lib/generated/prisma/enums";
 import { Command } from "./command";
 import { Export } from "./export";
 import { signOut } from "@/lib/client";
-import * as store from "@/app/[locale]/app/vault/store";
+import * as store from "@/app/[locale]/vault/vault/store";
 
 interface Props {
 	onitemcreate?: (type: ItemType) => void;
@@ -29,7 +29,7 @@ export function CommandWrapper({ onitemcreate }: Props) {
 		if (onitemcreate) {
 			onitemcreate(type);
 		} else {
-			router.push(`/app?newitem=${type}`);
+			router.push(`/vault?newitem=${type}`);
 		}
 	}
 

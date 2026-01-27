@@ -38,14 +38,15 @@ export function TagInput({ tags, onChange, readOnly }: TagInputProps) {
 				{tags.map((tag) => (
 					<span
 						key={tag}
-						className="inline-flex items-center gap-1 px-2 py-1 bg-white/10 rounded text-sm"
+						className="inline-flex items-center gap-1.5 px-2.5 py-1.5 bg-white/10 rounded text-sm min-h-[36px]"
 					>
 						{tag}
 						{!readOnly && (
 							<button
 								type="button"
 								onClick={() => removeTag(tag)}
-								className="text-white/40 hover:text-white"
+								className="w-6 h-6 flex items-center justify-center text-white/40 hover:text-white rounded"
+								aria-label={`remove ${tag}`}
 							>
 								<svg aria-hidden="true" className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -120,14 +121,14 @@ export function TagFilter({ tags, selected, onSelect }: TagFilterProps) {
 
 	return (
 		<div className="flex gap-2 flex-wrap items-center">
-			<svg aria-hidden="true" className="w-4 h-4 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+			<svg aria-hidden="true" className="w-4 h-4 text-white/40 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 				<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3z" />
 				<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M6 6h.008v.008H6V6z" />
 			</svg>
 			{selected && (
 				<button
 					onClick={() => onSelect(null)}
-					className="px-2 py-1 rounded text-xs text-white/60 hover:text-white"
+					className="px-3 py-2 min-h-[36px] rounded text-xs text-white/60 hover:text-white active:text-white"
 				>
 					clear
 				</button>
@@ -136,10 +137,10 @@ export function TagFilter({ tags, selected, onSelect }: TagFilterProps) {
 				<button
 					key={tag}
 					onClick={() => onSelect(selected === tag ? null : tag)}
-					className={`px-2.5 py-1 rounded-full text-xs transition-colors ${
+					className={`px-3 py-2 min-h-[36px] rounded-full text-xs transition-colors ${
 						selected === tag
 							? "bg-[#FF6B00] text-black"
-							: "bg-white/10 text-white/60 hover:bg-white/20 hover:text-white"
+							: "bg-white/10 text-white/60 hover:bg-white/20 hover:text-white active:bg-white/20"
 					}`}
 				>
 					{tag}

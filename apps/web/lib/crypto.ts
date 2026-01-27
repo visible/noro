@@ -1,3 +1,5 @@
+import { chars } from "@/lib/chars";
+
 async function derivekey(key: string, usage: "encrypt" | "decrypt") {
   const keydata = new TextEncoder().encode(key.padEnd(32, "0").slice(0, 32));
   return crypto.subtle.importKey("raw", keydata, "AES-GCM", false, [usage]);
@@ -36,10 +38,7 @@ export async function encrypt(data: Uint8Array, key: string): Promise<string> {
   return tobase64url(combined);
 }
 
-export async function decrypt(
-  encrypted: string,
-  key: string
-): Promise<Uint8Array> {
+export async function decrypt(encrypted: string, key: string): Promise<Uint8Array> {
   const bytes = frombase64url(encrypted);
   const iv = bytes.slice(0, 12);
   const data = bytes.slice(12);
@@ -53,23 +52,9 @@ export async function decrypt(
   return new Uint8Array(decrypted);
 }
 
-export async function encrypttext(text: string, key: string): Promise<string> {
-  const data = new TextEncoder().encode(text);
-  return encrypt(data, key);
-}
-
-export async function decrypttext(
-  encrypted: string,
-  key: string
-): Promise<string> {
-  const data = await decrypt(encrypted, key);
-  return new TextDecoder().decode(data);
-}
-
 export function generatekey(): string {
   const bytes = crypto.getRandomValues(new Uint8Array(24));
   let key = "";
-  const chars = "abcdefghijklmnopqrstuvwxyz0123456789";
   for (let i = 0; i < 24; i++) {
     key += chars[bytes[i] % chars.length];
   }

@@ -19,7 +19,7 @@ export default function Home() {
     <BackgroundBeams className="text-white selection:bg-[#FF6B00] selection:text-black">
       <Dock />
       <LanguageToggle />
-      <nav className="fixed top-0 left-0 p-6 md:p-8 z-50 flex items-center gap-4">
+      <nav className="fixed top-0 left-0 px-4 sm:px-8 md:px-16 pt-6 md:pt-8 z-50 flex items-center gap-4">
         <Link
           href="/login"
           className="text-sm font-medium text-white/70 hover:text-white transition-colors"

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Modal, ModalHeader, ModalContent, ModalFooter } from "@/components/ui/modal";
 import { encryptexport, tocsv, download } from "@/lib/transfer";
 import type { ExportItem, ExportData } from "@/lib/transfer";
 
@@ -16,8 +17,6 @@ export function Export({ items, open, onclose }: Props) {
 	const [confirm, setConfirm] = useState("");
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(false);
-
-	if (!open) return null;
 
 	async function handleexport() {
 		setError("");
@@ -61,15 +60,14 @@ export function Export({ items, open, onclose }: Props) {
 	}
 
 	return (
-		<div className="fixed inset-0 z-50 flex items-center justify-center">
-			<div className="absolute inset-0 bg-black/60" onClick={onclose} />
-			<div className="relative bg-[#0c0a09] border border-white/10 rounded-xl p-6 w-full max-w-md">
-				<h2 className="text-xl font-medium mb-6">export vault</h2>
-
+		<Modal open={open} onClose={onclose}>
+			<ModalHeader onClose={onclose}>export vault</ModalHeader>
+			<ModalContent>
 				<div className="mb-6">
 					<label className="block text-sm text-white/60 mb-3">format</label>
 					<div className="flex gap-2">
 						<button
+							type="button"
 							onClick={() => setFormat("encrypted")}
 							className={`flex-1 px-4 py-3 rounded-lg transition-colors ${
 								format === "encrypted" ? "bg-white/20 text-white" : "bg-white/5 text-white/40"
@@ -78,6 +76,7 @@ export function Export({ items, open, onclose }: Props) {
 							encrypted json
 						</button>
 						<button
+							type="button"
 							onClick={() => setFormat("csv")}
 							className={`flex-1 px-4 py-3 rounded-lg transition-colors ${
 								format === "csv" ? "bg-white/20 text-white" : "bg-white/5 text-white/40"
@@ -100,7 +99,7 @@ export function Export({ items, open, onclose }: Props) {
 								className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-[#FF6B00]/50"
 							/>
 						</div>
-						<div className="mb-6">
+						<div className="mb-4">
 							<label className="block text-sm text-white/60 mb-2">confirm password</label>
 							<input
 								type="password"
@@ -114,30 +113,31 @@ export function Export({ items, open, onclose }: Props) {
 				)}
 
 				{format === "csv" && (
-					<p className="text-sm text-white/40 mb-6">
+					<p className="text-sm text-white/40">
 						csv exports are unencrypted and should only be used for migration to other password
 						managers. delete the file after import.
 					</p>
 				)}
 
-				{error && <p className="text-red-400 text-sm mb-4">{error}</p>}
-
-				<div className="flex gap-3">
-					<button
-						onClick={onclose}
-						className="flex-1 px-4 py-3 bg-white/5 rounded-lg hover:bg-white/10 transition-colors"
-					>
-						cancel
-					</button>
-					<button
-						onClick={handleexport}
-						disabled={loading}
-						className="flex-1 px-4 py-3 bg-[#FF6B00] text-black rounded-lg hover:bg-[#FF6B00]/90 transition-colors font-medium disabled:opacity-50"
-					>
-						{loading ? "exporting..." : `export ${items.length} items`}
-					</button>
-				</div>
-			</div>
-		</div>
+				{error && <p className="text-red-400 text-sm mt-4">{error}</p>}
+			</ModalContent>
+			<ModalFooter>
+				<button
+					type="button"
+					onClick={onclose}
+					className="flex-1 px-4 py-2.5 bg-white/5 rounded-lg hover:bg-white/10 transition-colors"
+				>
+					cancel
+				</button>
+				<button
+					type="button"
+					onClick={handleexport}
+					disabled={loading}
+					className="flex-1 px-4 py-2.5 bg-[#FF6B00] text-black rounded-lg hover:bg-[#FF6B00]/90 transition-colors font-medium disabled:opacity-50"
+				>
+					{loading ? "exporting..." : `export ${items.length} items`}
+				</button>
+			</ModalFooter>
+		</Modal>
 	);
 }

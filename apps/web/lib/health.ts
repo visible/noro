@@ -1,4 +1,4 @@
-import type { VaultItem } from "@/app/[locale]/app/vault/store";
+import type { VaultItem } from "@/app/[locale]/vault/vault/store";
 import type { LoginData, CardData, ApiData, SshData } from "./types";
 import { checkpassword, type BreachResult } from "./breach";
 
