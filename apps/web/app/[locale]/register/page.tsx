@@ -47,7 +47,7 @@ export default function Register() {
 
 	return (
 		<div className="min-h-dvh bg-black text-white flex selection:bg-[#FF6B00] selection:text-black">
-			<div className="w-full lg:w-3/5 flex flex-col justify-center px-8 md:px-16 lg:px-24 relative">
+			<div className="w-full lg:w-2/5 flex flex-col justify-center px-8 md:px-16 lg:px-20 relative">
 				<div className="max-w-md w-full mx-auto lg:mx-0">
 					<h1 className="text-4xl font-bold mb-2 tracking-tight">get started</h1>
 					<p className="text-white/50 mb-8">create your secure vault</p>
@@ -108,8 +108,9 @@ export default function Register() {
 				</div>
 			</div>
 
-			<div className="hidden lg:flex lg:w-2/5 relative overflow-hidden">
-				<div className="absolute left-0 top-0 bottom-0 w-px bg-gradient-to-b from-transparent via-[#FF6B00]/40 to-transparent" />
+			<div className="hidden lg:flex lg:w-3/5 relative overflow-hidden">
+				<div className="absolute left-0 top-[15%] bottom-[15%] w-[2px] bg-[#FF6B00] z-20" />
+				<div className="absolute left-[-6px] top-[15%] bottom-[15%] w-4 bg-[#FF6B00]/20 blur-md z-10" />
 				<div className="absolute inset-0 bg-gradient-to-br from-[#FF6B00]/[0.03] via-transparent to-transparent" />
 				<BackgroundBeams className="absolute inset-0">
 					<div />
