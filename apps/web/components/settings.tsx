@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 interface RowProps {
 	label: string;
 	description?: string;
@@ -10,12 +8,12 @@ interface RowProps {
 
 export function Row({ label, description, children }: RowProps) {
 	return (
-		<div className="flex items-center justify-between py-4 border-b border-white/5 last:border-0">
-			<div className="flex-1 mr-4">
+		<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 py-4 border-b border-white/5 last:border-0">
+			<div className="flex-1">
 				<p className="font-medium">{label}</p>
 				{description && <p className="text-sm text-white/40 mt-0.5">{description}</p>}
 			</div>
-			{children}
+			<div className="shrink-0">{children}</div>
 		</div>
 	);
 }
@@ -37,13 +35,13 @@ export function Toggle({ label, description, checked, onChange, disabled }: Togg
 				aria-checked={checked}
 				disabled={disabled}
 				onClick={() => onChange(!checked)}
-				className={`relative w-12 h-7 rounded-full transition-colors ${
+				className={`relative w-14 h-8 rounded-full transition-colors ${
 					checked ? "bg-[#FF6B00]" : "bg-white/20"
 				} ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
 			>
 				<span
-					className={`absolute top-1 left-1 w-5 h-5 bg-white rounded-full transition-transform ${
-						checked ? "translate-x-5" : ""
+					className={`absolute top-1 left-1 w-6 h-6 bg-white rounded-full transition-transform ${
+						checked ? "translate-x-6" : ""
 					}`}
 				/>
 			</button>
@@ -65,7 +63,7 @@ export function Select({ label, description, value, options, onChange }: SelectP
 			<select
 				value={value}
 				onChange={(e) => onChange(e.target.value)}
-				className="px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-[#FF6B00] transition-colors text-sm"
+				className="w-full sm:w-auto px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-[#FF6B00] transition-colors text-sm min-h-[44px]"
 			>
 				{options.map((opt) => (
 					<option key={opt.value} value={opt.value} className="bg-stone-900">
@@ -87,15 +85,15 @@ interface ButtonRowProps {
 
 export function ButtonRow({ label, description, onClick, variant = "default", loading }: ButtonRowProps) {
 	const styles = {
-		default: "bg-white/5 hover:bg-white/10 text-white",
-		danger: "bg-red-500/10 hover:bg-red-500/20 text-red-500 border border-red-500/20",
+		default: "bg-white/5 hover:bg-white/10 active:bg-white/15 text-white",
+		danger: "bg-red-500/10 hover:bg-red-500/20 active:bg-red-500/30 text-red-500 border border-red-500/20",
 	};
 
 	return (
 		<button
 			onClick={onClick}
 			disabled={loading}
-			className={`w-full px-4 py-3 rounded-lg text-left transition-colors ${styles[variant]} disabled:opacity-50`}
+			className={`w-full px-4 py-3 rounded-lg text-left transition-colors min-h-[56px] ${styles[variant]} disabled:opacity-50`}
 		>
 			<p className="font-medium">{loading ? "loading..." : label}</p>
 			{description && (
@@ -151,7 +149,7 @@ export function Input({ label, description, value, onChange, type = "text", plac
 				onChange={(e) => onChange(e.target.value)}
 				placeholder={placeholder}
 				disabled={disabled}
-				className="px-3 py-2 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-[#FF6B00] transition-colors text-sm w-48 disabled:opacity-50"
+				className="w-full sm:w-48 px-3 py-2.5 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-[#FF6B00] transition-colors text-sm min-h-[44px] disabled:opacity-50"
 			/>
 		</Row>
 	);
@@ -168,10 +166,10 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
 	if (!open) return null;
 
 	return (
-		<div className="fixed inset-0 z-50 flex items-center justify-center">
+		<div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
 			<div className="absolute inset-0 bg-black/80" onClick={onClose} />
-			<div className="relative bg-stone-900 border border-white/10 rounded-xl p-6 w-full max-w-md mx-4">
-				<h3 className="text-xl font-bold mb-4">{title}</h3>
+			<div className="relative bg-stone-900 border-t sm:border border-white/10 rounded-t-xl sm:rounded-xl p-4 sm:p-6 w-full sm:max-w-md sm:mx-4 max-h-[85vh] overflow-y-auto">
+				<h3 className="text-lg sm:text-xl font-bold mb-4">{title}</h3>
 				{children}
 			</div>
 		</div>

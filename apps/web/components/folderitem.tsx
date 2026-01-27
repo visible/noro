@@ -60,8 +60,8 @@ export function FolderItem({ folder, depth, selected, onSelect, onRename, onDele
 	return (
 		<div>
 			<div
-				className={`group flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
-					selected ? "bg-white/10 text-white" : "text-white/60 hover:text-white hover:bg-white/5"
+				className={`group flex items-center gap-2 px-3 py-2.5 rounded-lg cursor-pointer transition-colors min-h-[44px] ${
+					selected ? "bg-white/10 text-white" : "text-white/60 hover:text-white hover:bg-white/5 active:bg-white/10"
 				} ${dragover ? "ring-2 ring-[#FF6B00]" : ""}`}
 				style={{ paddingLeft: `${12 + depth * 16}px` }}
 				onClick={onSelect}
@@ -79,7 +79,8 @@ export function FolderItem({ folder, depth, selected, onSelect, onRename, onDele
 							e.stopPropagation();
 							setExpanded(!expanded);
 						}}
-						className="w-4 h-4 flex items-center justify-center"
+						className="w-6 h-6 flex items-center justify-center -ml-1"
+						aria-label={expanded ? "collapse folder" : "expand folder"}
 					>
 						<Icon name="chevron" className={`w-3 h-3 transition-transform ${expanded ? "rotate-90" : ""}`} />
 					</button>
@@ -92,7 +93,7 @@ export function FolderItem({ folder, depth, selected, onSelect, onRename, onDele
 						onChange={(e) => setName(e.target.value)}
 						onBlur={saveEdit}
 						onKeyDown={handleKeyDown}
-						className="flex-1 bg-transparent border-b border-white/20 outline-none text-sm"
+						className="flex-1 bg-transparent border-b border-white/20 outline-none text-sm py-1"
 						onClick={(e) => e.stopPropagation()}
 					/>
 				) : (
@@ -104,7 +105,8 @@ export function FolderItem({ folder, depth, selected, onSelect, onRename, onDele
 						e.stopPropagation();
 						onDelete();
 					}}
-					className="opacity-0 group-hover:opacity-100 hover:text-red-400 p-1"
+					className="opacity-0 group-hover:opacity-100 hover:text-red-400 active:text-red-400 p-2 -mr-1"
+					aria-label="delete folder"
 				>
 					<Icon name="close" className="w-3 h-3" />
 				</button>

@@ -79,7 +79,7 @@ export default function Settings() {
 
 	return (
 		<div className="max-w-xl">
-			<h1 className="text-2xl font-bold mb-8">settings</h1>
+			<h1 className="text-xl sm:text-2xl font-bold mb-6 sm:mb-8">settings</h1>
 
 			<Section title="account">
 				<Card>

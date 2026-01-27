@@ -1,28 +1,101 @@
 "use client";
 
-import { useState, useEffect, useMemo } from "react";
-import { useSearchParams } from "next/navigation";
+import { useState, useEffect, useMemo, useRef, useCallback } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 import type { ItemType } from "@/lib/generated/prisma/enums";
 import type { SpecialFolder } from "@/lib/types";
 import type { VaultItem } from "./store";
+import type { LoginData } from "@/lib/types";
 import * as store from "./store";
 import { SearchBar } from "./search";
 import { TypeFilters } from "./filters";
 import { VaultListItem } from "./item";
 import { ItemModal } from "./modal";
+import { TagFilter } from "@/components/tags";
+import { useSidebar } from "@/components/sidebar";
+
+const itemtypes: ItemType[] = ["login", "note", "card", "identity", "ssh", "api", "otp", "passkey"];
 
 export default function Vault() {
 	const searchParams = useSearchParams();
+	const router = useRouter();
+	const { register, selectedItem, setSelectedItem } = useSidebar();
 	const folder = (searchParams.get("folder") || "all") as string | SpecialFolder;
+	const newitemtype = searchParams.get("newitem") as ItemType | null;
+	const itemid = searchParams.get("item");
 	const [items, setItems] = useState<VaultItem[]>([]);
 	const [search, setSearch] = useState("");
 	const [typeFilter, setTypeFilter] = useState<ItemType | null>(null);
+	const [tagFilter, setTagFilter] = useState<string | null>(null);
 	const [showModal, setShowModal] = useState(false);
 	const [editingItem, setEditingItem] = useState<VaultItem | null>(null);
+	const [defaulttype, setDefaulttype] = useState<ItemType | undefined>(undefined);
+	const searchRef = useRef<HTMLInputElement>(null);
 
 	useEffect(() => {
 		setItems(store.filter(folder, typeFilter));
 	}, [folder, typeFilter]);
+
+	useEffect(() => {
+		if (newitemtype && itemtypes.includes(newitemtype)) {
+			setDefaulttype(newitemtype);
+			setEditingItem(null);
+			setShowModal(true);
+			router.replace("/app");
+		}
+	}, [newitemtype, router]);
+
+	useEffect(() => {
+		if (itemid) {
+			const item = store.get(itemid);
+			if (item) {
+				setEditingItem(item);
+				setShowModal(true);
+			}
+			router.replace("/app");
+		}
+	}, [itemid, router]);
+
+	const copyPassword = useCallback(() => {
+		if (!selectedItem) return;
+		const item = store.get(selectedItem);
+		if (!item || item.type !== "login") return;
+		const data = item.data as LoginData;
+		if (data.password) {
+			navigator.clipboard.writeText(data.password);
+		}
+	}, [selectedItem]);
+
+	const openNewItem = useCallback(() => {
+		if (folder !== "trash") {
+			setEditingItem(null);
+			setShowModal(true);
+		}
+	}, [folder]);
+
+	const focusSearch = useCallback(() => {
+		searchRef.current?.focus();
+	}, []);
+
+	const closeModal = useCallback(() => {
+		if (showModal) {
+			setShowModal(false);
+			setEditingItem(null);
+		}
+	}, [showModal]);
+
+	useEffect(() => {
+		register("new", openNewItem);
+		register("search", focusSearch);
+		register("copy", copyPassword);
+		register("escape", closeModal);
+		return () => {
+			register("new", null);
+			register("search", null);
+			register("copy", null);
+			register("escape", null);
+		};
+	}, [register, openNewItem, focusSearch, copyPassword, closeModal]);
 
 	const counts = useMemo(() => {
 		const c: Record<ItemType, number> = {
@@ -30,6 +103,12 @@ export default function Vault() {
 		};
 		items.forEach((item) => c[item.type]++);
 		return c;
+	}, [items]);
+
+	const allTags = useMemo(() => {
+		const set = new Set<string>();
+		items.forEach((item) => item.tags.forEach((t) => set.add(t)));
+		return Array.from(set).sort();
 	}, [items]);
 
 	const filtered = useMemo(() => {
@@ -41,11 +120,14 @@ export default function Vault() {
 				i.tags.some((t) => t.toLowerCase().includes(q))
 			);
 		}
+		if (tagFilter) {
+			result = result.filter((i) => i.tags.includes(tagFilter));
+		}
 		return result.sort((a, b) => {
 			if (a.favorite !== b.favorite) return a.favorite ? -1 : 1;
 			return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime();
 		});
-	}, [items, search]);
+	}, [items, search, tagFilter]);
 
 	function reload() {
 		setItems(store.filter(folder, typeFilter));
@@ -94,21 +176,23 @@ export default function Vault() {
 
 	return (
 		<div>
-			<div className="flex items-center justify-between mb-6">
-				<h1 className="text-2xl font-bold">{title}</h1>
+			<div className="flex items-center justify-between gap-4 mb-6">
+				<h1 className="text-xl sm:text-2xl font-bold truncate">{title}</h1>
 				{!isTrash && (
 					<button
 						onClick={() => { setEditingItem(null); setShowModal(true); }}
-						className="px-4 py-2 bg-[#FF6B00] text-black font-semibold rounded-lg hover:bg-[#FF6B00]/90 transition-colors"
+						className="shrink-0 px-3 sm:px-4 py-2.5 bg-[#FF6B00] text-black font-semibold rounded-lg hover:bg-[#FF6B00]/90 active:bg-[#FF6B00]/80 transition-colors min-h-[44px] text-sm sm:text-base"
 					>
-						+ add item
+						<span className="sm:hidden">+ add</span>
+						<span className="hidden sm:inline">+ add item</span>
 					</button>
 				)}
 			</div>
 
 			<div className="space-y-4 mb-6">
-				<SearchBar value={search} onChange={setSearch} />
+				<SearchBar ref={searchRef} value={search} onChange={setSearch} />
 				{!isTrash && <TypeFilters selected={typeFilter} onSelect={setTypeFilter} counts={counts} />}
+				{!isTrash && <TagFilter tags={allTags} selected={tagFilter} onSelect={setTagFilter} />}
 			</div>
 
 			{filtered.length === 0 ? (
@@ -132,6 +216,7 @@ export default function Vault() {
 							item={item}
 							onClick={() => { setEditingItem(item); setShowModal(true); }}
 							onFavorite={() => handleFavorite(item.id)}
+							onTagClick={setTagFilter}
 						/>
 					))}
 				</div>
@@ -140,10 +225,11 @@ export default function Vault() {
 			{showModal && (
 				<ItemModal
 					item={editingItem}
+					defaulttype={defaulttype}
 					onSave={handleSave}
 					onDelete={editingItem ? handleDelete : undefined}
 					onRestore={editingItem && isTrash ? handleRestore : undefined}
-					onClose={() => { setShowModal(false); setEditingItem(null); }}
+					onClose={() => { setShowModal(false); setEditingItem(null); setDefaulttype(undefined); }}
 					isTrash={isTrash}
 				/>
 			)}

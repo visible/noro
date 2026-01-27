@@ -80,39 +80,45 @@ export function Folders({
 
 	return (
 		<div className="space-y-1">
-			<div
-				className={`flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
-					selected === "all" ? "bg-white/10 text-white" : "text-white/60 hover:text-white hover:bg-white/5"
+			<button
+				type="button"
+				className={`w-full flex items-center gap-2 px-3 py-2.5 rounded-lg transition-colors min-h-[44px] ${
+					selected === "all" ? "bg-white/10 text-white" : "text-white/60 hover:text-white hover:bg-white/5 active:bg-white/10"
 				}`}
 				onClick={() => onSelect("all")}
 			>
 				<Icon name="all" className="w-4 h-4" />
-				<span className="flex-1 text-sm">all items</span>
+				<span className="flex-1 text-sm text-left">all items</span>
 				<span className="text-xs text-white/40">{totalCount}</span>
-			</div>
+			</button>
 
-			<div
-				className={`flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
-					selected === "favorites" ? "bg-white/10 text-white" : "text-white/60 hover:text-white hover:bg-white/5"
+			<button
+				type="button"
+				className={`w-full flex items-center gap-2 px-3 py-2.5 rounded-lg transition-colors min-h-[44px] ${
+					selected === "favorites" ? "bg-white/10 text-white" : "text-white/60 hover:text-white hover:bg-white/5 active:bg-white/10"
 				}`}
 				onClick={() => onSelect("favorites")}
 			>
 				<Icon name="star" className="w-4 h-4" />
-				<span className="flex-1 text-sm">favorites</span>
+				<span className="flex-1 text-sm text-left">favorites</span>
 				<span className="text-xs text-white/40">{favoriteCount}</span>
-			</div>
+			</button>
 
 			<div className="pt-4 pb-2">
 				<div className="flex items-center justify-between px-3">
 					<span className="text-xs text-white/40 uppercase tracking-wider">folders</span>
-					<button onClick={startCreate} className="text-white/40 hover:text-white p-1">
+					<button
+						onClick={startCreate}
+						className="text-white/40 hover:text-white active:text-white p-2 -mr-2"
+						aria-label="create folder"
+					>
 						<Icon name="plus" className="w-4 h-4" />
 					</button>
 				</div>
 			</div>
 
 			{creating && (
-				<div className="flex items-center gap-2 px-3 py-2">
+				<div className="flex items-center gap-2 px-3 py-2.5 min-h-[44px]">
 					<Icon name="folder" className="w-4 h-4 text-white/60" />
 					<input
 						ref={createRef}
@@ -121,7 +127,7 @@ export function Folders({
 						onBlur={saveCreate}
 						onKeyDown={handleKeyDown}
 						placeholder="folder name"
-						className="flex-1 bg-transparent border-b border-white/20 outline-none text-sm placeholder:text-white/30"
+						className="flex-1 bg-transparent border-b border-white/20 outline-none text-sm placeholder:text-white/30 py-1"
 					/>
 				</div>
 			)}
@@ -129,16 +135,17 @@ export function Folders({
 			{buildTree(null)}
 
 			<div className="pt-4">
-				<div
-					className={`flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
-						selected === "trash" ? "bg-white/10 text-white" : "text-white/60 hover:text-white hover:bg-white/5"
+				<button
+					type="button"
+					className={`w-full flex items-center gap-2 px-3 py-2.5 rounded-lg transition-colors min-h-[44px] ${
+						selected === "trash" ? "bg-white/10 text-white" : "text-white/60 hover:text-white hover:bg-white/5 active:bg-white/10"
 					}`}
 					onClick={() => onSelect("trash")}
 				>
 					<Icon name="trash" className="w-4 h-4" />
-					<span className="flex-1 text-sm">trash</span>
+					<span className="flex-1 text-sm text-left">trash</span>
 					{trashCount > 0 && <span className="text-xs text-white/40">{trashCount}</span>}
-				</div>
+				</button>
 			</div>
 		</div>
 	);

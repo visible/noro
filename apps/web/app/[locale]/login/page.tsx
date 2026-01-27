@@ -42,7 +42,7 @@ export default function Login() {
 
 	return (
 		<div className="min-h-dvh bg-black text-white flex selection:bg-[#FF6B00] selection:text-black">
-			<div className="w-full lg:w-1/2 flex flex-col justify-center px-8 md:px-16 lg:px-24">
+			<div className="w-full lg:w-1/2 flex flex-col justify-center px-8 md:px-16 lg:px-24 relative">
 				<div className="max-w-sm w-full mx-auto lg:mx-0">
 					<h1 className="text-4xl font-bold mb-2 tracking-tight">welcome back</h1>
 					<p className="text-white/60 mb-8">sign in to your vault</p>
@@ -90,7 +90,14 @@ export default function Login() {
 				</div>
 			</div>
 
-			<div className="hidden lg:block lg:w-1/2 relative">
+			<div className="hidden lg:flex lg:w-1/2 relative">
+				<div className="absolute left-0 top-1/2 -translate-y-1/2 h-2/3 flex flex-col items-center gap-3 z-10">
+					<div className="w-3 h-3 rounded-full bg-[#FF6B00]" />
+					<div className="flex-1 w-px bg-gradient-to-b from-[#FF6B00] via-[#FF6B00]/50 to-transparent" style={{ backgroundImage: "repeating-linear-gradient(to bottom, #FF6B00 0px, #FF6B00 8px, transparent 8px, transparent 16px)" }} />
+					<div className="w-2 h-2 rounded-full bg-[#FF6B00]/60" />
+					<div className="flex-1 w-px" style={{ backgroundImage: "repeating-linear-gradient(to bottom, transparent 0px, transparent 8px, #FF6B00 8px, #FF6B00 16px)" }} />
+					<div className="w-3 h-3 rounded-full bg-[#FF6B00]" />
+				</div>
 				<BackgroundBeams className="absolute inset-0">
 					<div />
 				</BackgroundBeams>

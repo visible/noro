@@ -68,7 +68,7 @@ export function PasswordModal({ open, onClose }: Props) {
 						type="password"
 						value={current}
 						onChange={(e) => setCurrent(e.target.value)}
-						className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-[#FF6B00] transition-colors"
+						className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-[#FF6B00] transition-colors text-base"
 					/>
 				</div>
 				<div>
@@ -77,7 +77,7 @@ export function PasswordModal({ open, onClose }: Props) {
 						type="password"
 						value={newPass}
 						onChange={(e) => setNewPass(e.target.value)}
-						className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-[#FF6B00] transition-colors"
+						className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-[#FF6B00] transition-colors text-base"
 					/>
 				</div>
 				<div>
@@ -86,21 +86,21 @@ export function PasswordModal({ open, onClose }: Props) {
 						type="password"
 						value={confirm}
 						onChange={(e) => setConfirm(e.target.value)}
-						className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-[#FF6B00] transition-colors"
+						className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-[#FF6B00] transition-colors text-base"
 					/>
 				</div>
 				{error && <p className="text-red-500 text-sm">{error}</p>}
-				<div className="flex gap-3 pt-2">
+				<div className="flex flex-col-reverse sm:flex-row gap-3 pt-2">
 					<button
 						onClick={handleClose}
-						className="flex-1 py-3 bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
+						className="flex-1 py-3 bg-white/10 rounded-lg hover:bg-white/20 active:bg-white/25 transition-colors min-h-[48px]"
 					>
 						cancel
 					</button>
 					<button
 						onClick={handleSubmit}
 						disabled={loading || !current || !newPass || !confirm}
-						className="flex-1 py-3 bg-[#FF6B00] text-black font-semibold rounded-lg hover:bg-[#FF6B00]/90 transition-colors disabled:opacity-50"
+						className="flex-1 py-3 bg-[#FF6B00] text-black font-semibold rounded-lg hover:bg-[#FF6B00]/90 active:bg-[#FF6B00]/80 transition-colors disabled:opacity-50 min-h-[48px]"
 					>
 						{loading ? "updating..." : "update"}
 					</button>

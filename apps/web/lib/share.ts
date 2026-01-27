@@ -1,4 +1,4 @@
-import { encrypt } from "@/lib/crypto";
+import { encrypt, generatekey } from "@/lib/crypto";
 
 export interface ShareOptions {
   views?: number;
@@ -16,13 +16,6 @@ export interface VaultItem {
   type: string;
   title: string;
   data: string;
-}
-
-function generatekey(): string {
-  const bytes = crypto.getRandomValues(new Uint8Array(16));
-  return Array.from(bytes)
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
 }
 
 export async function shareitem(

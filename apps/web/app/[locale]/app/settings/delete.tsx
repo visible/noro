@@ -52,21 +52,21 @@ export function DeleteModal({ open, onClose }: Props) {
 					type="text"
 					value={confirm}
 					onChange={(e) => setConfirm(e.target.value)}
-					className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-red-500 transition-colors"
+					className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-red-500 transition-colors text-base"
 					placeholder="delete my account"
 				/>
 			</div>
-			<div className="flex gap-3">
+			<div className="flex flex-col-reverse sm:flex-row gap-3">
 				<button
 					onClick={handleClose}
-					className="flex-1 py-3 bg-white/10 rounded-lg hover:bg-white/20 transition-colors"
+					className="flex-1 py-3 bg-white/10 rounded-lg hover:bg-white/20 active:bg-white/25 transition-colors min-h-[48px]"
 				>
 					cancel
 				</button>
 				<button
 					onClick={handleDelete}
 					disabled={confirm !== "delete my account" || loading}
-					className="flex-1 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+					className="flex-1 py-3 bg-red-500 text-white rounded-lg hover:bg-red-600 active:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed min-h-[48px]"
 				>
 					{loading ? "deleting..." : "delete"}
 				</button>
