@@ -5,7 +5,7 @@ export interface Session {
 	email: string;
 }
 
-const BASE_URL = "https://noro.sh";
+const BASE_URL = "http://localhost:3000";
 
 export async function login(email: string, password: string): Promise<Session> {
 	return invoke("login", { baseUrl: BASE_URL, email, password });
