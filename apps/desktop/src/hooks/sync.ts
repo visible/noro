@@ -1,5 +1,6 @@
 import { invoke } from "@tauri-apps/api/core";
 import { useState, useCallback } from "react";
+import { BASE_URL } from "../config";
 
 export interface RemoteItem {
 	id: string;
@@ -11,8 +12,6 @@ export interface RemoteItem {
 	deleted: boolean;
 	tags: { id: string; name: string }[];
 }
-
-const BASE_URL = "https://noro.sh";
 
 export function useSync(token: string | null) {
 	const [items, setItems] = useState<RemoteItem[]>([]);

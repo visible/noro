@@ -1,11 +1,10 @@
 import { invoke } from "@tauri-apps/api/core";
+import { BASE_URL } from "./config";
 
 export interface Session {
 	token: string;
 	email: string;
 }
-
-const BASE_URL = "http://localhost:3000";
 
 export async function login(email: string, password: string): Promise<Session> {
 	return invoke("login", { baseUrl: BASE_URL, email, password });
