@@ -2,8 +2,8 @@
 
 import { Link } from "@/i18n/navigation";
 import { Logo } from "@/components/logo";
-import { HeroVisual } from "@/components/hero-visual";
-import { DeveloperNativeVisual } from "@/components/developer-native-visual";
+import { HeroVisual } from "@/components/hero";
+import { TerminalVisual } from "@/components/terminal";
 
 export default function Home() {
   return (
@@ -142,7 +142,7 @@ export default function Home() {
                 </div>
                 
                 <div className="relative mt-8 w-full h-[200px] bg-[#0a0a0a] rounded-lg border border-white/5 overflow-hidden flex flex-col p-6">
-                   <DeveloperNativeVisual />
+                   <TerminalVisual />
                 </div>
               </div>
             </div>
