@@ -13,7 +13,7 @@ function getItemOffset(depth: number): number {
 }
 
 const headerIcon = (
-	<svg className="w-4 h-4 text-black/30" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+	<svg className="w-4 h-4 text-white/30" viewBox="0 0 16 16" fill="none" aria-hidden="true">
 		<path d="M2 4h12M2 8h12M2 12h12" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
 	</svg>
 );
@@ -259,13 +259,13 @@ export function Toc() {
 		return (
 			<aside className="hidden xl:block w-56 shrink-0 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
 				<div className="py-6 pr-6">
-					<div className="flex items-center gap-1 mt-6 pt-6 border-t border-black/10">
+					<div className="flex items-center gap-1 mt-6 pt-6 border-t border-white/10">
 						<button
 							onClick={copyLink}
 							className={`p-2 rounded-md transition-all ${
 								linkCopied
-									? "text-[#C53D43] bg-[#C53D43]/10"
-									: "text-black/40 hover:text-black/70 hover:bg-black/5"
+									? "text-[#d4b08c] bg-[#d4b08c]/10"
+									: "text-white/40 hover:text-white/70 hover:bg-white/5"
 							}`}
 							title="Copy link"
 						>
@@ -275,7 +275,7 @@ export function Toc() {
 							href={`https://github.com/visible/noro/issues/new?title=Docs feedback: ${pathname}&body=Page: ${pathname}%0A%0AFeedback:%0A`}
 							target="_blank"
 							rel="noopener noreferrer"
-							className="p-2 rounded-md transition-all text-black/40 hover:text-black/70 hover:bg-black/5"
+							className="p-2 rounded-md transition-all text-white/40 hover:text-white/70 hover:bg-white/5"
 							title="Send feedback"
 						>
 							{feedbackIcon}
@@ -291,7 +291,7 @@ export function Toc() {
 			<div className="py-6 pr-6">
 				<div className="flex items-center gap-3 mb-5">
 					{headerIcon}
-					<span className="text-xs uppercase tracking-wider text-black/30 font-medium">On this page</span>
+					<span className="text-xs uppercase tracking-wider text-white/30 font-medium">On this page</span>
 				</div>
 
 				<nav className="relative">
@@ -307,7 +307,7 @@ export function Toc() {
 							}}
 						>
 							<div
-								className="absolute w-full bg-[#C53D43] transition-[top,height] duration-150"
+								className="absolute w-full bg-[#d4b08c] transition-[top,height] duration-150"
 								style={{ top: thumb.top, height: thumb.height }}
 							/>
 						</div>
@@ -328,8 +328,8 @@ export function Toc() {
 										e.preventDefault();
 										scrollTo(item.id);
 									}}
-									className={`relative py-1.5 text-sm rounded transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#C53D43] ${
-										isActive ? "text-[#C53D43] font-medium" : "text-black/40 hover:text-black/70"
+									className={`relative py-1.5 text-sm rounded transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d4b08c] ${
+										isActive ? "text-[#d4b08c] font-medium" : "text-white/40 hover:text-white/70"
 									}`}
 									style={{ paddingLeft: getItemOffset(item.level) }}
 								>
@@ -344,13 +344,13 @@ export function Toc() {
 												y1="0"
 												x2={offset}
 												y2="12"
-												className="stroke-black/10"
+												className="stroke-white/10"
 												strokeWidth="1"
 											/>
 										</svg>
 									)}
 									<div
-										className={`absolute inset-y-0 w-px bg-black/10 ${
+										className={`absolute inset-y-0 w-px bg-white/10 ${
 											offset !== upperOffset ? "top-1.5" : ""
 										} ${offset !== lowerOffset ? "bottom-1.5" : ""}`}
 										style={{ left: offset }}
@@ -362,13 +362,13 @@ export function Toc() {
 					</div>
 				</nav>
 
-				<div className="flex items-center gap-1 mt-6 pt-6 border-t border-black/10">
+				<div className="flex items-center gap-1 mt-6 pt-6 border-t border-white/10">
 					<button
 						onClick={copyAsMarkdown}
 						className={`p-2 rounded-md transition-all ${
 							copied
-								? "text-[#C53D43] bg-[#C53D43]/10"
-								: "text-black/40 hover:text-black/70 hover:bg-black/5"
+								? "text-[#d4b08c] bg-[#d4b08c]/10"
+								: "text-white/40 hover:text-white/70 hover:bg-white/5"
 						}`}
 						title="Copy as markdown"
 					>
@@ -378,8 +378,8 @@ export function Toc() {
 						onClick={copyLink}
 						className={`p-2 rounded-md transition-all ${
 							linkCopied
-								? "text-[#C53D43] bg-[#C53D43]/10"
-								: "text-black/40 hover:text-black/70 hover:bg-black/5"
+								? "text-[#d4b08c] bg-[#d4b08c]/10"
+								: "text-white/40 hover:text-white/70 hover:bg-white/5"
 						}`}
 						title="Copy link"
 					>
@@ -389,7 +389,7 @@ export function Toc() {
 						href={`https://github.com/visible/noro/issues/new?title=Docs feedback: ${pathname}&body=Page: ${pathname}%0A%0AFeedback:%0A`}
 						target="_blank"
 						rel="noopener noreferrer"
-						className="p-2 rounded-md transition-all text-black/40 hover:text-black/70 hover:bg-black/5"
+						className="p-2 rounded-md transition-all text-white/40 hover:text-white/70 hover:bg-white/5"
 						title="Send feedback"
 					>
 						{feedbackIcon}
@@ -397,20 +397,20 @@ export function Toc() {
 					<div className="relative">
 						<button
 							onClick={() => setShowVersions(!showVersions)}
-							className="p-2 rounded-md transition-all text-black/40 hover:text-black/70 hover:bg-black/5"
+							className="p-2 rounded-md transition-all text-white/40 hover:text-white/70 hover:bg-white/5"
 							title="Switch version"
 						>
 							{versionIcon}
 						</button>
 						{showVersions && (
-							<div className="absolute bottom-full left-0 mb-1 py-1 bg-white border border-black/10 rounded-md shadow-lg min-w-[80px]">
+							<div className="absolute bottom-full left-0 mb-1 py-1 bg-[#1a1a1a] border border-white/10 rounded-md shadow-lg min-w-[80px]">
 								{version.all.map((v) =>
 									v.href ? (
-										<a key={v.label} href={v.href} className={`block px-3 py-1.5 text-xs hover:bg-black/5 ${v.current ? "text-[#C53D43]" : "text-black/60"}`}>
+										<a key={v.label} href={v.href} className={`block px-3 py-1.5 text-xs hover:bg-white/5 ${v.current ? "text-[#d4b08c]" : "text-white/60"}`}>
 											{v.label}
 										</a>
 									) : (
-										<span key={v.label} className="block px-3 py-1.5 text-xs text-black/30 cursor-not-allowed">
+										<span key={v.label} className="block px-3 py-1.5 text-xs text-white/30 cursor-not-allowed">
 											{v.label}
 										</span>
 									)
@@ -421,7 +421,7 @@ export function Toc() {
 					{showTop && (
 						<button
 							onClick={scrollToTop}
-							className="p-2 rounded-md transition-all text-black/40 hover:text-black/70 hover:bg-black/5 animate-in fade-in duration-200"
+							className="p-2 rounded-md transition-all text-white/40 hover:text-white/70 hover:bg-white/5 animate-in fade-in duration-200"
 							title="Scroll to top"
 						>
 							{arrowUpIcon}

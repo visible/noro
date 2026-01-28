@@ -5,7 +5,11 @@ import type React from "react";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
-const jetbrainsMono = JetBrains_Mono({ subsets: ["latin"], variable: "--font-mono" });
+const jetbrainsMono = JetBrains_Mono({ 
+  subsets: ["latin", "latin-ext"], 
+  variable: "--font-mono",
+  display: "swap",
+});
 const playfair = Playfair_Display({ subsets: ["latin"], variable: "--font-serif" });
 
 export const metadata: Metadata = {

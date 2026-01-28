@@ -39,9 +39,10 @@ function Anchor({ id }: { id?: string }) {
 
 	return (
 		<button
+			type="button"
 			onClick={copy}
 			className={`opacity-0 group-hover/heading:opacity-100 p-1 rounded transition-all ${
-				copied ? "text-[#C53D43] opacity-100" : "text-black/30 hover:text-black/60"
+				copied ? "text-[#d4b08c] opacity-100" : "text-white/30 hover:text-white/60"
 			}`}
 			title="Copy link"
 		>
@@ -63,14 +64,14 @@ export function Header({
 }) {
 	return (
 		<div className="mb-8 md:mb-12">
-			<p className="text-xs md:text-sm text-black/40 mb-2">{section}</p>
+			<p className="text-xs md:text-sm text-white/40 mb-2">{section}</p>
 			<div className="flex items-center gap-2 group/heading">
-				<h1 id={id} className="text-3xl md:text-5xl font-semibold tracking-tight text-black">
+				<h1 id={id} className="text-3xl md:text-5xl font-semibold tracking-tight text-[#ededed]">
 					{title}
 				</h1>
 				<Anchor id={id} />
 			</div>
-			<p className="text-base md:text-xl text-black/60 max-w-2xl mt-4 md:mt-6">{description}</p>
+			<p className="text-base md:text-xl text-white/60 max-w-2xl mt-4 md:mt-6">{description}</p>
 		</div>
 	);
 }
@@ -85,19 +86,23 @@ export function Code({ children, className = "" }: { children: string; className
 	};
 
 	return (
-		<div className={`relative group/code ${className}`}>
+		<div className={`relative group/code my-4 ${className}`}>
 			<button
+				type="button"
 				onClick={copy}
 				className={`absolute top-3 right-3 md:top-4 md:right-4 p-1.5 md:p-2 rounded-lg transition-all ${
 					copied
-						? "text-[#C53D43] bg-[#C53D43]/20"
+						? "text-[#d4b08c] bg-[#d4b08c]/20"
 						: "text-white/30 hover:text-white/60 hover:bg-white/10 opacity-0 group-hover/code:opacity-100"
 				}`}
 				title="Copy code"
 			>
 				{copied ? checkIcon : copyIcon}
 			</button>
-			<pre className="bg-[#1a1a1a] text-[#e5e5e5] p-4 md:p-6 rounded-xl md:rounded-2xl text-xs md:text-sm font-mono leading-relaxed overflow-x-auto">
+			<pre 
+				className="bg-[#0a0a0a] text-[#e5e5e5] p-4 md:p-5 rounded-xl text-xs md:text-sm leading-relaxed overflow-x-auto border border-white/10"
+				style={{ fontFamily: "'SF Mono', 'Menlo', 'Monaco', 'Cascadia Code', 'Consolas', 'DejaVu Sans Mono', 'Liberation Mono', monospace" }}
+			>
 				{children}
 			</pre>
 		</div>
@@ -106,9 +111,44 @@ export function Code({ children, className = "" }: { children: string; className
 
 export function Codeinline({ children, className = "" }: { children: string; className?: string }) {
 	return (
-		<code className={`bg-[#C53D43]/10 text-[#C53D43] px-1.5 py-0.5 rounded text-sm font-mono ${className}`}>
+		<code className={`bg-[#d4b08c]/10 text-[#d4b08c] px-1.5 py-0.5 rounded text-sm font-mono ${className}`}>
 			{children}
 		</code>
+	);
+}
+
+export function Table({ headers, rows }: { headers: string[]; rows: string[][] }) {
+	return (
+		<div className="my-4 overflow-x-auto">
+			<table className="w-full text-sm border-collapse">
+				<thead>
+					<tr className="border-b border-white/10">
+						{headers.map((header) => (
+							<th
+								key={header}
+								className="text-left py-3 px-4 text-[#ededed] font-medium first:pl-0 last:pr-0"
+							>
+								{header}
+							</th>
+						))}
+					</tr>
+				</thead>
+				<tbody>
+					{rows.map((row) => (
+						<tr key={row.join("-")} className="border-b border-white/5 last:border-0">
+							{row.map((cell) => (
+								<td
+									key={cell}
+									className="py-3 px-4 text-white/60 first:pl-0 last:pr-0 first:text-[#d4b08c] first:font-mono"
+								>
+									{cell}
+								</td>
+							))}
+						</tr>
+					))}
+				</tbody>
+			</table>
+		</div>
 	);
 }
 
@@ -134,11 +174,11 @@ export function Prevnext() {
 	}, [prev, next, router]);
 
 	return (
-		<div className="flex items-center justify-between pt-8 border-t border-black/10">
+		<div className="flex items-center justify-between pt-8 border-t border-white/10">
 			{prev ? (
 				<Link
 					href={prev.href}
-					className="text-sm text-black/50 hover:text-black transition-colors"
+					className="text-sm text-white/50 hover:text-white transition-colors"
 				>
 					← {prev.title}
 				</Link>
@@ -148,7 +188,7 @@ export function Prevnext() {
 			{next ? (
 				<Link
 					href={next.href}
-					className="text-sm text-black/50 hover:text-black transition-colors"
+					className="text-sm text-white/50 hover:text-white transition-colors"
 				>
 					{next.title} →
 				</Link>
@@ -169,10 +209,10 @@ export function Card({
 	code?: string;
 }) {
 	return (
-		<div className="p-4 border border-black/10 rounded-xl">
-			{code && <code className="text-sm text-[#C53D43]">{code}</code>}
-			{title && <h4 className="text-sm font-medium text-black mb-1">{title}</h4>}
-			<p className={`text-black/50 ${code ? "text-xs mt-1" : "text-sm"}`}>{description}</p>
+		<div className="p-4 border border-white/10 rounded-xl bg-white/5">
+			{code && <code className="text-sm text-[#d4b08c]">{code}</code>}
+			{title && <h4 className="text-sm font-medium text-[#ededed] mb-1">{title}</h4>}
+			<p className={`text-white/50 ${code ? "text-xs mt-1" : "text-sm"}`}>{description}</p>
 		</div>
 	);
 }
@@ -187,9 +227,9 @@ export function Section({
 	children: React.ReactNode;
 }) {
 	return (
-		<section className="mb-10 md:mb-16 overflow-hidden">
-			<div className="flex items-center gap-2 mb-4 md:mb-6 group/heading">
-				<h2 id={id} className="text-xl md:text-3xl font-semibold text-black">
+		<section className="mb-10 md:mb-12 overflow-hidden">
+			<div className="flex items-center gap-2 mb-4 group/heading">
+				<h2 id={id} className="text-xl md:text-2xl font-semibold text-[#ededed]">
 					{title}
 				</h2>
 				<Anchor id={id} />
