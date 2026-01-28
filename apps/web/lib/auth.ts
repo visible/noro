@@ -2,6 +2,7 @@ import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { db } from "./db";
 import { upload, vaultkey } from "./r2";
+import { sendverification, sendreset } from "./email";
 
 export const auth = betterAuth({
 	secret: process.env.AUTH_SECRET,
@@ -11,6 +12,17 @@ export const auth = betterAuth({
 	emailAndPassword: {
 		enabled: true,
 		minPasswordLength: 12,
+		sendResetPassword: async ({ user, url }) => {
+			void sendreset(user.email, url);
+		},
+	},
+	emailVerification: {
+		sendVerificationEmail: async ({ user, url }) => {
+			void sendverification(user.email, url);
+		},
+		sendOnSignUp: true,
+		autoSignInAfterVerification: true,
+		expiresIn: 3600,
 	},
 	session: {
 		expiresIn: 60 * 60 * 24 * 30,

@@ -4,10 +4,13 @@ import { getSession, logout, type Session } from "./auth";
 import { Login } from "./pages/login";
 import { Vault } from "./pages/vault";
 import { Generator } from "./pages/generator";
+import { enableRoundedCorners } from "./rounded";
 
 type View = "login" | "vault" | "generator";
 
 const appWindow = getCurrentWindow();
+
+enableRoundedCorners(12);
 
 function Titlebar({ showLogo = true }: { showLogo?: boolean }) {
 	async function handleMouseDown(e: React.MouseEvent) {
@@ -24,26 +27,7 @@ function Titlebar({ showLogo = true }: { showLogo?: boolean }) {
 
 	return (
 		<div className="titlebar" onMouseDown={handleMouseDown}>
-			<div className="titlebar-controls">
-				<button
-					className="titlebar-btn close"
-					onClick={() => appWindow.close()}
-					type="button"
-					aria-label="close"
-				/>
-				<button
-					className="titlebar-btn minimize"
-					onClick={() => appWindow.minimize()}
-					type="button"
-					aria-label="minimize"
-				/>
-				<button
-					className="titlebar-btn maximize"
-					onClick={() => appWindow.toggleMaximize()}
-					type="button"
-					aria-label="maximize"
-				/>
-			</div>
+			<div style={{ width: 78 }} />
 			{showLogo && (
 				<div className="titlebar-title">
 					<svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
@@ -55,7 +39,7 @@ function Titlebar({ showLogo = true }: { showLogo?: boolean }) {
 					<span>noro</span>
 				</div>
 			)}
-			<div style={{ width: 52 }} />
+			<div style={{ width: 78 }} />
 		</div>
 	);
 }

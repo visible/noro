@@ -1,5 +1,6 @@
 mod auth;
 mod commands;
+mod plugins;
 mod storage;
 mod sync;
 
@@ -115,6 +116,7 @@ pub fn run() {
             sync::sync_update,
             sync::sync_delete,
             sync::sync_login,
+            plugins::rounded::enable_rounded_corners,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
