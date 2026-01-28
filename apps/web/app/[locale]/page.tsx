@@ -7,19 +7,18 @@ import { DeveloperNativeVisual } from "@/components/developer-native-visual";
 
 export default function Home() {
   return (
-    <div className="min-h-dvh bg-[#0a0a0a] text-[#ededed] antialiased selection:bg-[#d4b08c] selection:text-black font-sans">
-      {/* Background Ambience */}
-      <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
-        {/* Misty Top Glow */}
-        <div className="absolute top-[-20%] left-1/2 -translate-x-1/2 w-[140%] h-[800px] bg-[radial-gradient(ellipse_at_center,rgba(212,176,140,0.08),transparent_70%)] blur-[80px]"></div>
-        {/* Subtle Noise Texture (optional, simulated with opacity) */}
-        <div className="absolute inset-0 bg-white/1 opacity-20" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.65%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22 opacity=%221%22/%3E%3C/svg%3E")' }}></div>
+    <div className="min-h-dvh bg-[#0a0a0a] text-[#ededed] antialiased selection:bg-[#d4b08c] selection:text-black font-sans relative overflow-hidden">
+      <div className="fixed inset-0 z-0 pointer-events-none">
+        <div className="absolute inset-0 bg-[#0a0a0a]"></div>
+        <div className="absolute top-[-20%] right-[-10%] w-[80%] h-[80%] rounded-full bg-[radial-gradient(circle_at_center,rgba(212,176,140,0.08),transparent_60%)] blur-[120px] opacity-60"></div>
+        <div className="absolute bottom-[-10%] left-[-20%] w-[90%] h-[60%] rounded-full bg-[radial-gradient(circle_at_center,rgba(60,80,100,0.08),transparent_60%)] blur-[140px] opacity-40"></div>
+        <div className="absolute top-[20%] left-[20%] w-[60%] h-[60%] bg-[radial-gradient(ellipse_at_center,rgba(255,255,255,0.02),transparent_70%)] blur-[100px]"></div>
+        <div className="absolute inset-0 bg-white/1 opacity-20 mix-blend-overlay" style={{ backgroundImage: 'url("data:image/svg+xml,%3Csvg viewBox=%220 0 200 200%22 xmlns=%22http://www.w3.org/2000/svg%22%3E%3Cfilter id=%22noiseFilter%22%3E%3CfeTurbulence type=%22fractalNoise%22 baseFrequency=%220.8%22 numOctaves=%223%22 stitchTiles=%22stitch%22/%3E%3C/filter%3E%3Crect width=%22100%25%22 height=%22100%25%22 filter=%22url(%23noiseFilter)%22 opacity=%221%22/%3E%3C/svg%3E")' }}></div>
       </div>
 
       <nav className="fixed top-0 left-0 right-0 z-50 px-6 py-6 transition-all duration-300">
         <div className="mx-auto max-w-6xl flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2 group">
-             {/* Logo updated to be more subtle/classy */}
             <div className="text-[#ededed] group-hover:text-[#d4b08c] transition-colors duration-300">
               <Logo />
             </div>
@@ -31,15 +30,13 @@ export default function Home() {
             <Link href="/login" className="text-sm font-medium text-white/60 hover:text-[#d4b08c] transition-colors">Sign in</Link>
           </div>
           <div className="md:hidden">
-             {/* Mobile Menu Placeholder */}
              <div className="w-8 h-8 rounded-full bg-white/10"></div>
           </div>
         </div>
       </nav>
 
       <main className="relative z-10">
-        {/* Hero Section */}
-        <section className="min-h-[90dvh] flex flex-col items-center justify-center px-6 pt-20 pb-32">
+        <section className="min-h-dvh flex flex-col items-center justify-center px-6 py-24">
           <div className="text-center max-w-3xl animate-in fade-in slide-in-from-bottom-8 duration-1000">
             <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#d4b08c]/10 border border-[#d4b08c]/20 text-xs font-medium text-[#d4b08c] mb-10 tracking-wide uppercase">
               The new standard in privacy
@@ -67,19 +64,18 @@ export default function Home() {
               </div>
             </div>
           </div>
+        </section>
 
-          {/* Hero Visual - Abstract Landscape/Terminal Hybrid */}
-          <div className="mt-20 w-full max-w-5xl mx-auto">
+        <section className="pt-0 pb-24 px-6">
+          <div className="w-full max-w-5xl mx-auto">
              <HeroVisual />
           </div>
         </section>
 
-        {/* Features - "Misty Cards" */}
         <section className="py-32 px-6">
           <div className="max-w-6xl mx-auto">
             <div className="grid md:grid-cols-3 gap-6">
-              {/* Card 1: Zero Knowledge */}
-              <div className="group relative flex flex-col justify-between overflow-hidden rounded-xl bg-[#161616] border border-white/5 p-8 h-full min-h-[400px]">
+              <div className="group relative flex flex-col justify-between overflow-hidden rounded-xl bg-[#161616]/80 backdrop-blur-sm border border-white/5 p-8 h-full min-h-[400px] hover:border-white/10 transition-colors">
                 <div className="relative z-10">
                   <h3 className="text-xl font-serif text-[#ededed] mb-3">Zero Knowledge</h3>
                   <p className="text-sm text-white/50 leading-relaxed text-pretty">
@@ -103,8 +99,7 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Card 2: Granular Control (Based on user request) */}
-              <div className="group relative flex flex-col justify-between overflow-hidden rounded-xl bg-[#161616] border border-white/5 p-8 h-full min-h-[400px]">
+              <div className="group relative flex flex-col justify-between overflow-hidden rounded-xl bg-[#161616]/80 backdrop-blur-sm border border-white/5 p-8 h-full min-h-[400px] hover:border-white/10 transition-colors">
                 <div className="relative z-10">
                   <h3 className="text-xl font-serif text-[#ededed] mb-3">Granular Control</h3>
                   <p className="text-sm text-white/50 leading-relaxed text-pretty">
@@ -113,7 +108,6 @@ export default function Home() {
                 </div>
                 
                 <div className="relative mt-8 flex-1 w-full bg-[#0a0a0a] rounded-lg border border-white/5 overflow-hidden">
-                   {/* Background Gradient */}
                    <div className="absolute inset-0 bg-linear-to-br from-white/5 to-transparent opacity-50"></div>
                    
                    <div className="absolute inset-0 flex items-center justify-center p-6">
@@ -142,8 +136,7 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Card 3: Developer Native */}
-              <div className="group relative flex flex-col justify-between overflow-hidden rounded-xl bg-[#161616] border border-white/5 p-8 h-full min-h-[400px]">
+              <div className="group relative flex flex-col justify-between overflow-hidden rounded-xl bg-[#161616]/80 backdrop-blur-sm border border-white/5 p-8 h-full min-h-[400px] hover:border-white/10 transition-colors">
                 <div className="relative z-10">
                   <h3 className="text-xl font-serif text-[#ededed] mb-3">Developer Native</h3>
                   <p className="text-sm text-white/50 leading-relaxed text-pretty">
@@ -159,8 +152,7 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Integration Section */}
-        <section className="py-32 px-6 border-t border-white/5">
+        <section className="py-32 px-6">
           <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-20">
             <div className="md:w-1/2">
               <h2 className="font-serif text-4xl sm:text-5xl text-[#ededed] mb-8 leading-tight">
@@ -185,23 +177,23 @@ export default function Home() {
             <div className="md:w-1/2 w-full">
               <div className="grid grid-cols-2 gap-4">
                  <div className="space-y-4 translate-y-8">
-                   <div className="aspect-4/5 rounded-2xl bg-[#161616] border border-white/5 p-6 flex flex-col justify-end">
+                   <div className="aspect-4/5 rounded-2xl bg-[#161616] border border-white/5 p-6 flex flex-col justify-end hover:border-white/10 transition-colors group">
                       <span className="font-mono text-xs text-[#d4b08c]">CLI</span>
-                      <h4 className="text-lg font-medium mt-2">Terminal</h4>
+                      <h4 className="text-lg font-medium mt-2 group-hover:text-white transition-colors">Terminal</h4>
                    </div>
-                   <div className="aspect-square rounded-2xl bg-white/3 border border-white/5 p-6 flex flex-col justify-end">
-                      <span className="font-mono text-xs text-white/40">API</span>
-                      <h4 className="text-lg font-medium mt-2">SDK</h4>
+                   <div className="aspect-square rounded-2xl bg-white/3 border border-white/5 p-6 flex flex-col justify-end hover:border-white/10 transition-colors group">
+                      <span className="font-mono text-xs text-white/40 group-hover:text-[#d4b08c] transition-colors">API</span>
+                      <h4 className="text-lg font-medium mt-2 group-hover:text-white transition-colors">SDK</h4>
                    </div>
                  </div>
                  <div className="space-y-4">
-                   <div className="aspect-square rounded-2xl bg-white/3 border border-white/5 p-6 flex flex-col justify-end">
-                      <span className="font-mono text-xs text-white/40">GUI</span>
-                      <h4 className="text-lg font-medium mt-2">Desktop</h4>
+                   <div className="aspect-square rounded-2xl bg-white/3 border border-white/5 p-6 flex flex-col justify-end hover:border-white/10 transition-colors group">
+                      <span className="font-mono text-xs text-white/40 group-hover:text-[#d4b08c] transition-colors">GUI</span>
+                      <h4 className="text-lg font-medium mt-2 group-hover:text-white transition-colors">Desktop</h4>
                    </div>
-                   <div className="aspect-4/5 rounded-2xl bg-[#161616] border border-white/5 p-6 flex flex-col justify-end">
+                   <div className="aspect-4/5 rounded-2xl bg-[#161616] border border-white/5 p-6 flex flex-col justify-end hover:border-white/10 transition-colors group">
                       <span className="font-mono text-xs text-[#d4b08c]">WEB</span>
-                      <h4 className="text-lg font-medium mt-2">Extension</h4>
+                      <h4 className="text-lg font-medium mt-2 group-hover:text-white transition-colors">Extension</h4>
                    </div>
                  </div>
               </div>
@@ -209,22 +201,26 @@ export default function Home() {
           </div>
         </section>
 
-        {/* Footer CTA */}
-        <section className="py-40 px-6 text-center">
-          <h2 className="font-serif text-5xl sm:text-6xl text-[#ededed] mb-10">
-            Leave no trace.
-          </h2>
-          <Link 
-            href="/share" 
-            className="text-[#d4b08c] hover:text-white transition-colors border-b border-[#d4b08c]/30 hover:border-white pb-1 text-lg"
-          >
-            Start sharing securely →
-          </Link>
+        <section className="py-40 px-6 text-center relative overflow-hidden">
+          <div className="absolute bottom-[-20%] left-1/2 -translate-x-1/2 w-[60%] h-[40%] bg-[#d4b08c] opacity-[0.05] blur-[100px] rounded-full pointer-events-none"></div>
+          
+          <div className="relative z-10">
+            <h2 className="font-serif text-5xl sm:text-6xl text-[#ededed] mb-10">
+              Leave no trace.
+            </h2>
+            <Link 
+              href="/share" 
+              className="text-[#d4b08c] hover:text-white transition-colors border-b border-[#d4b08c]/30 hover:border-white pb-1 text-lg"
+            >
+              Start sharing securely →
+            </Link>
+          </div>
         </section>
       </main>
 
-      <footer className="border-t border-white/5 px-6 py-12 bg-[#0a0a0a]">
-        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8">
+      <footer className="px-6 py-12 relative z-10 overflow-hidden">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(212,176,140,0.05),transparent_70%)] opacity-60 pointer-events-none"></div>
+        <div className="max-w-6xl mx-auto flex flex-col md:flex-row items-center justify-between gap-8 relative z-10">
           <div className="flex items-center gap-3 opacity-50 hover:opacity-100 transition-opacity">
             <Logo />
             <span className="text-xs font-mono tracking-widest uppercase">Visible / Noro</span>
