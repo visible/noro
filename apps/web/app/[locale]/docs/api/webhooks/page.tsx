@@ -23,9 +23,9 @@ export default function Webhooks() {
 				<p className="text-white/60 mb-4 max-w-2xl">
 					configure a webhook URL when generating your API key:
 				</p>
-				<Code>{`curl -X POST https:
+				<Code>{`curl -X POST https://noro.sh/api/v1/keys \\
   -H "Content-Type: application/json" \\
-  -d '{"webhook":"https:
+  -d '{"webhook":"https://example.com/webhook"}'`}</Code>
 				<p className="text-white/60 mt-4 max-w-2xl">
 					the webhook URL must use HTTPS.
 				</p>

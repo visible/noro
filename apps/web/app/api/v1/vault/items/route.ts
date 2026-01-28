@@ -2,7 +2,28 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { upload, vaultkey } from "@/lib/r2";
 import { validateitemdata, isvaliditemtype } from "@/lib/validate";
+
+async function getorvault(userId: string) {
+	let vault = await db.vault.findUnique({
+		where: { userId },
+	});
+	if (!vault) {
+		const blobKey = vaultkey(userId);
+		const emptyVault = Buffer.from(JSON.stringify({ items: [], version: 1 }));
+		await upload(blobKey, emptyVault);
+		vault = await db.vault.create({
+			data: {
+				userId,
+				blobKey,
+				revision: 1,
+				size: emptyVault.length,
+			},
+		});
+	}
+	return vault;
+}
 
 export async function GET(req: Request) {
 	try {
@@ -11,13 +32,7 @@ export async function GET(req: Request) {
 			return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 		}
 
-		const vault = await db.vault.findUnique({
-			where: { userId: session.user.id },
-		});
-
-		if (!vault) {
-			return NextResponse.json({ error: "vault not found" }, { status: 404 });
-		}
+		const vault = await getorvault(session.user.id);
 
 		const url = new URL(req.url);
 		const type = url.searchParams.get("type");
@@ -47,13 +62,7 @@ export async function POST(req: Request) {
 			return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 		}
 
-		const vault = await db.vault.findUnique({
-			where: { userId: session.user.id },
-		});
-
-		if (!vault) {
-			return NextResponse.json({ error: "vault not found" }, { status: 404 });
-		}
+		const vault = await getorvault(session.user.id);
 
 		const { type, title, data, tags, favorite } = await req.json();
 

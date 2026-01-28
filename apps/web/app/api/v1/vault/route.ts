@@ -4,6 +4,20 @@ import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { download, upload, vaultkey } from "@/lib/r2";
 
+async function createvault(userId: string) {
+	const blobKey = vaultkey(userId);
+	const emptyVault = Buffer.from(JSON.stringify({ items: [], version: 1 }));
+	await upload(blobKey, emptyVault);
+	return db.vault.create({
+		data: {
+			userId,
+			blobKey,
+			revision: 1,
+			size: emptyVault.length,
+		},
+	});
+}
+
 export async function GET() {
 	try {
 		const session = await auth.api.getSession({ headers: await headers() });
@@ -11,12 +25,12 @@ export async function GET() {
 			return NextResponse.json({ error: "unauthorized" }, { status: 401 });
 		}
 
-		const vault = await db.vault.findUnique({
+		let vault = await db.vault.findUnique({
 			where: { userId: session.user.id },
 		});
 
 		if (!vault) {
-			return NextResponse.json({ error: "vault not found" }, { status: 404 });
+			vault = await createvault(session.user.id);
 		}
 
 		const data = await download(vault.blobKey);
@@ -46,12 +60,12 @@ export async function PUT(req: Request) {
 			return NextResponse.json({ error: "data required" }, { status: 400 });
 		}
 
-		const vault = await db.vault.findUnique({
+		let vault = await db.vault.findUnique({
 			where: { userId: session.user.id },
 		});
 
 		if (!vault) {
-			return NextResponse.json({ error: "vault not found" }, { status: 404 });
+			vault = await createvault(session.user.id);
 		}
 
 		if (revision !== undefined && revision < vault.revision) {

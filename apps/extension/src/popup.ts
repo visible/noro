@@ -4,7 +4,6 @@ const detailview = document.getElementById("detail") as HTMLDivElement;
 
 const emailinput = document.getElementById("email") as HTMLInputElement;
 const passwordinput = document.getElementById("password") as HTMLInputElement;
-const secretkeyinput = document.getElementById("secretkey") as HTMLInputElement;
 const loginerror = document.getElementById("loginerror") as HTMLParagraphElement;
 const signinbtn = document.getElementById("signin") as HTMLButtonElement;
 
@@ -80,9 +79,8 @@ async function init() {
 signinbtn.addEventListener("click", async () => {
 	const email = emailinput.value.trim();
 	const password = passwordinput.value;
-	const secretkey = secretkeyinput.value.trim();
 
-	if (!email || !password || !secretkey) {
+	if (!email || !password) {
 		loginerror.textContent = "all fields required";
 		return;
 	}
@@ -96,7 +94,6 @@ signinbtn.addEventListener("click", async () => {
 			type: "login",
 			email,
 			password,
-			secretkey,
 		});
 
 		if (response.success) {
@@ -106,7 +103,6 @@ signinbtn.addEventListener("click", async () => {
 			show("vault");
 			emailinput.value = "";
 			passwordinput.value = "";
-			secretkeyinput.value = "";
 		} else {
 			loginerror.textContent = response.error || "login failed";
 		}

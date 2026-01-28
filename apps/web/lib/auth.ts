@@ -1,6 +1,7 @@
 import { betterAuth } from "better-auth";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { db } from "./db";
+import { upload, vaultkey } from "./r2";
 
 export const auth = betterAuth({
 	secret: process.env.AUTH_SECRET,
@@ -20,6 +21,25 @@ export const auth = betterAuth({
 		},
 	},
 	appName: "noro",
+	databaseHooks: {
+		user: {
+			create: {
+				after: async (user) => {
+					const blobKey = vaultkey(user.id);
+					const emptyVault = Buffer.from(JSON.stringify({ items: [], version: 1 }));
+					await upload(blobKey, emptyVault);
+					await db.vault.create({
+						data: {
+							userId: user.id,
+							blobKey,
+							revision: 1,
+							size: emptyVault.length,
+						},
+					});
+				},
+			},
+		},
+	},
 });
 
 export type Session = typeof auth.$Infer.Session;
