@@ -18,7 +18,7 @@ export function HeroVisual() {
       <div className="absolute top-10 left-6 z-30">
         <h4 className="font-serif text-2xl text-[#ededed] mb-2">Secure Architecture</h4>
         <p className="text-sm text-white/50 max-w-[200px] leading-relaxed">
-          How Noro protects your secrets from end to end.
+          How noro protects your secrets from end to end.
         </p>
       </div>
 
