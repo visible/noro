@@ -10,26 +10,38 @@ type View = "login" | "vault" | "generator";
 const appWindow = getCurrentWindow();
 
 function Titlebar({ showLogo = true }: { showLogo?: boolean }) {
+	async function handleMouseDown(e: React.MouseEvent) {
+		const target = e.target as HTMLElement;
+		if (target.closest("button")) return;
+		if (e.buttons === 1) {
+			if (e.detail === 2) {
+				await appWindow.toggleMaximize();
+			} else {
+				await appWindow.startDragging();
+			}
+		}
+	}
+
 	return (
-		<div className="titlebar" data-tauri-drag-region>
+		<div className="titlebar" onMouseDown={handleMouseDown}>
 			<div className="titlebar-controls">
 				<button
 					className="titlebar-btn close"
 					onClick={() => appWindow.close()}
 					type="button"
-					aria-label="Close"
+					aria-label="close"
 				/>
 				<button
 					className="titlebar-btn minimize"
 					onClick={() => appWindow.minimize()}
 					type="button"
-					aria-label="Minimize"
+					aria-label="minimize"
 				/>
 				<button
 					className="titlebar-btn maximize"
 					onClick={() => appWindow.toggleMaximize()}
 					type="button"
-					aria-label="Maximize"
+					aria-label="maximize"
 				/>
 			</div>
 			{showLogo && (
