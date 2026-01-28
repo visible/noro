@@ -23,9 +23,9 @@ export default function Webhooks() {
 				<p className="text-white/60 mb-4 max-w-2xl">
 					configure a webhook URL when generating your API key:
 				</p>
-				<Code>{`curl -X POST https://noro.sh/api/v1/keys \\
+				<Code>{`curl -X POST https:
   -H "Content-Type: application/json" \\
-  -d '{"webhook":"https://example.com/webhook"}'`}</Code>
+  -d '{"webhook":"https:
 				<p className="text-white/60 mt-4 max-w-2xl">
 					the webhook URL must use HTTPS.
 				</p>
@@ -88,7 +88,7 @@ function verify(body, header, secret) {
   const timestamp = tPart.split("=")[1];
   const signature = vPart.split("=")[1];
 
-  // reject if older than 5 minutes
+
   const age = Date.now() - parseInt(timestamp);
   if (age > 300000) return false;
 

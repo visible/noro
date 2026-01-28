@@ -122,7 +122,7 @@ export default function Extension() {
 				description="Browser extension for password auto-fill, OTP, and more."
 			/>
 
-			{/* Coming Soon Banner */}
+			
 			<div className="mb-12 p-6 rounded-2xl border border-[#d4b08c]/20 bg-linear-to-br from-[#d4b08c]/5 to-transparent">
 				<div className="flex items-center gap-3 mb-3">
 					<div className="w-2 h-2 rounded-full bg-[#d4b08c] animate-pulse" />
@@ -133,7 +133,7 @@ export default function Extension() {
 				</p>
 			</div>
 
-			{/* Features Grid */}
+			
 			<section id="features" className="mb-12 scroll-mt-20">
 				<h2 className="text-xl font-semibold text-[#ededed] mb-6">Planned Features</h2>
 				<div className="grid sm:grid-cols-2 gap-4">
@@ -152,7 +152,7 @@ export default function Extension() {
 				</div>
 			</section>
 
-			{/* Sync with Desktop */}
+			
 			<section id="sync" className="mb-12 scroll-mt-20">
 				<div className="p-6 rounded-2xl border border-white/10 bg-white/2">
 					<div className="flex items-center gap-3 mb-4">
@@ -179,7 +179,7 @@ export default function Extension() {
 				</div>
 			</section>
 
-			{/* Supported Browsers */}
+			
 			<section id="browsers" className="mb-12 scroll-mt-20">
 				<h2 className="text-xl font-semibold text-[#ededed] mb-6">Supported Browsers</h2>
 				<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
@@ -195,7 +195,7 @@ export default function Extension() {
 				</div>
 			</section>
 
-			{/* Get Notified */}
+			
 			<section id="notify" className="mb-12 scroll-mt-20">
 				<div className="p-6 rounded-2xl border border-white/10 bg-white/2">
 					<h2 className="text-lg font-semibold text-[#ededed] mb-2">Get Notified</h2>

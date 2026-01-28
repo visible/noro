@@ -36,7 +36,6 @@ export default function Login() {
 
 	return (
 		<div className="min-h-dvh bg-[#0a0a0a] text-[#ededed] antialiased selection:bg-[#d4b08c] selection:text-black font-sans flex">
-			{/* Left Side - Form */}
 			<div className="w-full lg:w-[40%] min-h-dvh flex flex-col relative">
 				<main className="flex relative z-10 flex-1 justify-center items-center px-8 py-12 lg:px-16">
 					<div className="w-full max-w-[340px]">
@@ -139,12 +138,8 @@ export default function Login() {
 				</main>
 			</div>
 
-			{/* Right Side - Visual */}
 			<div className="hidden lg:flex w-[60%] min-h-dvh bg-[#0d0c0a] relative overflow-hidden items-center justify-center">
-				{/* Subtle gradient overlay */}
 				<div className="absolute inset-0 bg-linear-to-bl from-[#d4b08c]/2 via-transparent to-transparent" />
-				
-				{/* Grid pattern */}
 				<div className="absolute inset-0 opacity-[0.03]" style={{
 					backgroundImage: `
 						linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
@@ -152,27 +147,22 @@ export default function Login() {
 					`,
 					backgroundSize: '60px 60px'
 				}} />
-				
-				{/* Main content */}
 				<div className="relative z-10 max-w-md px-12">
-					{/* Animated dots visualization */}
 					<div className="relative mb-16">
 						<div className="flex justify-center gap-8 mb-8">
 							{[0, 1, 2].map((i) => (
 								<div key={i} className="relative">
-									<div 
+									<div
 										className="w-3 h-3 rounded-full bg-[#d4b08c]/20 animate-pulse"
 										style={{ animationDelay: `${i * 0.3}s` }}
 									/>
-									<div 
+									<div
 										className="absolute inset-0 w-3 h-3 rounded-full bg-[#d4b08c]/40 animate-ping"
 										style={{ animationDelay: `${i * 0.3}s`, animationDuration: '2s' }}
 									/>
 								</div>
 							))}
 						</div>
-						
-						{/* Connection lines */}
 						<div className="flex justify-center">
 							<svg width="200" height="60" className="text-white/10" aria-hidden="true">
 								<path d="M20 0 L20 30 L100 30 L100 60" fill="none" stroke="currentColor" strokeWidth="1" />
@@ -180,24 +170,18 @@ export default function Login() {
 								<path d="M180 0 L180 30 L100 30" fill="none" stroke="currentColor" strokeWidth="1" />
 							</svg>
 						</div>
-						
-						{/* Central node */}
 						<div className="flex justify-center -mt-1">
 							<div className="w-4 h-4 rounded-full bg-[#d4b08c] shadow-[0_0_20px_rgba(212,176,140,0.4)]" />
 						</div>
 					</div>
-					
-					{/* Text content */}
 					<div className="text-center">
 						<h2 className="font-serif text-2xl text-[#ededed]/90 mb-4">
 							Welcome back
 						</h2>
 						<p className="text-white/40 text-sm leading-relaxed mb-10">
-							Your secrets are encrypted client-side before transmission. 
+							Your secrets are encrypted client-side before transmission.
 							We never see your data.
 						</p>
-
-						{/* Stats */}
 						<div className="flex justify-center gap-12">
 							{[
 								{ value: "256-bit", label: "Encryption" },

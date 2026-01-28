@@ -11,7 +11,7 @@ const appWindow = getCurrentWindow();
 
 function Titlebar({ showLogo = true }: { showLogo?: boolean }) {
 	return (
-		<div className="titlebar">
+		<div className="titlebar" data-tauri-drag-region>
 			<div className="titlebar-controls">
 				<button
 					className="titlebar-btn close"

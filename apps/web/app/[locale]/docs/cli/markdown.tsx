@@ -18,7 +18,7 @@ interface MarkdownProps {
 
 function parseTableRow(line: string): string[] {
 	return line
-		.slice(1, -1) // Remove leading and trailing |
+		.slice(1, -1)
 		.split("|")
 		.map((cell) => cell.trim());
 }
@@ -31,7 +31,6 @@ function parseContent(content: string) {
 	while (i < lines.length) {
 		const line = lines[i].trimEnd();
 
-		// H3 subheadings
 		if (line.startsWith("### ")) {
 			const heading = line.replace(/^###\s+/, "");
 			elements.push(
@@ -43,7 +42,7 @@ function parseContent(content: string) {
 			continue;
 		}
 
-		// Code blocks
+
 		if (line.startsWith("```")) {
 			const codeLines: string[] = [];
 			i++;
@@ -58,10 +57,10 @@ function parseContent(content: string) {
 			continue;
 		}
 
-		// Tables
+
 		if (tablerow.test(line) && i + 1 < lines.length && tableseparator.test(lines[i + 1].trimEnd())) {
 			const headers = parseTableRow(line);
-			i += 2; // Skip header and separator
+			i += 2;
 			const rows: string[][] = [];
 			while (i < lines.length && tablerow.test(lines[i].trimEnd()) && !tableseparator.test(lines[i].trimEnd())) {
 				rows.push(parseTableRow(lines[i].trimEnd()));
@@ -73,7 +72,7 @@ function parseContent(content: string) {
 			continue;
 		}
 
-		// Lists
+
 		if (line.startsWith("- ") || line.startsWith("1. ")) {
 			const listItems: string[] = [];
 			while (i < lines.length && (lines[i].startsWith("- ") || orderedlist.test(lines[i]))) {
@@ -105,13 +104,13 @@ function parseContent(content: string) {
 			continue;
 		}
 
-		// Empty lines
+
 		if (line.trim() === "") {
 			i++;
 			continue;
 		}
 
-		// Regular paragraphs
+
 		elements.push(
 			<p key={`p-${i}`} className="text-sm text-white/60 my-3 max-w-2xl leading-relaxed">
 				{parseInline(line)}

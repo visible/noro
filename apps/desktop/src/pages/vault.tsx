@@ -107,17 +107,13 @@ export function Vault({ user, token, onLogout, onNavigate }: Props) {
 			await create(newType, newTitle, "{}");
 			setNewTitle("");
 			setAdding(false);
-		} catch {
-			// ignore
-		}
+		} catch {}
 	}
 
 	async function handleDelete(id: string) {
 		try {
 			await remove(id);
-		} catch {
-			// ignore
-		}
+		} catch {}
 	}
 
 	function handleNavClick(id: string) {
