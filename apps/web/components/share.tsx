@@ -80,7 +80,7 @@ export function ShareDialog({ item, open, onClose }: ShareDialogProps) {
 
   return (
     <dialog ref={dialogRef} onClick={handlebackdrop} onCancel={onClose} className="bg-transparent p-0 backdrop:bg-black/80">
-      <div className="bg-black border border-white/10 p-6 w-[400px] max-w-[90vw]">
+      <div className="bg-[#0a0a0a] border border-white/10 p-6 w-[400px] max-w-[90vw]">
         <div className="flex items-center justify-between mb-6">
           <h2 className="text-lg font-bold text-white">share item</h2>
           <button onClick={onClose} className="text-white/40 hover:text-white transition-colors">
@@ -99,7 +99,7 @@ export function ShareDialog({ item, open, onClose }: ShareDialogProps) {
               <label className="text-xs tracking-widest text-white/40 block mb-2">views</label>
               <div className="flex gap-1.5">
                 {viewoptions.map((n) => (
-                  <button key={n} type="button" onClick={() => setViews(n)} className={`flex-1 h-9 text-sm transition-colors ${views === n ? "bg-[#FF6B00] text-black" : "border border-white/10 text-white/40 hover:text-white hover:border-white/30"}`}>{n}</button>
+                  <button key={n} type="button" onClick={() => setViews(n)} className={`flex-1 h-9 text-sm transition-colors ${views === n ? "bg-[#d4b08c] text-black" : "border border-white/10 text-white/40 hover:text-white hover:border-white/30"}`}>{n}</button>
                 ))}
               </div>
             </div>
@@ -107,16 +107,16 @@ export function ShareDialog({ item, open, onClose }: ShareDialogProps) {
               <label className="text-xs tracking-widest text-white/40 block mb-2">expires</label>
               <div className="flex gap-1.5 flex-wrap">
                 {ttloptions.map((opt) => (
-                  <button key={opt.value} type="button" onClick={() => setTtl(opt.value)} className={`px-3 h-9 text-sm transition-colors ${ttl === opt.value ? "bg-[#FF6B00] text-black" : "border border-white/10 text-white/40 hover:text-white hover:border-white/30"}`}>{opt.label}</button>
+                  <button key={opt.value} type="button" onClick={() => setTtl(opt.value)} className={`px-3 h-9 text-sm transition-colors ${ttl === opt.value ? "bg-[#d4b08c] text-black" : "border border-white/10 text-white/40 hover:text-white hover:border-white/30"}`}>{opt.label}</button>
                 ))}
               </div>
             </div>
             <ul className="space-y-1">
-              <li className="text-xs text-white/30 flex items-center gap-2"><span className="w-1 h-1 bg-[#FF6B00] rounded-full" />encrypted with a unique key</li>
-              <li className="text-xs text-white/30 flex items-center gap-2"><span className="w-1 h-1 bg-[#FF6B00] rounded-full" />key never sent to server</li>
-              <li className="text-xs text-white/30 flex items-center gap-2"><span className="w-1 h-1 bg-[#FF6B00] rounded-full" />self-destructs after viewing</li>
+              <li className="text-xs text-white/30 flex items-center gap-2"><span className="w-1 h-1 bg-[#d4b08c] rounded-full" />encrypted with a unique key</li>
+              <li className="text-xs text-white/30 flex items-center gap-2"><span className="w-1 h-1 bg-[#d4b08c] rounded-full" />key never sent to server</li>
+              <li className="text-xs text-white/30 flex items-center gap-2"><span className="w-1 h-1 bg-[#d4b08c] rounded-full" />self-destructs after viewing</li>
             </ul>
-            <button onClick={handleshare} disabled={loading} className="w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:opacity-80 transition-opacity disabled:opacity-30 disabled:cursor-not-allowed">{loading ? "creating..." : "create share link"}</button>
+            <button onClick={handleshare} disabled={loading} className="w-full bg-[#d4b08c] text-black py-3 text-sm tracking-widest font-bold hover:opacity-80 transition-opacity disabled:opacity-30 disabled:cursor-not-allowed">{loading ? "creating..." : "create share link"}</button>
           </div>
         ) : (
           <div className="space-y-6">
@@ -127,7 +127,7 @@ export function ShareDialog({ item, open, onClose }: ShareDialogProps) {
                 <button type="button" onClick={() => setRevealed(!revealed)} className="text-white/40 hover:text-white text-xs tracking-widest shrink-0">{revealed ? "hide" : "show"}</button>
               </div>
             </div>
-            <button onClick={handlecopy} className="w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:opacity-80 transition-opacity">{copied ? "copied" : "copy link"}</button>
+            <button onClick={handlecopy} className="w-full bg-[#d4b08c] text-black py-3 text-sm tracking-widest font-bold hover:opacity-80 transition-opacity">{copied ? "copied" : "copy link"}</button>
             <p className="text-xs text-white/30 text-center">{copied ? "link will be cleared from clipboard in 30s" : `link expires after ${views} view${views > 1 ? "s" : ""}`}</p>
             <button onClick={reset} className="w-full border border-white/10 py-3 text-sm tracking-widest text-white/40 hover:text-white hover:border-white/30 transition-colors">create another link</button>
           </div>

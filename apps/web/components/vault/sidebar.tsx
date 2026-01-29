@@ -132,7 +132,7 @@ function FolderItemComponent({
 			<div
 				className={`group flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
 					selected
-						? "bg-[#FF6B00]/20 text-[#FF6B00]"
+						? "bg-[#d4b08c]/20 text-[#d4b08c]"
 						: "text-white/60 hover:text-white hover:bg-white/5"
 				}`}
 				style={{ paddingLeft: `${12 + depth * 16}px` }}
@@ -155,7 +155,7 @@ function FolderItemComponent({
 				)}
 				<Svg
 					path={iconpaths.folder}
-					className={`w-4 h-4 shrink-0 ${selected ? "text-[#FF6B00]" : "text-white/40"}`}
+					className={`w-4 h-4 shrink-0 ${selected ? "text-[#d4b08c]" : "text-white/40"}`}
 				/>
 				{editing ? (
 					<input
@@ -171,7 +171,7 @@ function FolderItemComponent({
 					<span className="flex-1 text-sm font-medium truncate">{folder.name}</span>
 				)}
 				{count > 0 && (
-					<span className={`text-xs ${selected ? "text-[#FF6B00]/80" : "text-white/40"}`}>
+					<span className={`text-xs ${selected ? "text-[#d4b08c]/80" : "text-white/40"}`}>
 						{count}
 					</span>
 				)}
@@ -188,7 +188,7 @@ function FolderItemComponent({
 							<Svg path={iconpaths.more} className="w-4 h-4" />
 						</button>
 						{showMenu && (
-							<div className="absolute right-0 top-full mt-1 bg-stone-800 border border-white/10 rounded-lg shadow-xl z-50 py-1 min-w-[120px]">
+							<div className="absolute right-0 top-full mt-1 bg-[#161616] border border-white/10 rounded-lg shadow-xl z-50 py-1 min-w-[120px]">
 								{onRename && (
 									<button
 										type="button"
@@ -293,7 +293,7 @@ export function VaultSidebar({
 					type="button"
 					className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
 						selected === "all" && !selectedType
-							? "bg-[#FF6B00]/20 text-[#FF6B00]"
+							? "bg-[#d4b08c]/20 text-[#d4b08c]"
 							: "text-white/60 hover:text-white hover:bg-white/5"
 					}`}
 					onClick={() => {
@@ -303,11 +303,11 @@ export function VaultSidebar({
 				>
 					<Svg
 						path={iconpaths.archive}
-						className={`w-5 h-5 ${selected === "all" && !selectedType ? "text-[#FF6B00]" : "text-white/40"}`}
+						className={`w-5 h-5 ${selected === "all" && !selectedType ? "text-[#d4b08c]" : "text-white/40"}`}
 					/>
 					<span className="flex-1 text-sm font-medium text-left">All Items</span>
 					<span
-						className={`text-xs ${selected === "all" && !selectedType ? "text-[#FF6B00]/80" : "text-white/40"}`}
+						className={`text-xs ${selected === "all" && !selectedType ? "text-[#d4b08c]/80" : "text-white/40"}`}
 					>
 						{totalCount}
 					</span>
@@ -317,18 +317,18 @@ export function VaultSidebar({
 					type="button"
 					className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
 						selected === "favorites"
-							? "bg-[#FF6B00]/20 text-[#FF6B00]"
+							? "bg-[#d4b08c]/20 text-[#d4b08c]"
 							: "text-white/60 hover:text-white hover:bg-white/5"
 					}`}
 					onClick={() => onSelect("favorites")}
 				>
 					<Svg
 						path={iconpaths.star}
-						className={`w-5 h-5 ${selected === "favorites" ? "text-[#FF6B00]" : "text-white/40"}`}
+						className={`w-5 h-5 ${selected === "favorites" ? "text-[#d4b08c]" : "text-white/40"}`}
 					/>
 					<span className="flex-1 text-sm font-medium text-left">Favorites</span>
 					{favoriteCount > 0 && (
-						<span className={`text-xs ${selected === "favorites" ? "text-[#FF6B00]/80" : "text-white/40"}`}>
+						<span className={`text-xs ${selected === "favorites" ? "text-[#d4b08c]/80" : "text-white/40"}`}>
 							{favoriteCount}
 						</span>
 					)}
@@ -351,13 +351,13 @@ export function VaultSidebar({
 								onClick={() => onTypeFilter(isactive ? null : type)}
 								className={`w-full flex items-center gap-3 px-3 py-2 rounded-lg transition-colors ${
 									isactive
-										? "bg-[#FF6B00]/20 text-[#FF6B00]"
+										? "bg-[#d4b08c]/20 text-[#d4b08c]"
 										: "text-white/60 hover:text-white hover:bg-white/5"
 								}`}
 							>
-								<Svg path={iconpaths[type]} className={`w-4 h-4 ${isactive ? "text-[#FF6B00]" : "text-white/40"}`} />
+								<Svg path={iconpaths[type]} className={`w-4 h-4 ${isactive ? "text-[#d4b08c]" : "text-white/40"}`} />
 								<span className="flex-1 text-sm text-left">{typelabels[type]}</span>
-								<span className={`text-xs ${isactive ? "text-[#FF6B00]/80" : "text-white/40"}`}>
+								<span className={`text-xs ${isactive ? "text-[#d4b08c]/80" : "text-white/40"}`}>
 									{count}
 								</span>
 							</button>
@@ -403,18 +403,18 @@ export function VaultSidebar({
 					type="button"
 					className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg transition-colors ${
 						selected === "trash"
-							? "bg-[#FF6B00]/20 text-[#FF6B00]"
+							? "bg-[#d4b08c]/20 text-[#d4b08c]"
 							: "text-white/60 hover:text-white hover:bg-white/5"
 					}`}
 					onClick={() => onSelect("trash")}
 				>
 					<Svg
 						path={iconpaths.trash}
-						className={`w-5 h-5 ${selected === "trash" ? "text-[#FF6B00]" : "text-white/40"}`}
+						className={`w-5 h-5 ${selected === "trash" ? "text-[#d4b08c]" : "text-white/40"}`}
 					/>
 					<span className="flex-1 text-sm font-medium text-left">Trash</span>
 					{trashCount > 0 && (
-						<span className={`text-xs ${selected === "trash" ? "text-[#FF6B00]/80" : "text-white/40"}`}>
+						<span className={`text-xs ${selected === "trash" ? "text-[#d4b08c]/80" : "text-white/40"}`}>
 							{trashCount}
 						</span>
 					)}

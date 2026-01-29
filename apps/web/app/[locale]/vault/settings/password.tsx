@@ -63,44 +63,44 @@ export function PasswordModal({ open, onClose }: Props) {
 		<Modal open={open} onClose={handleClose} title="change password">
 			<div className="space-y-4">
 				<div>
-					<label className="block text-sm font-medium text-stone-700 mb-1.5">current password</label>
+					<label className="block text-sm font-medium text-white/70 mb-1.5">current password</label>
 					<input
 						type="password"
 						value={current}
 						onChange={(e) => setCurrent(e.target.value)}
-						className="w-full px-3 py-2.5 bg-white border border-stone-200 rounded-lg text-stone-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-colors"
+						className="w-full px-3 py-2.5 bg-[#161616] border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#d4b08c]/20 focus:border-[#d4b08c] transition-colors"
 					/>
 				</div>
 				<div>
-					<label className="block text-sm font-medium text-stone-700 mb-1.5">new password</label>
+					<label className="block text-sm font-medium text-white/70 mb-1.5">new password</label>
 					<input
 						type="password"
 						value={newPass}
 						onChange={(e) => setNewPass(e.target.value)}
-						className="w-full px-3 py-2.5 bg-white border border-stone-200 rounded-lg text-stone-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-colors"
+						className="w-full px-3 py-2.5 bg-[#161616] border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#d4b08c]/20 focus:border-[#d4b08c] transition-colors"
 					/>
 				</div>
 				<div>
-					<label className="block text-sm font-medium text-stone-700 mb-1.5">confirm new password</label>
+					<label className="block text-sm font-medium text-white/70 mb-1.5">confirm new password</label>
 					<input
 						type="password"
 						value={confirm}
 						onChange={(e) => setConfirm(e.target.value)}
-						className="w-full px-3 py-2.5 bg-white border border-stone-200 rounded-lg text-stone-900 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 transition-colors"
+						className="w-full px-3 py-2.5 bg-[#161616] border border-white/10 rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-[#d4b08c]/20 focus:border-[#d4b08c] transition-colors"
 					/>
 				</div>
 				{error && <p className="text-red-500 text-sm">{error}</p>}
 				<div className="flex flex-col-reverse sm:flex-row gap-3 pt-2">
 					<button
 						onClick={handleClose}
-						className="flex-1 py-2.5 bg-stone-100 text-stone-700 font-medium rounded-lg hover:bg-stone-200 transition-colors"
+						className="flex-1 py-2.5 bg-white/10 text-white/70 font-medium rounded-lg hover:bg-white/20 transition-colors"
 					>
 						cancel
 					</button>
 					<button
 						onClick={handleSubmit}
 						disabled={loading || !current || !newPass || !confirm}
-						className="flex-1 py-2.5 bg-emerald-500 text-white font-medium rounded-lg hover:bg-emerald-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+						className="flex-1 py-2.5 bg-[#d4b08c] text-[#0a0a0a] font-medium rounded-lg hover:bg-[#d4b08c]/90 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
 					>
 						{loading ? "updating..." : "update password"}
 					</button>

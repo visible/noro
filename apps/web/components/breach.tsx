@@ -103,7 +103,7 @@ export function Scanner({ items }: ScannerProps) {
 				<button
 					onClick={scan}
 					disabled={scanning}
-					className="px-4 py-2 bg-[#FF6B00] text-black font-medium rounded-lg hover:bg-[#FF6B00]/90 transition-colors disabled:opacity-50"
+					className="px-4 py-2 bg-[#d4b08c] text-black font-medium rounded-lg hover:bg-[#d4b08c]/90 transition-colors disabled:opacity-50"
 				>
 					{scanning ? "scanning..." : "scan vault"}
 				</button>
@@ -113,7 +113,7 @@ export function Scanner({ items }: ScannerProps) {
 				<div className="space-y-2">
 					<div className="h-2 bg-white/10 rounded-full overflow-hidden">
 						<div
-							className="h-full bg-[#FF6B00] transition-all duration-300"
+							className="h-full bg-[#d4b08c] transition-all duration-300"
 							style={{ width: `${progress}%` }}
 						/>
 					</div>

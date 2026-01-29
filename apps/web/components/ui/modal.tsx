@@ -71,7 +71,7 @@ export function Modal({ open, onClose, children, closeOnBackdrop = true }: Modal
 				ref={contentref}
 				role="dialog"
 				aria-modal="true"
-				className="relative bg-stone-900 border border-white/10 rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden animate-in zoom-in-95 duration-200"
+				className="relative bg-[#161616] border border-white/10 rounded-xl shadow-2xl w-full max-w-md mx-4 overflow-hidden animate-in zoom-in-95 duration-200"
 			>
 				{children}
 			</div>
@@ -166,7 +166,7 @@ export function ConfirmDialog({
 	loading = false,
 }: ConfirmDialogProps) {
 	const styles = {
-		default: "bg-[#FF6B00] text-black hover:opacity-80",
+		default: "bg-[#d4b08c] text-black hover:opacity-80",
 		danger: "bg-red-500 text-white hover:bg-red-600",
 	};
 

@@ -42,7 +42,7 @@ export function PasswordField({ value, onChange, required, readOnly, showGenerat
 					onChange={(e) => onChange(e.target.value)}
 					required={required}
 					readOnly={readOnly}
-					className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 min-h-[48px] pr-28 focus:outline-none focus:border-[#FF6B00] transition-colors font-mono text-base read-only:opacity-60"
+					className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 min-h-[48px] pr-28 focus:outline-none focus:ring-2 focus:ring-[#d4b08c]/40 focus:border-[#d4b08c] transition-colors font-mono text-base text-white read-only:bg-white/[0.02] read-only:text-white/50"
 				/>
 				<div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
 					{showGenerator && !readOnly && (
@@ -68,7 +68,7 @@ export function PasswordField({ value, onChange, required, readOnly, showGenerat
 				</div>
 			</div>
 			{generatorOpen && (
-				<div className="absolute z-50 mt-2 left-0 right-0 bg-stone-800 border border-white/10 rounded-lg p-4 shadow-xl">
+				<div className="absolute z-50 mt-2 left-0 right-0 bg-[#161616] border border-white/10 rounded-lg p-4 shadow-xl">
 					<Generator onSelect={handleSelect} compact />
 				</div>
 			)}
@@ -107,14 +107,14 @@ export function PasswordFieldLight({ value, onChange, required, readOnly, showGe
 					onChange={(e) => onChange(e.target.value)}
 					required={required}
 					readOnly={readOnly}
-					className="w-full bg-white border border-stone-200 rounded-xl px-4 py-3 pr-28 text-base text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-orange-500/40 focus:border-orange-500 transition-all font-mono read-only:bg-stone-50 read-only:text-stone-500"
+					className="w-full bg-[#161616] border border-white/10 rounded-xl px-4 py-3 pr-28 text-base text-white placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-[#d4b08c]/40 focus:border-[#d4b08c] transition-all font-mono read-only:bg-white/5 read-only:text-white/40"
 				/>
 				<div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
 					{showGenerator && !readOnly && (
 						<button
 							type="button"
 							onClick={() => setGeneratorOpen(!generatorOpen)}
-							className="w-9 h-9 flex items-center justify-center text-stone-400 hover:text-stone-600 hover:bg-stone-100 rounded-lg transition-colors"
+							className="w-9 h-9 flex items-center justify-center text-white/30 hover:text-white/50 hover:bg-white/10 rounded-lg transition-colors"
 							title="generate password"
 							aria-label="generate password"
 						>
@@ -126,14 +126,14 @@ export function PasswordFieldLight({ value, onChange, required, readOnly, showGe
 					<button
 						type="button"
 						onClick={() => setShow(!show)}
-						className="px-2 h-9 flex items-center text-xs font-medium text-stone-500 hover:text-stone-700 transition-colors rounded-lg"
+						className="px-2 h-9 flex items-center text-xs font-medium text-white/40 hover:text-white/70 transition-colors rounded-lg"
 					>
 						{show ? "hide" : "show"}
 					</button>
 				</div>
 			</div>
 			{generatorOpen && (
-				<div className="absolute z-50 mt-2 left-0 right-0 bg-white border border-stone-200 rounded-xl p-4 shadow-lg">
+				<div className="absolute z-50 mt-2 left-0 right-0 bg-[#161616] border border-white/10 rounded-xl p-4 shadow-lg">
 					<GeneratorLight onSelect={handleSelect} />
 				</div>
 			)}
@@ -189,29 +189,29 @@ function GeneratorLight({ onSelect }: GeneratorProps) {
 
 	return (
 		<div className="space-y-4">
-			<div className="bg-stone-50 rounded-lg p-3">
-				<p className="font-mono text-sm text-stone-900 break-all min-h-[20px]">{password}</p>
+			<div className="bg-white/5 rounded-lg p-3">
+				<p className="font-mono text-sm text-white break-all min-h-[20px]">{password}</p>
 			</div>
 
 			<div className="flex gap-2">
 				<button
 					type="button"
 					onClick={copy}
-					className="px-3.5 py-2.5 text-sm font-medium text-stone-600 bg-stone-100 rounded-lg hover:bg-stone-200 active:bg-stone-300 transition-colors"
+					className="px-3.5 py-2.5 text-sm font-medium text-white/50 bg-white/10 rounded-lg hover:bg-white/20 active:bg-white/30 transition-colors"
 				>
 					{copied ? "copied" : "copy"}
 				</button>
 				<button
 					type="button"
 					onClick={generate}
-					className="px-3.5 py-2.5 text-sm font-medium text-stone-600 bg-stone-100 rounded-lg hover:bg-stone-200 active:bg-stone-300 transition-colors"
+					className="px-3.5 py-2.5 text-sm font-medium text-white/50 bg-white/10 rounded-lg hover:bg-white/20 active:bg-white/30 transition-colors"
 				>
 					regenerate
 				</button>
 				<button
 					type="button"
 					onClick={() => onSelect(password)}
-					className="px-3.5 py-2.5 text-sm font-medium text-white bg-orange-500 rounded-lg hover:bg-orange-600 active:bg-orange-700 transition-colors"
+					className="px-3.5 py-2.5 text-sm font-medium text-[#0a0a0a] bg-[#d4b08c] rounded-lg hover:bg-[#d4b08c]/90 active:bg-[#d4b08c]/80 transition-colors"
 				>
 					use
 				</button>
@@ -219,8 +219,8 @@ function GeneratorLight({ onSelect }: GeneratorProps) {
 
 			<div>
 				<div className="flex justify-between text-sm mb-2">
-					<span className="text-stone-600">length</span>
-					<span className="font-medium text-stone-900">{length}</span>
+					<span className="text-white/50">length</span>
+					<span className="font-medium text-white">{length}</span>
 				</div>
 				<input
 					type="range"
@@ -228,7 +228,7 @@ function GeneratorLight({ onSelect }: GeneratorProps) {
 					max={128}
 					value={length}
 					onChange={(e) => setLength(Number(e.target.value))}
-					className="w-full accent-orange-500"
+					className="w-full accent-[#d4b08c]"
 				/>
 			</div>
 
@@ -244,7 +244,7 @@ function GeneratorLight({ onSelect }: GeneratorProps) {
 						type="button"
 						onClick={() => opt.set(!opt.value)}
 						className={`px-3.5 py-2.5 rounded-lg text-sm font-medium transition-colors ${
-							opt.value ? "bg-stone-200 text-stone-900" : "bg-stone-100 text-stone-400"
+							opt.value ? "bg-white/20 text-white" : "bg-white/10 text-white/30"
 						}`}
 					>
 						{opt.label}

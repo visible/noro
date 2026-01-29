@@ -12,7 +12,7 @@ export const SearchBar = forwardRef<HTMLInputElement, Props>(function SearchBar(
 		<div className="relative">
 			<svg
 				aria-hidden="true"
-				className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-500"
+				className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/40"
 				fill="none"
 				stroke="currentColor"
 				viewBox="0 0 24 24"
@@ -30,11 +30,11 @@ export const SearchBar = forwardRef<HTMLInputElement, Props>(function SearchBar(
 				value={value}
 				onChange={(e) => onChange(e.target.value)}
 				placeholder="Search items..."
-				className="w-full bg-zinc-800 border border-zinc-700 rounded-lg pl-10 pr-10 py-2.5 text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-zinc-600 focus:ring-1 focus:ring-zinc-600 transition-all"
+				className="w-full bg-white/10 border border-white/20 rounded-lg pl-10 pr-10 py-2.5 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-white/30 focus:ring-1 focus:ring-white/30 transition-all"
 			/>
 			<button
 				onClick={() => onChange("")}
-				className={`absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center text-zinc-500 hover:text-zinc-400 rounded transition-all ${value ? "opacity-100" : "opacity-0 pointer-events-none"}`}
+				className={`absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center text-white/40 hover:text-white/50 rounded transition-all ${value ? "opacity-100" : "opacity-0 pointer-events-none"}`}
 				aria-label="clear search"
 			>
 				<svg aria-hidden="true" className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">

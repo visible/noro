@@ -90,7 +90,7 @@ export function Dock() {
             {isExternal ? (
               <a
                 {...linkProps}
-                className="text-white/30 hover:text-[#FF6B00] transition-colors block"
+                className="text-white/30 hover:text-[#d4b08c] transition-colors block"
                 onMouseEnter={() => setHovered(item.key)}
                 onMouseLeave={() => setHovered(null)}
               >
@@ -99,7 +99,7 @@ export function Dock() {
             ) : (
               <Link
                 href={item.href}
-                className="text-white/30 hover:text-[#FF6B00] transition-colors block"
+                className="text-white/30 hover:text-[#d4b08c] transition-colors block"
                 onMouseEnter={() => setHovered(item.key)}
                 onMouseLeave={() => setHovered(null)}
               >

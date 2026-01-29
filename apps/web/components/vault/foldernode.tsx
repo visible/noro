@@ -76,9 +76,9 @@ export function FolderNode({
 			<div
 				className={`group flex items-center gap-1 px-2 py-1.5 rounded-lg cursor-pointer transition-colors ${
 					isSelected
-						? "bg-[#FF6B00]/20 text-[#FF6B00]"
+						? "bg-[#d4b08c]/20 text-[#d4b08c]"
 						: "text-white/60 hover:text-white hover:bg-white/5"
-				} ${isDragOver ? "ring-2 ring-[#FF6B00]" : ""}`}
+				} ${isDragOver ? "ring-2 ring-[#d4b08c]" : ""}`}
 				style={{ paddingLeft: `${8 + depth * 16}px` }}
 				onClick={() => onSelect(folder.id)}
 				onContextMenu={(e) => onContext(e, folder.id)}
@@ -108,11 +108,11 @@ export function FolderNode({
 				)}
 				<Icon
 					name={folder.icon}
-					className={`w-4 h-4 shrink-0 ${isSelected ? "text-[#FF6B00]" : colorClasses[folder.color]}`}
+					className={`w-4 h-4 shrink-0 ${isSelected ? "text-[#d4b08c]" : colorClasses[folder.color]}`}
 				/>
 				<span className="flex-1 text-sm font-medium truncate">{folder.name}</span>
 				{folder.itemCount > 0 && (
-					<span className={`text-xs ${isSelected ? "text-[#FF6B00]/80" : "text-white/40"}`}>
+					<span className={`text-xs ${isSelected ? "text-[#d4b08c]/80" : "text-white/40"}`}>
 						{folder.itemCount}
 					</span>
 				)}

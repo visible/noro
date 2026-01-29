@@ -165,7 +165,7 @@ function PasswordField({ value, onChange, required, showGenerator }: PasswordFie
 				value={value}
 				onChange={(e) => onChange(e.target.value)}
 				required={required}
-				className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 pr-24 text-sm text-white font-mono placeholder:text-white/30 focus:outline-none focus:border-[#FF6B00]/50 focus:ring-1 focus:ring-[#FF6B00]/30 transition-all"
+				className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 pr-24 text-sm text-white font-mono placeholder:text-white/30 focus:outline-none focus:border-[#d4b08c]/50 focus:ring-1 focus:ring-[#d4b08c]/30 transition-all"
 			/>
 			<div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
 				{showGenerator && (
@@ -222,7 +222,7 @@ function TagInput({ tags, onChange }: TagInputProps) {
 	}
 
 	return (
-		<div className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 min-h-[48px] focus-within:border-[#FF6B00]/50 focus-within:ring-1 focus-within:ring-[#FF6B00]/30 transition-all">
+		<div className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 min-h-[48px] focus-within:border-[#d4b08c]/50 focus-within:ring-1 focus-within:ring-[#d4b08c]/30 transition-all">
 			<div className="flex flex-wrap gap-2 items-center">
 				{tags.map((tag) => (
 					<span
@@ -301,7 +301,7 @@ export function ItemForm({ item, defaulttype, onSave, onDelete, onCancel }: Prop
 
 	function renderfield(field: FieldConfig) {
 		const inputclass =
-			"w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-[#FF6B00]/50 focus:ring-1 focus:ring-[#FF6B00]/30 transition-all";
+			"w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-[#d4b08c]/50 focus:ring-1 focus:ring-[#d4b08c]/30 transition-all";
 
 		return (
 			<div>
@@ -353,7 +353,7 @@ export function ItemForm({ item, defaulttype, onSave, onDelete, onCancel }: Prop
 									onClick={() => setType(t)}
 									className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm font-medium transition-colors ${
 										type === t
-											? "bg-[#FF6B00] text-black"
+											? "bg-[#d4b08c] text-black"
 											: "text-white/60 hover:text-white hover:bg-white/10"
 									}`}
 								>
@@ -374,7 +374,7 @@ export function ItemForm({ item, defaulttype, onSave, onDelete, onCancel }: Prop
 						onChange={(e) => setTitle(e.target.value)}
 						placeholder={typelabels[type]}
 						required
-						className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-[#FF6B00]/50 focus:ring-1 focus:ring-[#FF6B00]/30 transition-all"
+						className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-[#d4b08c]/50 focus:ring-1 focus:ring-[#d4b08c]/30 transition-all"
 					/>
 				</div>
 
@@ -405,7 +405,7 @@ export function ItemForm({ item, defaulttype, onSave, onDelete, onCancel }: Prop
 				</button>
 				<button
 					type="submit"
-					className="flex-1 sm:flex-initial px-6 py-2.5 bg-[#FF6B00] text-black font-medium rounded-lg hover:bg-[#FF6B00]/90 transition-colors text-sm"
+					className="flex-1 sm:flex-initial px-6 py-2.5 bg-[#d4b08c] text-black font-medium rounded-lg hover:bg-[#d4b08c]/90 transition-colors text-sm"
 				>
 					save
 				</button>

@@ -7,8 +7,8 @@ export default function manifest(): MetadataRoute.Manifest {
     description: "one-time secret sharing for env vars",
     start_url: "/",
     display: "standalone",
-    background_color: "#000000",
-    theme_color: "#FF6B00",
+    background_color: "#0a0a0a",
+    theme_color: "#d4b08c",
     icons: [
       {
         src: "/icon-192.png",

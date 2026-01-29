@@ -93,7 +93,7 @@ function Field({ label, value, masked, mono, url }: FieldProps) {
 							href={value.startsWith("http") ? value : `https://${value}`}
 							target="_blank"
 							rel="noopener noreferrer"
-							className="text-[#FF6B00] hover:underline inline-flex items-center gap-1"
+							className="text-[#d4b08c] hover:underline inline-flex items-center gap-1"
 						>
 							{displayValue}
 							<Svg path={iconpaths.external} className="w-3 h-3" />
@@ -274,7 +274,7 @@ export function ItemDisplay({ item, onEdit, onFavorite, onClose, compact }: Prop
 	}
 
 	return (
-		<div className={compact ? "" : "bg-stone-900 border border-white/10 rounded-xl overflow-hidden"}>
+		<div className={compact ? "" : "bg-[#161616] border border-white/10 rounded-xl overflow-hidden"}>
 			<div className={`${compact ? "" : "px-6 py-5"} border-b border-white/10`}>
 				<div className="flex items-start justify-between gap-4">
 					<div className="flex items-center gap-3 min-w-0">

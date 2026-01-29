@@ -110,7 +110,7 @@ export function Command({ onnewitem, onexport, onlock }: Props) {
 	return (
 		<div className="fixed inset-0 z-[200] flex items-start justify-center pt-[15vh]">
 			<div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={() => setOpen(false)} />
-			<div className="relative bg-stone-900 border border-white/10 rounded-xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden">
+			<div className="relative bg-[#161616] border border-white/10 rounded-xl shadow-2xl w-full max-w-lg mx-4 overflow-hidden">
 				<div className="flex items-center gap-3 px-4 py-3 border-b border-white/10">
 					<svg aria-hidden="true" className="w-5 h-5 text-white/40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 						<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={navicons.search} />

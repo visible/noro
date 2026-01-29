@@ -134,7 +134,7 @@ export default function ClaimPage({
   const highlighted = secret?.type === "text" ? highlight(secret.value) : null;
 
   return (
-    <div className="min-h-screen bg-black text-white selection:bg-[#FF6B00] selection:text-black">
+    <div className="min-h-screen bg-[#0a0a0a] text-white selection:bg-[#d4b08c] selection:text-black">
       <LanguageToggle />
       <Link
         href="/"
@@ -146,7 +146,7 @@ export default function ClaimPage({
       <section className="min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 pb-32">
         <div className="w-full max-w-md">
           <div className="mb-8 sm:mb-16">
-            <h1 className="text-3xl sm:text-4xl font-bold tracking-tighter border-b-4 border-[#FF6B00] inline-block">
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tighter border-b-4 border-[#d4b08c] inline-block">
               {titles(status)}
             </h1>
             <p className="mt-4 text-white/40 text-sm invisible">placeholder</p>
@@ -177,7 +177,7 @@ export default function ClaimPage({
               <button
                 type="button"
                 onClick={handleReveal}
-                className="w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:opacity-80 transition-opacity"
+                className="w-full bg-[#d4b08c] text-black py-3 text-sm tracking-widest font-bold hover:opacity-80 transition-opacity"
               >
                 {t("confirmButton")}
               </button>
@@ -207,7 +207,7 @@ export default function ClaimPage({
               </div>
               <Link
                 href="/share"
-                className="block w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:opacity-80 transition-opacity text-center"
+                className="block w-full bg-[#d4b08c] text-black py-3 text-sm tracking-widest font-bold hover:opacity-80 transition-opacity text-center"
               >
                 {t("create")}
               </Link>
@@ -226,7 +226,7 @@ export default function ClaimPage({
                     {secret.label && (
                       <>
                         <p className="text-xs tracking-widest text-white/40 mb-2">{t("label")}</p>
-                        <p className="text-[#FF6B00] font-mono text-sm">{secret.label}</p>
+                        <p className="text-[#d4b08c] font-mono text-sm">{secret.label}</p>
                       </>
                     )}
                   </div>
@@ -270,7 +270,7 @@ export default function ClaimPage({
                   <button
                     type="button"
                     onClick={handleCopy}
-                    className="w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:opacity-80 transition-opacity mb-6"
+                    className="w-full bg-[#d4b08c] text-black py-3 text-sm tracking-widest font-bold hover:opacity-80 transition-opacity mb-6"
                   >
                     {copied ? t("copied") : t("copy")}
                   </button>
@@ -279,13 +279,13 @@ export default function ClaimPage({
                 <>
                   <div className="mb-6">
                     <p className="text-xs tracking-widest text-white/40 mb-2">{t("filename")}</p>
-                    <p className="text-[#FF6B00] font-mono text-sm">{secret.filename}</p>
+                    <p className="text-[#d4b08c] font-mono text-sm">{secret.filename}</p>
                   </div>
 
                   <button
                     type="button"
                     onClick={handleDownload}
-                    className="w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:opacity-80 transition-opacity mb-6"
+                    className="w-full bg-[#d4b08c] text-black py-3 text-sm tracking-widest font-bold hover:opacity-80 transition-opacity mb-6"
                   >
                     {t("download")}
                   </button>
@@ -293,7 +293,7 @@ export default function ClaimPage({
               ) : null}
 
               {secret && secret.remaining > 0 && (
-                <p className="text-xs text-[#FF6B00] text-center mb-6">
+                <p className="text-xs text-[#d4b08c] text-center mb-6">
                   {secret.remaining} {t("remaining")}
                 </p>
               )}

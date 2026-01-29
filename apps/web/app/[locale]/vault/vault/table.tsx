@@ -19,9 +19,9 @@ export function VaultTable({ items, onItemClick, onFavorite, onTagClick }: Props
 			<table className="w-full">
 				<thead>
 					<tr className="border-b border-white/[0.04]">
-						<th className="text-left text-xs font-medium text-zinc-500 uppercase tracking-wider px-4 py-3">name</th>
-						<th className="text-left text-xs font-medium text-zinc-500 uppercase tracking-wider px-4 py-3 hidden sm:table-cell w-24">type</th>
-						<th className="text-left text-xs font-medium text-zinc-500 uppercase tracking-wider px-4 py-3 hidden md:table-cell">tags</th>
+						<th className="text-left text-xs font-medium text-white/40 uppercase tracking-wider px-4 py-3">name</th>
+						<th className="text-left text-xs font-medium text-white/40 uppercase tracking-wider px-4 py-3 hidden sm:table-cell w-24">type</th>
+						<th className="text-left text-xs font-medium text-white/40 uppercase tracking-wider px-4 py-3 hidden md:table-cell">tags</th>
 						<th className="w-16 px-4 py-3" />
 					</tr>
 				</thead>
@@ -38,17 +38,17 @@ export function VaultTable({ items, onItemClick, onFavorite, onTagClick }: Props
 							>
 								<td className="px-4 py-3.5">
 									<div className="flex items-center gap-3">
-										<div className="flex items-center justify-center shrink-0 text-zinc-500">
+										<div className="flex items-center justify-center shrink-0 text-white/40">
 											{typeIconsSmall[item.type]}
 										</div>
 										<div className="min-w-0">
 											<p className="text-sm font-medium text-white truncate">{item.title}</p>
-											<p className="text-xs text-zinc-500 sm:hidden">{item.type}</p>
+											<p className="text-xs text-white/40 sm:hidden">{item.type}</p>
 										</div>
 									</div>
 								</td>
 								<td className="px-4 py-3.5 hidden sm:table-cell">
-									<span className="text-xs text-zinc-500 capitalize">{item.type}</span>
+									<span className="text-xs text-white/40 capitalize">{item.type}</span>
 								</td>
 								<td className="px-4 py-3.5 hidden md:table-cell">
 									{item.tags.length > 0 ? (
@@ -57,17 +57,17 @@ export function VaultTable({ items, onItemClick, onFavorite, onTagClick }: Props
 												<button
 													key={tag}
 													onClick={(e) => { e.stopPropagation(); onTagClick?.(tag); }}
-													className="px-2 py-0.5 rounded text-xs bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-300 transition-colors"
+													className="px-2 py-0.5 rounded text-xs bg-white/10 text-white/50 hover:bg-white/20 hover:text-white/60 transition-colors"
 												>
 													{tag}
 												</button>
 											))}
 											{item.tags.length > 2 && (
-												<span className="px-1.5 py-0.5 text-xs text-zinc-600">+{item.tags.length - 2}</span>
+												<span className="px-1.5 py-0.5 text-xs text-white/30">+{item.tags.length - 2}</span>
 											)}
 										</div>
 									) : (
-										<span className="text-zinc-700 text-xs">-</span>
+										<span className="text-white/20 text-xs">-</span>
 									)}
 								</td>
 								<td className="px-4 py-3.5">
@@ -77,7 +77,7 @@ export function VaultTable({ items, onItemClick, onFavorite, onTagClick }: Props
 											className={`p-1.5 rounded transition-all ${
 												item.favorite
 													? "text-amber-400 hover:text-amber-300"
-													: "text-transparent group-hover:text-zinc-600 hover:!text-zinc-400"
+													: "text-transparent group-hover:text-white/30 hover:!text-white/50"
 											}`}
 											aria-label={item.favorite ? "remove from favorites" : "add to favorites"}
 										>

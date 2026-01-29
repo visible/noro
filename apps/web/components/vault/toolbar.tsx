@@ -141,14 +141,14 @@ export function Toolbar({
 					<button
 						onClick={() => setShowNewMenu(!showNewMenu)}
 						disabled={disabled}
-						className="flex items-center gap-2 px-4 py-2 bg-[#FF6B00] text-black text-sm font-medium rounded-lg hover:bg-[#FF6B00]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+						className="flex items-center gap-2 px-4 py-2 bg-[#d4b08c] text-black text-sm font-medium rounded-lg hover:bg-[#d4b08c]/90 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
 					>
 						<Svg path={iconpaths.plus} className="w-4 h-4" />
 						<span className="hidden sm:inline">New Item</span>
 						<Svg path={iconpaths.chevron} className="w-3.5 h-3.5 ml-1" />
 					</button>
 					{showNewMenu && (
-						<div className="absolute left-0 top-full mt-2 bg-stone-800 border border-white/10 rounded-lg shadow-xl z-50 py-1 min-w-[160px]">
+						<div className="absolute left-0 top-full mt-2 bg-[#161616] border border-white/10 rounded-lg shadow-xl z-50 py-1 min-w-[160px]">
 							<button
 								onClick={() => {
 									onNew();
@@ -232,7 +232,7 @@ export function Toolbar({
 						<Svg path={iconpaths.chevron} className="w-3.5 h-3.5" />
 					</button>
 					{showSortMenu && (
-						<div className="absolute right-0 top-full mt-2 bg-stone-800 border border-white/10 rounded-lg shadow-xl z-50 py-1 min-w-[160px]">
+						<div className="absolute right-0 top-full mt-2 bg-[#161616] border border-white/10 rounded-lg shadow-xl z-50 py-1 min-w-[160px]">
 							{(Object.keys(sortlabels) as SortField[]).map((field) => (
 								<button
 									key={field}
@@ -242,7 +242,7 @@ export function Toolbar({
 									}}
 									className={`w-full flex items-center justify-between px-4 py-2.5 text-sm transition-colors ${
 										sortField === field
-											? "text-[#FF6B00] bg-[#FF6B00]/10"
+											? "text-[#d4b08c] bg-[#d4b08c]/10"
 											: "text-white/80 hover:text-white hover:bg-white/10"
 									}`}
 								>
@@ -250,7 +250,7 @@ export function Toolbar({
 									{sortField === field && (
 										<Svg
 											path={sortOrder === "asc" ? iconpaths.sortasc : iconpaths.sortdesc}
-											className="w-3.5 h-3.5 text-[#FF6B00]"
+											className="w-3.5 h-3.5 text-[#d4b08c]"
 										/>
 									)}
 								</button>

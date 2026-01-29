@@ -106,7 +106,7 @@ export function FolderTree(props: Props) {
 		setContext({ x: e.clientX, y: e.clientY, folderId });
 	}
 
-	const activeStyle = "bg-[#FF6B00]/20 text-[#FF6B00]";
+	const activeStyle = "bg-[#d4b08c]/20 text-[#d4b08c]";
 	const inactiveStyle = "text-white/60 hover:text-white hover:bg-white/5";
 
 	return (
@@ -172,10 +172,10 @@ interface SpecialButtonProps {
 function SpecialButton({ icon, label, count, active, onClick, hideZero, dragOver, onDragOver, onDrop, onDragLeave }: SpecialButtonProps) {
 	const show = !hideZero || count > 0;
 	return (
-		<button type="button" className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${active ? "bg-[#FF6B00]/20 text-[#FF6B00]" : "text-white/60 hover:text-white hover:bg-white/5"} ${dragOver ? "ring-2 ring-[#FF6B00]" : ""}`} onClick={onClick} onDragOver={onDragOver} onDrop={onDrop} onDragLeave={onDragLeave}>
-			<Icon name={icon} className={`w-4 h-4 ${active ? "text-[#FF6B00]" : "text-white/40"}`} />
+		<button type="button" className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${active ? "bg-[#d4b08c]/20 text-[#d4b08c]" : "text-white/60 hover:text-white hover:bg-white/5"} ${dragOver ? "ring-2 ring-[#d4b08c]" : ""}`} onClick={onClick} onDragOver={onDragOver} onDrop={onDrop} onDragLeave={onDragLeave}>
+			<Icon name={icon} className={`w-4 h-4 ${active ? "text-[#d4b08c]" : "text-white/40"}`} />
 			<span className="flex-1 text-sm text-left font-medium">{label}</span>
-			{show && <span className={`text-xs ${active ? "text-[#FF6B00]/80" : "text-white/40"}`}>{count}</span>}
+			{show && <span className={`text-xs ${active ? "text-[#d4b08c]/80" : "text-white/40"}`}>{count}</span>}
 		</button>
 	);
 }

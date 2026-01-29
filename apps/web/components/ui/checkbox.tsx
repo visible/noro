@@ -33,8 +33,8 @@ export const Checkbox = forwardRef<HTMLInputElement, CheckboxProps>(
               className={`
                 w-5 h-5 rounded border bg-white/5
                 transition-all duration-150
-                peer-checked:bg-[#FF6B00] peer-checked:border-[#FF6B00]
-                peer-focus-visible:ring-2 peer-focus-visible:ring-[#FF6B00]/20
+                peer-checked:bg-[#d4b08c] peer-checked:border-[#d4b08c]
+                peer-focus-visible:ring-2 peer-focus-visible:ring-[#d4b08c]/20
                 ${error ? "border-red-500" : "border-white/20"}
                 ${className}
               `}
