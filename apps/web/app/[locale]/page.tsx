@@ -4,8 +4,10 @@ import { Link } from "@/i18n/navigation";
 import { Logo } from "@/components/logo";
 import { HeroVisual } from "@/components/hero";
 import { TerminalVisual } from "@/components/terminal";
+import { useSession } from "@/lib/client";
 
 export default function Home() {
+  const { data: session, isPending } = useSession();
   return (
     <div className="min-h-dvh bg-[#0a0a0a] text-[#ededed] antialiased selection:bg-[#d4b08c] selection:text-black font-sans relative overflow-hidden">
       <div className="fixed inset-0 z-0 pointer-events-none">
@@ -24,7 +26,9 @@ export default function Home() {
           <div className="hidden gap-8 items-center px-6 py-2 rounded-full border shadow-lg backdrop-blur-md md:flex bg-white/3 border-white/5 shadow-black/20">
             <Link href="/docs" className="text-sm font-medium text-white/60 hover:text-[#d4b08c] transition-colors">Documentation</Link>
             <a href="https://github.com/visible/noro" target="_blank" rel="noopener noreferrer" className="text-sm font-medium text-white/60 hover:text-[#d4b08c] transition-colors">GitHub</a>
-            <Link href="/login" className="text-sm font-medium text-white/60 hover:text-[#d4b08c] transition-colors">Sign in</Link>
+            <Link href={session ? "/vault" : "/login"} className="text-sm font-medium text-white/60 hover:text-[#d4b08c] transition-colors min-w-[72px] text-center">
+              {isPending ? "" : session ? "Open Vault" : "Sign in"}
+            </Link>
           </div>
           <div className="md:hidden">
              <div className="w-8 h-8 rounded-full bg-white/10"></div>

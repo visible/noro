@@ -1,19 +1,26 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Link } from "@/i18n/navigation";
 import { Logo } from "@/components/logo";
 import { GoogleButton } from "@/components/google";
 import { AuthPanel } from "@/components/authpanel";
-import { signIn } from "@/lib/client";
+import { signIn, useSession } from "@/lib/client";
 
 export default function Login() {
 	const router = useRouter();
+	const { data: session, isPending } = useSession();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState("");
 	const [loading, setLoading] = useState(false);
+
+	useEffect(() => {
+		if (!isPending && session) {
+			router.replace("/vault");
+		}
+	}, [session, isPending, router]);
 
 	async function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();

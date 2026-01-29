@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { Link } from "@/i18n/navigation";
 import { Logo } from "@/components/logo";
 import { GoogleButton } from "@/components/google";
 import { AuthPanel } from "@/components/authpanel";
 import { SecretKey } from "@/components/secretkey";
-import { signUp } from "@/lib/client";
+import { signUp, useSession } from "@/lib/client";
 import { generatesecretkey, deriveauk, wrapvaultkey } from "@/lib/twoskd";
 
 function arraytohex(arr: Uint8Array): string {
@@ -18,6 +18,7 @@ function arraytohex(arr: Uint8Array): string {
 
 export default function Register() {
 	const router = useRouter();
+	const { data: session, isPending } = useSession();
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
 	const [name, setName] = useState("");
@@ -25,6 +26,12 @@ export default function Register() {
 	const [loading, setLoading] = useState(false);
 	const [step, setStep] = useState<"form" | "secretkey">("form");
 	const [secretkey, setSecretkey] = useState("");
+
+	useEffect(() => {
+		if (!isPending && session) {
+			router.replace("/vault");
+		}
+	}, [session, isPending, router]);
 
 	async function handleSubmit(e: React.FormEvent) {
 		e.preventDefault();
