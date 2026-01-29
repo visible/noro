@@ -13,7 +13,7 @@ export function Row({ label, description, children }: RowProps) {
 		<div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 sm:gap-4 py-4 border-b border-white/5 last:border-0">
 			<div className="flex-1">
 				<p className="font-medium text-white">{label}</p>
-				{description && <p className="text-sm text-white/50 mt-0.5">{description}</p>}
+				{description && <p className="text-sm text-white/40 mt-0.5">{description}</p>}
 			</div>
 			<div className="shrink-0">{children}</div>
 		</div>
@@ -38,7 +38,7 @@ export function Toggle({ label, description, checked, onChange, disabled }: Togg
 				disabled={disabled}
 				onClick={() => onChange(!checked)}
 				className={`relative w-12 h-6 rounded-full transition-colors ${
-					checked ? "bg-[#FF6B00]" : "bg-white/10"
+					checked ? "bg-[#d4b08c]" : "bg-white/10"
 				} ${disabled ? "opacity-50 cursor-not-allowed" : "cursor-pointer"}`}
 			>
 				<span
@@ -80,7 +80,7 @@ export function Select({ label, description, value, options, onChange }: SelectP
 				<button
 					type="button"
 					onClick={() => setOpen(!open)}
-					className="w-full sm:w-40 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm text-left flex items-center justify-between gap-2 hover:bg-white/10 transition-colors"
+					className="w-full sm:w-40 px-3 py-2 bg-[#161616] border border-white/10 rounded-lg text-white text-sm text-left flex items-center justify-between gap-2 hover:border-white/20 transition-colors"
 				>
 					<span>{selected?.label}</span>
 					<svg aria-hidden="true" className={`w-4 h-4 text-white/40 transition-transform ${open ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -88,14 +88,14 @@ export function Select({ label, description, value, options, onChange }: SelectP
 					</svg>
 				</button>
 				{open && (
-					<div className="absolute right-0 top-full mt-1 w-full sm:w-40 bg-[#1a1a1a] border border-white/10 rounded-lg shadow-xl z-50 py-1 max-h-48 overflow-y-auto scrollbar-hidden">
+					<div className="absolute right-0 top-full mt-1 w-full sm:w-40 bg-[#161616] border border-white/10 rounded-lg shadow-xl z-50 py-1 max-h-48 overflow-y-auto scrollbar-hidden">
 						{options.map((opt) => (
 							<button
 								key={opt.value}
 								type="button"
 								onClick={() => { onChange(opt.value); setOpen(false); }}
 								className={`w-full px-3 py-2 text-left text-sm transition-colors ${
-									opt.value === value ? "bg-[#FF6B00] text-white" : "text-white/80 hover:bg-white/5"
+									opt.value === value ? "bg-[#d4b08c] text-[#0a0a0a]" : "text-white/80 hover:bg-white/5"
 								}`}
 							>
 								{opt.label}
@@ -118,7 +118,7 @@ interface ButtonRowProps {
 
 export function ButtonRow({ label, description, onClick, variant = "default", loading }: ButtonRowProps) {
 	const styles = {
-		default: "bg-white/5 border border-white/10 hover:bg-white/10 text-white",
+		default: "bg-[#161616] border border-white/5 hover:border-white/10 text-white",
 		danger: "bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 text-red-400",
 	};
 
@@ -126,11 +126,11 @@ export function ButtonRow({ label, description, onClick, variant = "default", lo
 		<button
 			onClick={onClick}
 			disabled={loading}
-			className={`w-full px-4 py-3 rounded-lg text-left transition-colors ${styles[variant]} disabled:opacity-50`}
+			className={`w-full px-4 py-3 rounded-xl text-left transition-colors ${styles[variant]} disabled:opacity-50`}
 		>
 			<p className="font-medium">{loading ? "loading..." : label}</p>
 			{description && (
-				<p className={`text-sm mt-0.5 ${variant === "danger" ? "text-red-400/70" : "text-white/50"}`}>
+				<p className={`text-sm mt-0.5 ${variant === "danger" ? "text-red-400/70" : "text-white/40"}`}>
 					{description}
 				</p>
 			)}
@@ -147,12 +147,12 @@ interface SectionProps {
 
 export function Section({ title, description, variant = "default", children }: SectionProps) {
 	return (
-		<section className="mb-8">
+		<section>
 			<div className="mb-4">
-				<h2 className={`text-base font-semibold ${variant === "danger" ? "text-red-400" : "text-white"}`}>
+				<h2 className={`text-sm font-medium uppercase tracking-wider ${variant === "danger" ? "text-red-400" : "text-white/40"}`}>
 					{title}
 				</h2>
-				{description && <p className="text-sm text-white/50 mt-1">{description}</p>}
+				{description && <p className="text-sm text-white/30 mt-1">{description}</p>}
 			</div>
 			{children}
 		</section>
@@ -166,8 +166,8 @@ interface CardProps {
 
 export function Card({ children, variant = "default" }: CardProps) {
 	const styles = {
-		default: "bg-white/5 border border-white/10",
-		danger: "bg-red-500/10 border border-red-500/20",
+		default: "bg-[#161616] border border-white/5",
+		danger: "bg-red-500/5 border border-red-500/20",
 	};
 	return <div className={`rounded-xl px-5 ${styles[variant]}`}>{children}</div>;
 }
@@ -191,7 +191,7 @@ export function Input({ label, description, value, onChange, type = "text", plac
 				onChange={(e) => onChange(e.target.value)}
 				placeholder={placeholder}
 				disabled={disabled}
-				className="w-full sm:w-48 px-3 py-2 bg-white/5 border border-white/10 rounded-lg text-white text-sm placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-[#FF6B00]/20 focus:border-[#FF6B00] transition-colors disabled:opacity-50"
+				className="w-full sm:w-48 px-3 py-2 bg-[#161616] border border-white/10 rounded-lg text-white text-sm placeholder:text-white/30 focus:outline-none focus:ring-2 focus:ring-[#d4b08c]/20 focus:border-[#d4b08c] transition-colors disabled:opacity-50"
 			/>
 		</Row>
 	);
@@ -209,9 +209,9 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
 
 	return (
 		<div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
-			<div className="absolute inset-0 bg-black/70" onClick={onClose} />
-			<div className="relative bg-stone-950 border border-white/10 rounded-t-2xl sm:rounded-2xl p-5 sm:p-6 w-full sm:max-w-md sm:mx-4 max-h-[85vh] overflow-y-auto shadow-xl">
-				<h3 className="text-lg font-semibold text-white mb-4">{title}</h3>
+			<div className="absolute inset-0 bg-black/80 backdrop-blur-sm" onClick={onClose} />
+			<div className="relative bg-[#161616] border border-white/10 rounded-t-2xl sm:rounded-2xl p-6 w-full sm:max-w-md sm:mx-4 max-h-[85vh] overflow-y-auto shadow-xl">
+				<h3 className="text-lg font-serif text-white mb-4">{title}</h3>
 				{children}
 			</div>
 		</div>

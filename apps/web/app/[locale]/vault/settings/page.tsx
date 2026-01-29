@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useSession } from "@/lib/client";
+import { Page, Header, Loading } from "@/components/dashboard";
 import { Section, Card, Row, Toggle, Select, ButtonRow } from "@/components/settings";
 import { DeleteModal } from "./delete";
 import { PasswordModal } from "./password";
@@ -54,25 +55,18 @@ export default function Settings() {
 
 	if (loading) {
 		return (
-			<div className="h-full overflow-y-auto scrollbar-hidden px-6 py-8">
-				<div className="max-w-2xl">
-					<div className="animate-pulse">
-						<div className="h-8 bg-white/10 rounded w-32 mb-2" />
-						<div className="h-4 bg-white/10 rounded w-64" />
-					</div>
-				</div>
-			</div>
+			<Page maxWidth="md">
+				<Header title="settings" description="manage your account and preferences" />
+				<Loading />
+			</Page>
 		);
 	}
 
 	return (
-		<div className="h-full overflow-y-auto scrollbar-hidden px-6 py-8">
-			<div className="max-w-2xl space-y-8">
-				<header>
-					<h1 className="text-2xl font-semibold text-white">settings</h1>
-					<p className="text-white/50 mt-1">manage your account and preferences</p>
-				</header>
+		<Page maxWidth="md">
+			<Header title="settings" description="manage your account and preferences" />
 
+			<div className="space-y-10">
 				<Section title="profile" description="your account information">
 					<Card>
 						<Row label="email" description="your login email">
@@ -170,10 +164,10 @@ export default function Settings() {
 						</Row>
 					</Card>
 				</Section>
-
-				<DeleteModal open={deleteModal} onClose={() => setDeleteModal(false)} />
-				<PasswordModal open={passwordModal} onClose={() => setPasswordModal(false)} />
 			</div>
-		</div>
+
+			<DeleteModal open={deleteModal} onClose={() => setDeleteModal(false)} />
+			<PasswordModal open={passwordModal} onClose={() => setPasswordModal(false)} />
+		</Page>
 	);
 }

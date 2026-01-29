@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Page, Header, Surface } from "@/components/dashboard";
 
 type Format = "json" | "csv" | "onepassword" | "bitwarden";
 
@@ -86,92 +87,87 @@ export default function Export() {
 	}
 
 	return (
-		<div className="h-full overflow-y-auto scrollbar-hidden px-8 py-10">
-			<div className="max-w-xl">
-				<div className="mb-10">
-					<h1 className="text-2xl font-semibold text-white tracking-tight">export vault</h1>
-					<p className="text-zinc-500 mt-2 text-sm">download a backup of your encrypted data</p>
-				</div>
+		<Page maxWidth="sm">
+			<Header title="export vault" description="download a backup of your encrypted data" />
 
-				<div className="mb-8">
-					<label className="block text-xs font-medium text-zinc-400 uppercase tracking-wider mb-4">
-						select format
-					</label>
-					<div className="grid grid-cols-2 gap-3">
-						{formats.map((f) => (
-							<label
-								key={f.id}
-								className={`relative flex flex-col p-4 rounded-xl cursor-pointer transition-all duration-200 ${
-									format === f.id
-										? "bg-orange-500/10 border-2 border-orange-500 shadow-[0_0_20px_-5px_rgba(249,115,22,0.3)]"
-										: "bg-zinc-900 border-2 border-zinc-800 hover:border-zinc-700 hover:bg-zinc-900/80"
-								}`}
-							>
-								<input
-									type="radio"
-									name="format"
-									value={f.id}
-									checked={format === f.id}
-									onChange={() => setFormat(f.id)}
-									className="sr-only"
-								/>
-								<div className={`mb-3 ${format === f.id ? "text-orange-500" : "text-zinc-500"}`}>
-									{f.icon}
+			<div className="mb-8">
+				<label className="block text-sm font-medium text-white/40 uppercase tracking-wider mb-4">
+					select format
+				</label>
+				<div className="grid grid-cols-2 gap-3">
+					{formats.map((f) => (
+						<label
+							key={f.id}
+							className={`relative flex flex-col p-4 rounded-xl cursor-pointer transition-all duration-200 ${
+								format === f.id
+									? "bg-[#d4b08c]/10 border-2 border-[#d4b08c] shadow-[0_0_20px_-5px_rgba(212,176,140,0.3)]"
+									: "bg-[#161616] border-2 border-white/5 hover:border-white/10"
+							}`}
+						>
+							<input
+								type="radio"
+								name="format"
+								value={f.id}
+								checked={format === f.id}
+								onChange={() => setFormat(f.id)}
+								className="sr-only"
+							/>
+							<div className={`mb-3 ${format === f.id ? "text-[#d4b08c]" : "text-white/40"}`}>
+								{f.icon}
+							</div>
+							<span className={`font-medium text-sm ${format === f.id ? "text-white" : "text-white/70"}`}>
+								{f.name}
+							</span>
+							<span className="text-xs text-white/40 mt-0.5">{f.description}</span>
+							{format === f.id && (
+								<div className="absolute top-3 right-3">
+									<svg className="w-4 h-4 text-[#d4b08c]" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+										<path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
+									</svg>
 								</div>
-								<span className={`font-medium text-sm ${format === f.id ? "text-white" : "text-zinc-300"}`}>
-									{f.name}
-								</span>
-								<span className="text-xs text-zinc-500 mt-0.5">{f.description}</span>
-								{format === f.id && (
-									<div className="absolute top-3 right-3">
-										<svg className="w-4 h-4 text-orange-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-											<path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z" clipRule="evenodd" />
-										</svg>
-									</div>
-								)}
-							</label>
-						))}
-					</div>
+							)}
+						</label>
+					))}
 				</div>
-
-				<div className="mb-8 p-4 bg-amber-500/10 border border-amber-500/30 rounded-xl">
-					<div className="flex gap-3">
-						<div className="shrink-0 mt-0.5">
-							<svg className="w-5 h-5 text-amber-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
-								<path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 6a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 6zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
-							</svg>
-						</div>
-						<div>
-							<p className="text-amber-400 font-medium text-sm">exported data is unencrypted</p>
-							<p className="text-amber-400/70 text-sm mt-1 leading-relaxed">
-								your passwords will be visible in plain text. store the exported file securely and delete it when done.
-							</p>
-						</div>
-					</div>
-				</div>
-
-				<button
-					onClick={handleExport}
-					disabled={exporting}
-					className="w-full py-3.5 bg-orange-500 text-white font-semibold rounded-xl hover:bg-orange-600 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-orange-500/20 hover:shadow-orange-500/30"
-				>
-					{exporting ? (
-						<span className="flex items-center justify-center gap-2">
-							<svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-								<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-								<path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-							</svg>
-							exporting...
-						</span>
-					) : (
-						"export vault"
-					)}
-				</button>
-
-				<p className="text-center text-xs text-zinc-600 mt-4">
-					exports include all vault items and metadata
-				</p>
 			</div>
-		</div>
+
+			<Surface className="mb-8 p-4">
+				<div className="flex gap-3">
+					<div className="shrink-0 mt-0.5">
+						<svg className="w-5 h-5 text-amber-500" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+							<path fillRule="evenodd" d="M8.485 2.495c.673-1.167 2.357-1.167 3.03 0l6.28 10.875c.673 1.167-.17 2.625-1.516 2.625H3.72c-1.347 0-2.189-1.458-1.515-2.625L8.485 2.495zM10 6a.75.75 0 01.75.75v3.5a.75.75 0 01-1.5 0v-3.5A.75.75 0 0110 6zm0 9a1 1 0 100-2 1 1 0 000 2z" clipRule="evenodd" />
+						</svg>
+					</div>
+					<div>
+						<p className="text-amber-400 font-medium text-sm">exported data is unencrypted</p>
+						<p className="text-amber-400/70 text-sm mt-1 leading-relaxed">
+							your passwords will be visible in plain text. store the exported file securely and delete it when done.
+						</p>
+					</div>
+				</div>
+			</Surface>
+
+			<button
+				onClick={handleExport}
+				disabled={exporting}
+				className="w-full py-3.5 bg-[#d4b08c] text-[#0a0a0a] font-semibold rounded-xl hover:bg-[#d4b08c]/90 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-[#d4b08c]/20"
+			>
+				{exporting ? (
+					<span className="flex items-center justify-center gap-2">
+						<svg className="w-4 h-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+							<circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+							<path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
+						</svg>
+						exporting...
+					</span>
+				) : (
+					"export vault"
+				)}
+			</button>
+
+			<p className="text-center text-xs text-white/30 mt-4">
+				exports include all vault items and metadata
+			</p>
+		</Page>
 	);
 }

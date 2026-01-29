@@ -13,7 +13,7 @@ import { ItemModal } from "./modal";
 import { VaultGrid } from "./grid";
 import { VaultSearch } from "./vaultsearch";
 import { VaultEmpty } from "./empty";
-import { VaultLoading } from "./loading";
+import { VaultLoading } from "./skeleton";
 
 const itemtypes: ItemType[] = ["login", "note", "card", "identity", "ssh", "api", "otp", "passkey"];
 

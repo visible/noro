@@ -2,10 +2,10 @@
 
 import { useState, useCallback, useMemo } from "react";
 import { strength, type Mode } from "./strength";
-import { Icons } from "./icons";
 import { Output } from "./output";
 import { Settings } from "./settings";
 import { History } from "./history";
+import { Page, Header } from "@/components/dashboard";
 
 export default function Generator() {
 	const [password, setPassword] = useState("");
@@ -67,50 +67,48 @@ export default function Generator() {
 	const strengthInfo = useMemo(() => strength(password, mode), [password, mode]);
 
 	return (
-		<div className="h-full overflow-y-auto scrollbar-hidden">
-			<div className="max-w-2xl px-6 py-12">
-				<header className="mb-10">
-					<h1 className="text-2xl font-serif text-[#ededed] tracking-tight">Password Generator</h1>
-					<p className="mt-2 text-white/50">Generate secure passwords, passphrases, and PINs.</p>
-				</header>
+		<Page maxWidth="md">
+			<Header
+				title="password generator"
+				description="generate secure passwords, passphrases, and pins"
+			/>
 
-				<div className="space-y-6">
-					<Output
-						password={password}
-						copied={copied}
-						strengthInfo={strengthInfo}
-						onCopy={() => copy(password)}
-						onRegenerate={generate}
-					/>
+			<div className="space-y-6">
+				<Output
+					password={password}
+					copied={copied}
+					strengthInfo={strengthInfo}
+					onCopy={() => copy(password)}
+					onRegenerate={generate}
+				/>
 
-					<Settings
-						mode={mode}
-						length={length}
-						uppercase={uppercase}
-						lowercase={lowercase}
-						numbers={numbers}
-						symbols={symbols}
-						onModeChange={(m) => {
-							setMode(m);
-							setLength(m === "diceware" ? 5 : m === "pin" ? 6 : 24);
-						}}
-						onLengthChange={setLength}
-						onUppercaseChange={setUppercase}
-						onLowercaseChange={setLowercase}
-						onNumbersChange={setNumbers}
-						onSymbolsChange={setSymbols}
-					/>
+				<Settings
+					mode={mode}
+					length={length}
+					uppercase={uppercase}
+					lowercase={lowercase}
+					numbers={numbers}
+					symbols={symbols}
+					onModeChange={(m) => {
+						setMode(m);
+						setLength(m === "diceware" ? 5 : m === "pin" ? 6 : 24);
+					}}
+					onLengthChange={setLength}
+					onUppercaseChange={setUppercase}
+					onLowercaseChange={setLowercase}
+					onNumbersChange={setNumbers}
+					onSymbolsChange={setSymbols}
+				/>
 
-					<button
-						onClick={generate}
-						className="w-full h-14 bg-[#d4b08c] text-[#0a0a0a] font-medium rounded-full hover:bg-[#d4b08c]/90 transition-all duration-500 shadow-[0_0_30px_rgba(212,176,140,0.2)] hover:shadow-[0_0_40px_rgba(212,176,140,0.3)]"
-					>
-						Generate Password
-					</button>
+				<button
+					onClick={generate}
+					className="w-full h-14 bg-[#d4b08c] text-[#0a0a0a] font-medium rounded-xl hover:bg-[#d4b08c]/90 transition-all duration-300 shadow-lg shadow-[#d4b08c]/20"
+				>
+					generate password
+				</button>
 
-					<History history={history} onCopy={copy} />
-				</div>
+				<History history={history} onCopy={copy} />
 			</div>
-		</div>
+		</Page>
 	);
 }

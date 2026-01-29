@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { analyze, type HealthReport } from "@/lib/health";
 import * as store from "../vault/store";
+import { Page, Header, Button, Loading } from "@/components/dashboard";
 import { Score } from "./score";
 import { Stats } from "./stats";
 import { Issues } from "./issues";
@@ -32,57 +33,39 @@ export default function Health() {
 
 	if (loading) {
 		return (
-			<div className="h-full overflow-y-auto scrollbar-hidden px-8 py-10">
-				<div className="max-w-4xl">
-					<header className="mb-12">
-						<h1 className="text-2xl font-serif text-white">security health</h1>
-						<p className="text-white/40 mt-1">analyzing your vault...</p>
-					</header>
-					<div className="flex items-center justify-center py-24">
-						<div className="w-10 h-10 border-2 border-white/10 border-t-[#d4b08c] rounded-full animate-spin" />
-					</div>
-				</div>
-			</div>
+			<Page>
+				<Header title="security health" description="analyzing your vault..." />
+				<Loading text="analyzing passwords..." />
+			</Page>
 		);
 	}
 
 	if (!report) {
 		return (
-			<div className="h-full overflow-y-auto scrollbar-hidden px-8 py-10">
-				<div className="max-w-4xl">
-					<header className="mb-12">
-						<h1 className="text-2xl font-serif text-white">security health</h1>
-						<p className="text-white/40 mt-1">check the security of your passwords</p>
-					</header>
-					<div className="bg-[#161616]/80 backdrop-blur-sm border border-white/5 rounded-xl p-10">
-						<p className="text-white/50">failed to analyze vault</p>
-					</div>
+			<Page>
+				<Header title="security health" description="check the security of your passwords" />
+				<div className="bg-[#161616]/80 backdrop-blur-sm border border-white/5 rounded-xl p-10">
+					<p className="text-white/50">failed to analyze vault</p>
 				</div>
-			</div>
+			</Page>
 		);
 	}
 
 	return (
-		<div className="h-full overflow-y-auto scrollbar-hidden px-8 py-10">
-			<div className="max-w-4xl">
-				<header className="flex items-center justify-between mb-12">
-					<div>
-						<h1 className="text-2xl font-serif text-white">security health</h1>
-						<p className="text-white/40 mt-1">check the security of your passwords</p>
-					</div>
-					<button
-						onClick={recheck}
-						disabled={checking}
-						className="px-4 py-2 text-sm font-medium text-white bg-[#161616]/80 backdrop-blur-sm border border-white/5 rounded-lg hover:border-white/10 hover:bg-[#161616] transition-all disabled:opacity-50"
-					>
+		<Page>
+			<Header
+				title="security health"
+				description="check the security of your passwords"
+				action={
+					<Button variant="secondary" onClick={recheck} disabled={checking}>
 						{checking ? "checking..." : "recheck"}
-					</button>
-				</header>
+					</Button>
+				}
+			/>
 
-				<Score value={report.score} total={report.totalPasswords} />
-				<Stats report={report} />
-				<Issues issues={report.issues} />
-			</div>
-		</div>
+			<Score value={report.score} total={report.totalPasswords} />
+			<Stats report={report} />
+			<Issues issues={report.issues} />
+		</Page>
 	);
 }
