@@ -1,6 +1,7 @@
 mod auth;
 mod biometric;
 mod commands;
+mod crypto;
 mod plugins;
 mod storage;
 mod sync;
@@ -9,7 +10,6 @@ mod twoskd;
 
 use rand::Rng;
 use serde::{Deserialize, Serialize};
-use tauri::Manager;
 
 #[derive(Debug, Deserialize)]
 pub struct GeneratorOptions {
@@ -131,6 +131,13 @@ pub fn run() {
             tray::tray_show_notification,
             tray::tray_set_autostart,
             tray::tray_get_autostart,
+            crypto::crypto_is_locked,
+            crypto::crypto_is_setup,
+            crypto::crypto_setup,
+            crypto::crypto_unlock,
+            crypto::crypto_lock,
+            crypto::crypto_get_secret_key,
+            crypto::crypto_clear,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

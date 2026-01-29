@@ -11,7 +11,6 @@ import {
 import { router } from "expo-router";
 import * as Haptics from "expo-haptics";
 import * as LocalAuthentication from "expo-local-authentication";
-import * as SecureStore from "expo-secure-store";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -26,6 +25,9 @@ import { Logo } from "../components/logo";
 import { Input } from "../components/input";
 import { Button } from "../components/button";
 import { FaceIdIcon, FingerprintIcon } from "../components/icons";
+import { api } from "../../lib/api";
+import { settoken, gettoken } from "../../lib/storage";
+import { useauth } from "../../stores/auth";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -52,10 +54,9 @@ export default function Login() {
   async function checkBiometrics() {
     const compatible = await LocalAuthentication.hasHardwareAsync();
     const enrolled = await LocalAuthentication.isEnrolledAsync();
-    const storedSession = await SecureStore.getItemAsync("session");
-    const biometricEnabled = await SecureStore.getItemAsync("biometric");
+    const token = await gettoken();
 
-    if (compatible && enrolled && storedSession && biometricEnabled === "true") {
+    if (compatible && enrolled && token) {
       setBiometricAvailable(true);
       const types = await LocalAuthentication.supportedAuthenticationTypesAsync();
       if (types.includes(LocalAuthentication.AuthenticationType.FACIAL_RECOGNITION)) {
@@ -84,10 +85,11 @@ export default function Login() {
 
     setLoading(true);
     try {
-      await new Promise((r) => setTimeout(r, 1500));
-      await SecureStore.setItemAsync("session", "demo-session-token");
+      const response = await api.auth.login(email, password);
+      await settoken(response.token);
+      useauth.getState().login(response.user, response.token);
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      router.replace("/(auth)/unlock");
+      router.replace("/(app)");
     } catch (e) {
       setError("invalid email or password");
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error);

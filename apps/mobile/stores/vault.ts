@@ -83,7 +83,21 @@ type VaultState = {
 	setError: (error: string | null) => void;
 };
 
-const baseurl = "https://noro.sh/api";
+import { gettoken } from "../lib/storage";
+
+const baseurl = process.env.EXPO_PUBLIC_API_URL || "https://noro.sh/api";
+
+async function authfetch(path: string, options: RequestInit = {}) {
+	const token = await gettoken();
+	const headers: Record<string, string> = {
+		"content-type": "application/json",
+		...(options.headers as Record<string, string>),
+	};
+	if (token) {
+		headers["authorization"] = `Bearer ${token}`;
+	}
+	return fetch(`${baseurl}${path}`, { ...options, headers });
+}
 
 export const usevault = create<VaultState>()(
 	persist(
@@ -107,7 +121,7 @@ export const usevault = create<VaultState>()(
 			fetch: async () => {
 				set({ loading: true, error: null });
 				try {
-					const res = await fetch(`${baseurl}/v1/vault/items`);
+					const res = await authfetch("/v1/vault/items");
 					if (!res.ok) throw new Error("failed to fetch");
 					const data = await res.json();
 					set({ items: data.items || [], loading: false });
@@ -122,9 +136,8 @@ export const usevault = create<VaultState>()(
 			create: async (input) => {
 				set({ loading: true, error: null });
 				try {
-					const res = await fetch(`${baseurl}/v1/vault/items`, {
+					const res = await authfetch("/v1/vault/items", {
 						method: "POST",
-						headers: { "content-type": "application/json" },
 						body: JSON.stringify(input),
 					});
 					if (!res.ok) throw new Error("failed to create");
@@ -144,9 +157,8 @@ export const usevault = create<VaultState>()(
 			update: async (id, input) => {
 				set({ loading: true, error: null });
 				try {
-					const res = await fetch(`${baseurl}/v1/vault/items/${id}`, {
+					const res = await authfetch(`/v1/vault/items/${id}`, {
 						method: "PATCH",
-						headers: { "content-type": "application/json" },
 						body: JSON.stringify(input),
 					});
 					if (!res.ok) throw new Error("failed to update");
@@ -168,7 +180,7 @@ export const usevault = create<VaultState>()(
 			delete: async (id) => {
 				set({ loading: true, error: null });
 				try {
-					const res = await fetch(`${baseurl}/v1/vault/items/${id}`, {
+					const res = await authfetch(`/v1/vault/items/${id}`, {
 						method: "DELETE",
 					});
 					if (!res.ok) throw new Error("failed to delete");

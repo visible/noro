@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo, useEffect } from "react";
 import {
   View,
   Text,
@@ -7,8 +7,10 @@ import {
   TextInput,
   Pressable,
   RefreshControl,
+  ActivityIndicator,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
 import Animated, {
   FadeIn,
   Layout,
@@ -18,6 +20,7 @@ import Animated, {
 } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 import { Svg, Path, Rect, Circle } from "react-native-svg";
+import { usevault, type VaultItem, type ItemType } from "../../stores";
 
 const colors = {
   bg: "#0a0a0a",
@@ -30,30 +33,7 @@ const colors = {
   subtle: "#999999",
 };
 
-type ItemType = "login" | "card" | "note" | "identity" | "ssh" | "api";
 type FilterType = "all" | ItemType;
-
-interface VaultItem {
-  id: string;
-  type: ItemType;
-  title: string;
-  subtitle: string;
-  favorite: boolean;
-  icon?: string;
-}
-
-const mockItems: VaultItem[] = [
-  { id: "1", type: "login", title: "GitHub", subtitle: "josh@noro.sh", favorite: true },
-  { id: "2", type: "login", title: "Vercel", subtitle: "josh@noro.sh", favorite: true },
-  { id: "3", type: "card", title: "Chase Sapphire", subtitle: "****4242", favorite: false },
-  { id: "4", type: "login", title: "AWS Console", subtitle: "root@noro.sh", favorite: false },
-  { id: "5", type: "note", title: "Recovery Codes", subtitle: "10 items", favorite: true },
-  { id: "6", type: "ssh", title: "Production Server", subtitle: "ed25519", favorite: false },
-  { id: "7", type: "api", title: "OpenAI API", subtitle: "sk-***abc", favorite: false },
-  { id: "8", type: "identity", title: "Personal Info", subtitle: "Josh", favorite: false },
-  { id: "9", type: "login", title: "Stripe", subtitle: "josh@noro.sh", favorite: false },
-  { id: "10", type: "login", title: "Cloudflare", subtitle: "josh@noro.sh", favorite: false },
-];
 
 const filters: { type: FilterType; label: string }[] = [
   { type: "all", label: "All" },
@@ -149,7 +129,12 @@ function ItemIcon({ type }: { type: ItemType }) {
         </Svg>
       );
     default:
-      return null;
+      return (
+        <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
+          <Rect x={3} y={11} width={18} height={10} rx={2} stroke={iconColor} strokeWidth={1.5} />
+          <Path d="M7 11V7a5 5 0 0110 0v4" stroke={iconColor} strokeWidth={1.5} strokeLinecap="round" />
+        </Svg>
+      );
   }
 }
 
@@ -198,6 +183,14 @@ function VaultListItem({
     scale.value = withSpring(1, { damping: 15 });
   };
 
+  const subtitle = useMemo(() => {
+    const data = item.data as Record<string, unknown>;
+    if (item.type === "login") return (data.username || data.email || "") as string;
+    if (item.type === "card") return `****${String(data.number || "").slice(-4)}`;
+    if (item.type === "note") return `${item.tags.length} tags`;
+    return item.type;
+  }, [item]);
+
   return (
     <Animated.View style={animatedStyle} entering={FadeIn.duration(200)} layout={Layout.springify()}>
       <Pressable
@@ -217,7 +210,7 @@ function VaultListItem({
             {item.title}
           </Text>
           <Text style={styles.listItemSubtitle} numberOfLines={1}>
-            {item.subtitle}
+            {subtitle}
           </Text>
         </View>
         <Pressable
@@ -263,26 +256,30 @@ function SectionHeader({
 
 export default function VaultScreen() {
   const insets = useSafeAreaInsets();
+  const router = useRouter();
+  const { items, loading, error, fetch, update } = usevault();
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState<FilterType>("all");
   const [refreshing, setRefreshing] = useState(false);
   const [favoritesCollapsed, setFavoritesCollapsed] = useState(false);
-  const [items, setItems] = useState(mockItems);
 
-  const onRefresh = useCallback(() => {
+  useEffect(() => {
+    fetch();
+  }, []);
+
+  const onRefresh = useCallback(async () => {
     setRefreshing(true);
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-    setTimeout(() => setRefreshing(false), 1000);
-  }, []);
+    await fetch();
+    setRefreshing(false);
+  }, [fetch]);
 
-  const toggleFavorite = useCallback((id: string) => {
-    setItems((prev) =>
-      prev.map((item) => (item.id === id ? { ...item, favorite: !item.favorite } : item))
-    );
-  }, []);
+  const toggleFavorite = useCallback(async (id: string, currentFavorite: boolean) => {
+    await update(id, { favorite: !currentFavorite });
+  }, [update]);
 
   const filteredItems = useMemo(() => {
-    let result = items;
+    let result = items.filter((item) => !item.deletedAt);
     if (filter !== "all") {
       result = result.filter((item) => item.type === filter);
     }
@@ -290,7 +287,8 @@ export default function VaultScreen() {
       const q = search.toLowerCase();
       result = result.filter(
         (item) =>
-          item.title.toLowerCase().includes(q) || item.subtitle.toLowerCase().includes(q)
+          item.title.toLowerCase().includes(q) ||
+          item.tags.some((tag) => tag.toLowerCase().includes(q))
       );
     }
     return result;
@@ -298,6 +296,24 @@ export default function VaultScreen() {
 
   const favorites = useMemo(() => filteredItems.filter((item) => item.favorite), [filteredItems]);
   const regular = useMemo(() => filteredItems.filter((item) => !item.favorite), [filteredItems]);
+
+  const handleItemPress = (id: string) => {
+    router.push({ pathname: "/(app)/item/[id]", params: { id } });
+  };
+
+  const handleAddItem = () => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    router.push("/(app)/item/new");
+  };
+
+  if (loading && items.length === 0) {
+    return (
+      <View style={[styles.container, styles.centered, { paddingTop: insets.top }]}>
+        <ActivityIndicator size="large" color={colors.accent} />
+        <Text style={styles.loadingText}>loading vault...</Text>
+      </View>
+    );
+  }
 
   return (
     <View style={[styles.container, { paddingTop: insets.top }]}>
@@ -349,6 +365,15 @@ export default function VaultScreen() {
           />
         }
       >
+        {error && (
+          <View style={styles.errorBanner}>
+            <Text style={styles.errorText}>{error}</Text>
+            <Pressable onPress={onRefresh}>
+              <Text style={styles.retryText}>retry</Text>
+            </Pressable>
+          </View>
+        )}
+
         {favorites.length > 0 && (
           <View style={styles.section}>
             <SectionHeader
@@ -363,8 +388,8 @@ export default function VaultScreen() {
                   <VaultListItem
                     key={item.id}
                     item={item}
-                    onPress={() => {}}
-                    onFavorite={() => toggleFavorite(item.id)}
+                    onPress={() => handleItemPress(item.id)}
+                    onFavorite={() => toggleFavorite(item.id, item.favorite)}
                   />
                 ))}
               </View>
@@ -385,15 +410,15 @@ export default function VaultScreen() {
                 <VaultListItem
                   key={item.id}
                   item={item}
-                  onPress={() => {}}
-                  onFavorite={() => toggleFavorite(item.id)}
+                  onPress={() => handleItemPress(item.id)}
+                  onFavorite={() => toggleFavorite(item.id, item.favorite)}
                 />
               ))}
             </View>
           </View>
         )}
 
-        {filteredItems.length === 0 && (
+        {filteredItems.length === 0 && !loading && (
           <View style={styles.emptyState}>
             <View style={styles.emptyIcon}>
               <Svg width={48} height={48} viewBox="0 0 24 24" fill="none">
@@ -401,7 +426,9 @@ export default function VaultScreen() {
                 <Circle cx={12} cy={12} r={3} stroke={colors.muted} strokeWidth={1.5} />
               </Svg>
             </View>
-            <Text style={styles.emptyTitle}>No items found</Text>
+            <Text style={styles.emptyTitle}>
+              {search ? "No items found" : "Your vault is empty"}
+            </Text>
             <Text style={styles.emptySubtitle}>
               {search ? "Try adjusting your search" : "Add your first item to get started"}
             </Text>
@@ -410,7 +437,7 @@ export default function VaultScreen() {
       </ScrollView>
 
       <Pressable
-        onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
+        onPress={handleAddItem}
         style={({ pressed }) => [styles.fab, pressed && styles.fabPressed]}
       >
         <PlusIcon />
@@ -423,6 +450,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.bg,
+  },
+  centered: {
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  loadingText: {
+    marginTop: 16,
+    fontSize: 15,
+    color: colors.muted,
   },
   header: {
     paddingHorizontal: 20,
@@ -591,6 +627,27 @@ const styles = StyleSheet.create({
     fontSize: 15,
     color: colors.muted,
     textAlign: "center",
+  },
+  errorBanner: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    backgroundColor: "rgba(239,68,68,0.1)",
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    borderRadius: 12,
+    marginBottom: 16,
+  },
+  errorText: {
+    fontSize: 14,
+    color: "#ef4444",
+    flex: 1,
+  },
+  retryText: {
+    fontSize: 14,
+    fontWeight: "600",
+    color: colors.accent,
+    marginLeft: 12,
   },
   fab: {
     position: "absolute",

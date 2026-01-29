@@ -18,7 +18,7 @@ export default function Health() {
 
 	async function runAnalysis() {
 		setLoading(true);
-		const items = store.load();
+		const items = await store.load();
 		const result = await analyze(items);
 		setReport(result);
 		setLoading(false);

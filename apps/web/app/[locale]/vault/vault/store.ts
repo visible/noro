@@ -16,116 +16,114 @@ export interface VaultItem {
 	updatedAt: string;
 }
 
-const STORAGE_KEY = "noro_vault_items";
-
-export function load(): VaultItem[] {
-	if (typeof window === "undefined") return [];
-	try {
-		const data = localStorage.getItem(STORAGE_KEY);
-		return data ? JSON.parse(data) : [];
-	} catch {
-		return [];
-	}
+interface ApiItem {
+	id: string;
+	type: ItemType;
+	title: string;
+	data: ItemDataMap[ItemType];
+	tags: { name: string }[];
+	favorite: boolean;
+	folderId: string | null;
+	deleted: boolean;
+	createdAt: string;
+	updatedAt: string;
 }
 
-export function save(items: VaultItem[]) {
-	if (typeof window === "undefined") return;
-	localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
-}
-
-export function create(item: Omit<VaultItem, "id" | "createdAt" | "updatedAt" | "deleted">): VaultItem {
-	const items = load();
-	const now = new Date().toISOString();
-	const newItem: VaultItem = {
+function transform(item: ApiItem): VaultItem {
+	return {
 		...item,
-		id: crypto.randomUUID(),
-		deleted: false,
-		createdAt: now,
-		updatedAt: now,
+		tags: item.tags.map((t) => t.name),
 	};
-	items.push(newItem);
-	save(items);
-	return newItem;
 }
 
-export function update(id: string, updates: Partial<Omit<VaultItem, "id" | "createdAt">>): VaultItem | null {
-	const items = load();
-	const index = items.findIndex((i) => i.id === id);
-	if (index === -1) return null;
-	items[index] = {
-		...items[index],
-		...updates,
-		updatedAt: new Date().toISOString(),
-	};
-	save(items);
-	return items[index];
+export async function load(deleted = false): Promise<VaultItem[]> {
+	const res = await fetch(`/api/v1/vault/items?deleted=${deleted}`);
+	if (!res.ok) return [];
+	const data = await res.json();
+	return (data.items || []).map(transform);
 }
 
-export function remove(id: string): boolean {
-	const items = load();
-	const index = items.findIndex((i) => i.id === id);
-	if (index === -1) return false;
-	items.splice(index, 1);
-	save(items);
-	return true;
+export async function create(
+	item: Omit<VaultItem, "id" | "createdAt" | "updatedAt" | "deleted">
+): Promise<VaultItem | null> {
+	const res = await fetch("/api/v1/vault/items", {
+		method: "POST",
+		headers: { "content-type": "application/json" },
+		body: JSON.stringify({
+			type: item.type,
+			title: item.title,
+			data: item.data,
+			tags: item.tags,
+			favorite: item.favorite,
+			folderId: item.folderId,
+		}),
+	});
+	if (!res.ok) return null;
+	const data = await res.json();
+	return transform(data.item);
 }
 
-export function softDelete(id: string): VaultItem | null {
+export async function update(
+	id: string,
+	updates: Partial<Omit<VaultItem, "id" | "createdAt">>
+): Promise<VaultItem | null> {
+	const res = await fetch(`/api/v1/vault/items/${id}`, {
+		method: "PATCH",
+		headers: { "content-type": "application/json" },
+		body: JSON.stringify(updates),
+	});
+	if (!res.ok) return null;
+	const data = await res.json();
+	return transform(data.item);
+}
+
+export async function remove(id: string): Promise<boolean> {
+	const res = await fetch(`/api/v1/vault/items/${id}`, {
+		method: "DELETE",
+	});
+	return res.ok;
+}
+
+export async function softdelete(id: string): Promise<VaultItem | null> {
 	return update(id, { deleted: true });
 }
 
-export function restore(id: string): VaultItem | null {
+export async function restore(id: string): Promise<VaultItem | null> {
 	return update(id, { deleted: false });
 }
 
-export function get(id: string): VaultItem | null {
-	const items = load();
-	return items.find((i) => i.id === id) || null;
+export async function get(id: string): Promise<VaultItem | null> {
+	const res = await fetch(`/api/v1/vault/items/${id}`);
+	if (!res.ok) return null;
+	const data = await res.json();
+	return transform(data.item);
 }
 
-export function toggleFavorite(id: string): VaultItem | null {
-	const item = get(id);
+export async function togglefavorite(id: string): Promise<VaultItem | null> {
+	const item = await get(id);
 	if (!item) return null;
 	return update(id, { favorite: !item.favorite });
 }
 
-export function filter(folder: string | SpecialFolder, typeFilter?: ItemType | null): VaultItem[] {
-	let items = load();
+export async function filter(
+	folder: string | SpecialFolder,
+	typeFilter?: ItemType | null
+): Promise<VaultItem[]> {
+	const deleted = folder === "trash";
+	const params = new URLSearchParams();
+	params.set("deleted", String(deleted));
+	if (typeFilter) params.set("type", typeFilter);
 
-	if (folder === "trash") {
-		return items.filter((i) => i.deleted);
-	}
-
-	items = items.filter((i) => !i.deleted);
+	const res = await fetch(`/api/v1/vault/items?${params}`);
+	if (!res.ok) return [];
+	const data = await res.json();
+	let items: VaultItem[] = (data.items || []).map(transform);
 
 	if (folder === "favorites") {
 		items = items.filter((i) => i.favorite);
-	} else if (folder !== "all") {
+	} else if (folder !== "all" && folder !== "trash") {
 		items = items.filter((i) => i.folderId === folder);
 	}
 
-	if (typeFilter) {
-		items = items.filter((i) => i.type === typeFilter);
-	}
-
 	return items;
-}
-
-export function getCounts(): { total: number; favorites: number; trash: number; byFolder: Record<string, number> } {
-	const items = load();
-	const active = items.filter((i) => !i.deleted);
-	const byFolder: Record<string, number> = {};
-
-	active.forEach((item) => {
-		if (item.folderId) {
-			byFolder[item.folderId] = (byFolder[item.folderId] || 0) + 1;
-		}
-	});
-
-	return {
-		total: active.length,
-		favorites: active.filter((i) => i.favorite).length,
-		trash: items.filter((i) => i.deleted).length,
-		byFolder,
-	};
 }

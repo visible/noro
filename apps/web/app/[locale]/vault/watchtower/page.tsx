@@ -233,7 +233,7 @@ export default function Watchtower() {
 
   async function runanalysis() {
     setLoading(true);
-    const items = store.load();
+    const items = await store.load();
     const result = await watchtower(items);
     setReport(result);
     setLoading(false);

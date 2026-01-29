@@ -1,6 +1,8 @@
 use serde::{Deserialize, Serialize};
 use thiserror::Error;
 
+use crate::crypto;
+
 #[derive(Error, Debug)]
 pub enum SyncError {
     #[error("http error: {0}")]
@@ -9,6 +11,8 @@ pub enum SyncError {
     Auth(String),
     #[error("conflict: server revision {0}")]
     Conflict(i32),
+    #[error("crypto error: {0}")]
+    Crypto(String),
 }
 
 impl Serialize for SyncError {
@@ -53,6 +57,22 @@ fn auth_header(token: &str) -> String {
     format!("better-auth.session_token={}", token)
 }
 
+fn encryptitem(id: &str, title: &str, data: &str) -> Result<(String, String), SyncError> {
+    let enctitle = crypto::encryptfield(id, title)
+        .map_err(|e| SyncError::Crypto(e.to_string()))?;
+    let encdata = crypto::encryptfield(id, data)
+        .map_err(|e| SyncError::Crypto(e.to_string()))?;
+    Ok((enctitle, encdata))
+}
+
+fn decryptitem(item: &mut RemoteItem) -> Result<(), SyncError> {
+    item.title = crypto::decryptfield(&item.id, &item.title)
+        .map_err(|e| SyncError::Crypto(e.to_string()))?;
+    item.data = crypto::decryptfield(&item.id, &item.data)
+        .map_err(|e| SyncError::Crypto(e.to_string()))?;
+    Ok(())
+}
+
 #[tauri::command]
 pub async fn sync_fetch(base_url: String, token: String) -> Result<Vec<RemoteItem>, SyncError> {
     let client = reqwest::Client::new();
@@ -80,13 +100,19 @@ pub async fn sync_fetch(base_url: String, token: String) -> Result<Vec<RemoteIte
         .await
         .map_err(|e| SyncError::Http(e.to_string()))?;
 
-    Ok(data.items)
+    let mut items = data.items;
+    for item in &mut items {
+        decryptitem(item)?;
+    }
+
+    Ok(items)
 }
 
 #[tauri::command]
 pub async fn sync_create(
     base_url: String,
     token: String,
+    id: String,
     item_type: String,
     title: String,
     data: String,
@@ -96,8 +122,11 @@ pub async fn sync_create(
     let client = reqwest::Client::new();
     let url = format!("{}/api/v1/vault/items", base_url);
 
+    let (enctitle, encdata) = encryptitem(&id, &title, &data)?;
+
     #[derive(Serialize)]
     struct Body {
+        id: String,
         #[serde(rename = "type")]
         item_type: String,
         title: String,
@@ -107,9 +136,10 @@ pub async fn sync_create(
     }
 
     let body = Body {
+        id,
         item_type,
-        title,
-        data,
+        title: enctitle,
+        data: encdata,
         tags,
         favorite,
     };
@@ -132,12 +162,15 @@ pub async fn sync_create(
         return Err(SyncError::Http(format!("{}: {}", status, body)));
     }
 
-    let data: ItemResponse = res
+    let resp: ItemResponse = res
         .json()
         .await
         .map_err(|e| SyncError::Http(e.to_string()))?;
 
-    Ok(data.item)
+    let mut item = resp.item;
+    decryptitem(&mut item)?;
+
+    Ok(item)
 }
 
 #[tauri::command]
@@ -153,6 +186,18 @@ pub async fn sync_update(
     let client = reqwest::Client::new();
     let url = format!("{}/api/v1/vault/items/{}", base_url, id);
 
+    let enctitle = match &title {
+        Some(t) => Some(crypto::encryptfield(&id, t)
+            .map_err(|e| SyncError::Crypto(e.to_string()))?),
+        None => None,
+    };
+
+    let encdata = match &data {
+        Some(d) => Some(crypto::encryptfield(&id, d)
+            .map_err(|e| SyncError::Crypto(e.to_string()))?),
+        None => None,
+    };
+
     #[derive(Serialize)]
     struct Body {
         #[serde(skip_serializing_if = "Option::is_none")]
@@ -166,8 +211,8 @@ pub async fn sync_update(
     }
 
     let body = Body {
-        title,
-        data,
+        title: enctitle,
+        data: encdata,
         tags,
         favorite,
     };
@@ -190,12 +235,15 @@ pub async fn sync_update(
         return Err(SyncError::Http(format!("{}: {}", status, body)));
     }
 
-    let data: ItemResponse = res
+    let resp: ItemResponse = res
         .json()
         .await
         .map_err(|e| SyncError::Http(e.to_string()))?;
 
-    Ok(data.item)
+    let mut item = resp.item;
+    decryptitem(&mut item)?;
+
+    Ok(item)
 }
 
 #[tauri::command]

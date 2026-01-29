@@ -20,17 +20,19 @@ const itemtypes: ItemType[] = ["login", "note", "card", "identity", "ssh", "api"
 export default function Vault() {
 	const searchParams = useSearchParams();
 	const router = useRouter();
-	const { register, selectedItem, setSelectedItem } = useSidebar();
+	const { register } = useSidebar();
 	const folder = (searchParams.get("folder") || "all") as string | SpecialFolder;
 	const newitemtype = searchParams.get("newitem") as ItemType | null;
 	const itemid = searchParams.get("item");
 	const [items, setItems] = useState<VaultItem[]>([]);
+	const [loading, setLoading] = useState(true);
 	const [search, setSearch] = useState("");
 	const [typeFilter, setTypeFilter] = useState<ItemType | null>(null);
 	const [tagFilter, setTagFilter] = useState<string | null>(null);
 	const [showModal, setShowModal] = useState(false);
 	const [editingItem, setEditingItem] = useState<VaultItem | null>(null);
 	const [defaulttype, setDefaulttype] = useState<ItemType | undefined>(undefined);
+	const [saving, setSaving] = useState(false);
 	const searchRef = useRef<HTMLInputElement>(null);
 
 	const [folders, setFolders] = useState<FolderData[]>([]);
@@ -50,7 +52,7 @@ export default function Vault() {
 			const data = await res.json();
 			setFolders(data.folders || []);
 		} catch {
-			console.error("failed to load folders");
+			setFolders([]);
 		}
 	}
 
@@ -63,7 +65,10 @@ export default function Vault() {
 			setTrashCount(data.trash || 0);
 			setTotalCount(data.total || 0);
 		} catch {
-			console.error("failed to load counts");
+			setItemCounts({});
+			setFavoriteCount(0);
+			setTrashCount(0);
+			setTotalCount(0);
 		}
 	}
 
@@ -76,9 +81,7 @@ export default function Vault() {
 			});
 			const data = await res.json();
 			setFolders([...folders, data.folder]);
-		} catch {
-			console.error("failed to create folder");
-		}
+		} catch {}
 	}
 
 	async function handleRenameFolder(id: string, name: string) {
@@ -89,9 +92,7 @@ export default function Vault() {
 				body: JSON.stringify({ name }),
 			});
 			setFolders(folders.map((f) => (f.id === id ? { ...f, name } : f)));
-		} catch {
-			console.error("failed to rename folder");
-		}
+		} catch {}
 	}
 
 	async function handleDeleteFolder(id: string) {
@@ -101,22 +102,14 @@ export default function Vault() {
 			if (folder === id) {
 				router.push("/vault");
 			}
-		} catch {
-			console.error("failed to delete folder");
-		}
+		} catch {}
 	}
 
 	async function handleMoveItem(itemId: string, folderId: string | null) {
 		try {
-			await fetch(`/api/v1/vault/items/${itemId}`, {
-				method: "PATCH",
-				headers: { "content-type": "application/json" },
-				body: JSON.stringify({ folderId }),
-			});
-			loadCounts();
-		} catch {
-			console.error("failed to move item");
-		}
+			await store.update(itemId, { folderId });
+			await reload();
+		} catch {}
 	}
 
 	function handleSelectFolder(id: string | SpecialFolder) {
@@ -127,8 +120,21 @@ export default function Vault() {
 		}
 	}
 
+	async function reload() {
+		setLoading(true);
+		try {
+			const data = await store.filter(folder, typeFilter);
+			setItems(data);
+			await loadCounts();
+		} catch {
+			setItems([]);
+		} finally {
+			setLoading(false);
+		}
+	}
+
 	useEffect(() => {
-		setItems(store.filter(folder, typeFilter));
+		reload();
 	}, [folder, typeFilter]);
 
 	useEffect(() => {
@@ -142,24 +148,26 @@ export default function Vault() {
 
 	useEffect(() => {
 		if (itemid) {
-			const item = store.get(itemid);
-			if (item) {
-				setEditingItem(item);
-				setShowModal(true);
-			}
+			store.get(itemid).then((item) => {
+				if (item) {
+					setEditingItem(item);
+					setShowModal(true);
+				}
+			});
 			router.replace("/vault");
 		}
 	}, [itemid, router]);
 
-	const copyPassword = useCallback(() => {
-		if (!selectedItem) return;
-		const item = store.get(selectedItem);
+	const copyPassword = useCallback(async () => {
+		const selected = items.find((i) => i.type === "login");
+		if (!selected) return;
+		const item = await store.get(selected.id);
 		if (!item || item.type !== "login") return;
 		const data = item.data as LoginData;
 		if (data.password) {
 			navigator.clipboard.writeText(data.password);
 		}
-	}, [selectedItem]);
+	}, [items]);
 
 	const openNewItem = useCallback(() => {
 		if (folder !== "trash") {
@@ -224,47 +232,59 @@ export default function Vault() {
 		});
 	}, [items, search, tagFilter]);
 
-	function reload() {
-		setItems(store.filter(folder, typeFilter));
-		loadCounts();
-	}
-
-	function handleSave(data: { type: ItemType; title: string; data: Record<string, unknown>; tags: string[] }) {
-		if (editingItem) {
-			store.update(editingItem.id, data);
-		} else {
-			store.create({ ...data, favorite: false, folderId: folder === "all" || folder === "favorites" || folder === "trash" ? null : folder });
-		}
-		reload();
-		setShowModal(false);
-		setEditingItem(null);
-	}
-
-	function handleDelete() {
-		if (editingItem) {
-			if (folder === "trash") {
-				store.remove(editingItem.id);
+	async function handleSave(data: { type: ItemType; title: string; data: Record<string, unknown>; tags: string[] }) {
+		setSaving(true);
+		try {
+			if (editingItem) {
+				await store.update(editingItem.id, data);
 			} else {
-				store.softDelete(editingItem.id);
+				await store.create({
+					...data,
+					favorite: false,
+					folderId: folder === "all" || folder === "favorites" || folder === "trash" ? null : folder,
+				});
 			}
-			reload();
+			await reload();
 			setShowModal(false);
 			setEditingItem(null);
+		} finally {
+			setSaving(false);
 		}
 	}
 
-	function handleRestore() {
-		if (editingItem) {
-			store.restore(editingItem.id);
-			reload();
+	async function handleDelete() {
+		if (!editingItem) return;
+		setSaving(true);
+		try {
+			if (folder === "trash") {
+				await store.remove(editingItem.id);
+			} else {
+				await store.softdelete(editingItem.id);
+			}
+			await reload();
 			setShowModal(false);
 			setEditingItem(null);
+		} finally {
+			setSaving(false);
 		}
 	}
 
-	function handleFavorite(id: string) {
-		store.toggleFavorite(id);
-		reload();
+	async function handleRestore() {
+		if (!editingItem) return;
+		setSaving(true);
+		try {
+			await store.restore(editingItem.id);
+			await reload();
+			setShowModal(false);
+			setEditingItem(null);
+		} finally {
+			setSaving(false);
+		}
+	}
+
+	async function handleFavorite(id: string) {
+		await store.togglefavorite(id);
+		await reload();
 	}
 
 	const isTrash = folder === "trash";
@@ -327,7 +347,11 @@ export default function Vault() {
 						</div>
 					</div>
 
-					{filtered.length === 0 ? (
+					{loading ? (
+						<div className="text-center py-16">
+							<div className="w-8 h-8 mx-auto border-2 border-white/20 border-t-white/60 rounded-full animate-spin" />
+						</div>
+					) : filtered.length === 0 ? (
 						<div className="text-center py-16 rounded-xl border border-white/[0.06] bg-white/[0.02]">
 							<div className="w-12 h-12 mx-auto mb-4 rounded-full bg-white/[0.04] flex items-center justify-center">
 								<svg aria-hidden="true" className="w-6 h-6 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -368,6 +392,7 @@ export default function Vault() {
 					onRestore={editingItem && isTrash ? handleRestore : undefined}
 					onClose={() => { setShowModal(false); setEditingItem(null); setDefaulttype(undefined); }}
 					isTrash={isTrash}
+					saving={saving}
 				/>
 			)}
 		</div>

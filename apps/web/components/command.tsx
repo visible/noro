@@ -28,7 +28,9 @@ export function Command({ onnewitem, onexport, onlock }: Props) {
 
 	useEffect(() => {
 		setRecent(loadrecent());
-		if (isinapp) setItems(store.load().filter((i) => !i.deleted));
+		if (isinapp) {
+			store.load().then((data) => setItems(data.filter((i) => !i.deleted)));
+		}
 	}, [isinapp]);
 
 	const commands = useMemo<CommandDef[]>(() => {

@@ -16,11 +16,12 @@ interface Props {
 	onRestore?: () => void;
 	onClose: () => void;
 	isTrash?: boolean;
+	saving?: boolean;
 }
 
 const types: ItemType[] = ["login", "note", "card", "identity", "ssh", "api", "otp", "passkey"];
 
-export function ItemModal({ item, defaulttype, onSave, onDelete, onRestore, onClose, isTrash }: Props) {
+export function ItemModal({ item, defaulttype, onSave, onDelete, onRestore, onClose, isTrash, saving }: Props) {
 	const [type, setType] = useState<ItemType>(item?.type || defaulttype || "login");
 	const [title, setTitle] = useState(item?.title || "");
 	const [data, setData] = useState<Record<string, unknown>>(item?.data || {});
@@ -207,7 +208,8 @@ export function ItemModal({ item, defaulttype, onSave, onDelete, onRestore, onCl
 							<button
 								type="button"
 								onClick={handleClose}
-								className="flex-1 px-4 py-3 text-stone-600 font-medium rounded-xl border border-stone-200 hover:bg-stone-100 active:bg-stone-200 transition-colors"
+								disabled={saving}
+								className="flex-1 px-4 py-3 text-stone-600 font-medium rounded-xl border border-stone-200 hover:bg-stone-100 active:bg-stone-200 transition-colors disabled:opacity-50"
 							>
 								close
 							</button>
@@ -215,18 +217,20 @@ export function ItemModal({ item, defaulttype, onSave, onDelete, onRestore, onCl
 								<button
 									type="button"
 									onClick={onRestore}
-									className="flex-1 px-4 py-3 bg-orange-500 text-white font-medium rounded-xl hover:bg-orange-600 active:bg-orange-700 transition-colors"
+									disabled={saving}
+									className="flex-1 px-4 py-3 bg-orange-500 text-white font-medium rounded-xl hover:bg-orange-600 active:bg-orange-700 transition-colors disabled:opacity-50"
 								>
-									restore
+									{saving ? "restoring..." : "restore"}
 								</button>
 							)}
 							{onDelete && (
 								<button
 									type="button"
 									onClick={onDelete}
-									className="px-4 py-3 text-red-600 font-medium rounded-xl border border-red-200 bg-red-50 hover:bg-red-100 active:bg-red-200 transition-colors"
+									disabled={saving}
+									className="px-4 py-3 text-red-600 font-medium rounded-xl border border-red-200 bg-red-50 hover:bg-red-100 active:bg-red-200 transition-colors disabled:opacity-50"
 								>
-									delete forever
+									{saving ? "deleting..." : "delete forever"}
 								</button>
 							)}
 						</>
@@ -236,24 +240,27 @@ export function ItemModal({ item, defaulttype, onSave, onDelete, onRestore, onCl
 								<button
 									type="button"
 									onClick={onDelete}
-									className="sm:mr-auto px-4 py-3 text-red-500 font-medium rounded-xl hover:bg-red-50 active:bg-red-100 transition-colors"
+									disabled={saving}
+									className="sm:mr-auto px-4 py-3 text-red-500 font-medium rounded-xl hover:bg-red-50 active:bg-red-100 transition-colors disabled:opacity-50"
 								>
-									delete
+									{saving ? "deleting..." : "delete"}
 								</button>
 							)}
 							<button
 								type="button"
 								onClick={handleClose}
-								className="flex-1 sm:flex-initial px-5 py-3 text-stone-600 font-medium rounded-xl border border-stone-200 hover:bg-stone-100 active:bg-stone-200 transition-colors"
+								disabled={saving}
+								className="flex-1 sm:flex-initial px-5 py-3 text-stone-600 font-medium rounded-xl border border-stone-200 hover:bg-stone-100 active:bg-stone-200 transition-colors disabled:opacity-50"
 							>
 								cancel
 							</button>
 							<button
 								type="submit"
 								onClick={handleSubmit}
-								className="flex-1 sm:flex-initial px-6 py-3 bg-orange-500 text-white font-medium rounded-xl hover:bg-orange-600 active:bg-orange-700 transition-colors"
+								disabled={saving}
+								className="flex-1 sm:flex-initial px-6 py-3 bg-orange-500 text-white font-medium rounded-xl hover:bg-orange-600 active:bg-orange-700 transition-colors disabled:opacity-50"
 							>
-								save
+								{saving ? "saving..." : "save"}
 							</button>
 						</>
 					)}

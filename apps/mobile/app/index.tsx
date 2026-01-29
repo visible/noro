@@ -1,7 +1,6 @@
 import { useEffect } from "react";
 import { View, StyleSheet } from "react-native";
 import { router } from "expo-router";
-import * as SecureStore from "expo-secure-store";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
@@ -9,6 +8,8 @@ import Animated, {
   Easing,
 } from "react-native-reanimated";
 import { Logo } from "./components/logo";
+import { gettoken } from "../lib/storage";
+import { api } from "../lib/api";
 
 export default function Splash() {
   const opacity = useSharedValue(0);
@@ -24,14 +25,17 @@ export default function Splash() {
   async function checkAuth() {
     await new Promise((r) => setTimeout(r, 1200));
 
-    const token = await SecureStore.getItemAsync("session");
-    const biometric = await SecureStore.getItemAsync("biometric");
+    const token = await gettoken();
 
-    if (token && biometric === "true") {
+    if (!token) {
+      router.replace("/(auth)/login");
+      return;
+    }
+
+    try {
+      await api.auth.session();
       router.replace("/(auth)/unlock");
-    } else if (token) {
-      router.replace("/(auth)/unlock");
-    } else {
+    } catch {
       router.replace("/(auth)/login");
     }
   }

@@ -144,6 +144,38 @@ pub fn deriveitemkey(vaultkey: &[u8; 32], itemid: &str) -> Result<[u8; 32]> {
     Ok(itemkey)
 }
 
+pub fn encryptitem(data: &[u8], itemkey: &[u8; 32]) -> Result<Vec<u8>> {
+    let cipher = Aes256Gcm::new_from_slice(itemkey).map_err(|_| TwoskdError::Encryption)?;
+    let mut rng = rand::thread_rng();
+    let noncebytes: [u8; NONCE_LEN] = rng.gen();
+    let nonce = Nonce::from_slice(&noncebytes);
+    let ciphertext = cipher.encrypt(nonce, data).map_err(|_| TwoskdError::Encryption)?;
+    let mut result = Vec::with_capacity(NONCE_LEN + ciphertext.len());
+    result.extend_from_slice(&noncebytes);
+    result.extend_from_slice(&ciphertext);
+    Ok(result)
+}
+
+pub fn decryptitem(encrypted: &[u8], itemkey: &[u8; 32]) -> Result<Vec<u8>> {
+    if encrypted.len() < NONCE_LEN + 16 {
+        return Err(TwoskdError::Decryption);
+    }
+    let cipher = Aes256Gcm::new_from_slice(itemkey).map_err(|_| TwoskdError::Decryption)?;
+    let nonce = Nonce::from_slice(&encrypted[..NONCE_LEN]);
+    let ciphertext = &encrypted[NONCE_LEN..];
+    cipher.decrypt(nonce, ciphertext).map_err(|_| TwoskdError::Decryption)
+}
+
+pub fn generatevaultkey() -> [u8; 32] {
+    let mut rng = rand::thread_rng();
+    rng.gen()
+}
+
+pub fn generatesalt() -> [u8; 16] {
+    let mut rng = rand::thread_rng();
+    rng.gen()
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

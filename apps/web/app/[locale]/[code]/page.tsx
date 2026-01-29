@@ -118,7 +118,7 @@ export default function ClaimPage({
 
   const handleDownload = () => {
     if (!secret || secret.type !== "file" || !secret.bytes) return;
-    const blob = new Blob([secret.bytes], {
+    const blob = new Blob([new Uint8Array(secret.bytes)], {
       type: secret.mimetype || "application/octet-stream",
     });
     const url = URL.createObjectURL(blob);
