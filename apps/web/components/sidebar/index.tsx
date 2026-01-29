@@ -8,6 +8,15 @@ import { useSidebar } from "./context";
 export { SidebarProvider, useSidebar } from "./context";
 export { MobileHeader } from "./header";
 
+export function MainContent({ children }: { children: React.ReactNode }) {
+	const { collapsed } = useSidebar();
+	return (
+		<div className={`flex-1 flex flex-col min-w-0 h-screen transition-[margin] duration-200 ${collapsed ? "md:ml-14" : "md:ml-56"}`}>
+			{children}
+		</div>
+	);
+}
+
 interface User {
 	id: string;
 	email: string;
@@ -142,7 +151,7 @@ export function Sidebar({ user }: Props) {
 				onClick={() => setOpen(false)}
 			/>
 			<aside
-				className={`fixed md:relative top-0 left-0 h-full bg-[#0a0a0a] border-r border-white/5 flex flex-col z-50 transition-all duration-200 md:translate-x-0 ${
+				className={`fixed top-0 left-0 h-full bg-[#0a0a0a] border-r border-white/5 flex flex-col z-50 transition-[transform] duration-200 md:translate-x-0 ${
 					open ? "translate-x-0" : "-translate-x-full"
 				} ${collapsed ? "w-14" : "w-56"}`}
 			>
