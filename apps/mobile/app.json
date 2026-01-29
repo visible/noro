@@ -1,0 +1,34 @@
+{
+  "expo": {
+    "name": "noro",
+    "slug": "noro",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "scheme": "noro",
+    "userInterfaceStyle": "automatic",
+    "newArchEnabled": true,
+    "ios": {
+      "bundleIdentifier": "sh.noro.app",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "sh.noro.app",
+      "adaptiveIcon": {
+        "backgroundColor": "#0c0a09"
+      }
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Allow noro to use Face ID for authentication"
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true
+    }
+  }
+}
