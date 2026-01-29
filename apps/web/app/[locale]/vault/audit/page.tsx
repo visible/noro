@@ -185,8 +185,8 @@ export default function Audit() {
 	}, {} as Record<string, AuditEntry[]>);
 
 	return (
-		<div className="h-full overflow-y-auto scrollbar-hidden bg-zinc-950 px-8 py-10">
-			<div className="max-w-4xl mx-auto">
+		<div className="h-full overflow-y-auto scrollbar-hidden px-8 py-10">
+			<div className="max-w-4xl">
 				<div className="mb-8">
 					<h1 className="text-2xl font-semibold text-white tracking-tight">audit log</h1>
 					<p className="text-zinc-500 mt-2 text-sm">detailed security and access history</p>

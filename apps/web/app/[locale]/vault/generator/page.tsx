@@ -68,7 +68,7 @@ export default function Generator() {
 
 	return (
 		<div className="h-full overflow-y-auto scrollbar-hidden">
-			<div className="max-w-2xl mx-auto px-6 py-12">
+			<div className="max-w-2xl px-6 py-12">
 				<header className="mb-10">
 					<h1 className="text-2xl font-serif text-[#ededed] tracking-tight">Password Generator</h1>
 					<p className="mt-2 text-white/50">Generate secure passwords, passphrases, and PINs.</p>

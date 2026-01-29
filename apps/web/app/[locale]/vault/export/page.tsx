@@ -86,8 +86,8 @@ export default function Export() {
 	}
 
 	return (
-		<div className="h-full overflow-y-auto scrollbar-hidden bg-zinc-950 px-8 py-10">
-			<div className="max-w-xl mx-auto">
+		<div className="h-full overflow-y-auto scrollbar-hidden px-8 py-10">
+			<div className="max-w-xl">
 				<div className="mb-10">
 					<h1 className="text-2xl font-semibold text-white tracking-tight">export vault</h1>
 					<p className="text-zinc-500 mt-2 text-sm">download a backup of your encrypted data</p>

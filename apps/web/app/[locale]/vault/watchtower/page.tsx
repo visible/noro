@@ -264,16 +264,12 @@ export default function Watchtower() {
   if (loading) {
     return (
       <div className="h-full overflow-y-auto scrollbar-hidden px-8 py-10">
-        <div className="max-w-4xl mx-auto">
-          <header className="text-center mb-12">
-            <h1 className="text-2xl font-semibold text-white">watchtower</h1>
-            <p className="text-stone-500 mt-1">
-              analyzing your vault security...
-            </p>
-          </header>
-          <div className="flex items-center justify-center py-24">
-            <div className="w-10 h-10 border-2 border-stone-800 border-t-amber-500 rounded-full animate-spin" />
-          </div>
+        <header className="mb-12">
+          <h1 className="text-2xl font-serif text-white">watchtower</h1>
+          <p className="text-white/40 mt-1">analyzing your vault security...</p>
+        </header>
+        <div className="flex items-start py-24">
+          <div className="w-10 h-10 border-2 border-white/10 border-t-[#d4b08c] rounded-full animate-spin" />
         </div>
       </div>
     );
@@ -282,14 +278,12 @@ export default function Watchtower() {
   if (!report) {
     return (
       <div className="h-full overflow-y-auto scrollbar-hidden px-8 py-10">
-        <div className="max-w-4xl mx-auto">
-          <header className="text-center mb-12">
-            <h1 className="text-2xl font-semibold text-white">watchtower</h1>
-            <p className="text-stone-500 mt-1">security monitoring dashboard</p>
-          </header>
-          <div className="bg-stone-900 rounded-xl p-10 text-center">
-            <p className="text-stone-500">failed to analyze vault</p>
-          </div>
+        <header className="mb-12">
+          <h1 className="text-2xl font-serif text-white">watchtower</h1>
+          <p className="text-white/40 mt-1">security monitoring dashboard</p>
+        </header>
+        <div className="bg-[#161616]/80 backdrop-blur-sm border border-white/5 rounded-xl p-10">
+          <p className="text-white/50">failed to analyze vault</p>
         </div>
       </div>
     );
@@ -304,17 +298,16 @@ export default function Watchtower() {
 
   return (
     <div className="h-full overflow-y-auto scrollbar-hidden px-8 py-10">
-      <div className="max-w-4xl mx-auto">
-        <header className="flex items-center justify-between mb-10">
-          <div>
-            <h1 className="text-2xl font-semibold text-white">watchtower</h1>
-            <p className="text-stone-500 mt-1">security monitoring dashboard</p>
-          </div>
-          <button
-            onClick={rescan}
-            disabled={scanning}
-            className="px-4 py-2 text-sm font-medium text-white bg-stone-900 rounded-lg hover:bg-stone-800 transition-colors disabled:opacity-50"
-          >
+      <header className="flex items-center justify-between mb-10">
+        <div>
+          <h1 className="text-2xl font-serif text-white">watchtower</h1>
+          <p className="text-white/40 mt-1">security monitoring dashboard</p>
+        </div>
+        <button
+          onClick={rescan}
+          disabled={scanning}
+          className="px-4 py-2 text-sm font-medium text-white bg-[#161616]/80 backdrop-blur-sm border border-white/5 rounded-lg hover:border-white/10 transition-all disabled:opacity-50"
+        >
             {scanning ? "scanning..." : "rescan"}
           </button>
         </header>

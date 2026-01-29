@@ -33,8 +33,8 @@ export default function Health() {
 	if (loading) {
 		return (
 			<div className="h-full overflow-y-auto scrollbar-hidden px-8 py-10">
-				<div className="max-w-4xl mx-auto">
-					<header className="text-center mb-12">
+				<div className="max-w-4xl">
+					<header className="mb-12">
 						<h1 className="text-2xl font-serif text-white">security health</h1>
 						<p className="text-white/40 mt-1">analyzing your vault...</p>
 					</header>
@@ -49,12 +49,12 @@ export default function Health() {
 	if (!report) {
 		return (
 			<div className="h-full overflow-y-auto scrollbar-hidden px-8 py-10">
-				<div className="max-w-4xl mx-auto">
-					<header className="text-center mb-12">
+				<div className="max-w-4xl">
+					<header className="mb-12">
 						<h1 className="text-2xl font-serif text-white">security health</h1>
 						<p className="text-white/40 mt-1">check the security of your passwords</p>
 					</header>
-					<div className="bg-[#161616]/80 backdrop-blur-sm border border-white/5 rounded-xl p-10 text-center">
+					<div className="bg-[#161616]/80 backdrop-blur-sm border border-white/5 rounded-xl p-10">
 						<p className="text-white/50">failed to analyze vault</p>
 					</div>
 				</div>
@@ -64,7 +64,7 @@ export default function Health() {
 
 	return (
 		<div className="h-full overflow-y-auto scrollbar-hidden px-8 py-10">
-			<div className="max-w-4xl mx-auto">
+			<div className="max-w-4xl">
 				<header className="flex items-center justify-between mb-12">
 					<div>
 						<h1 className="text-2xl font-serif text-white">security health</h1>

@@ -92,7 +92,7 @@ export default function Import() {
 
 	return (
 		<div className="h-full overflow-y-auto scrollbar-hidden px-8 py-10">
-			<div className="max-w-2xl mx-auto">
+			<div className="max-w-2xl">
 				<header className="mb-10">
 					<h1 className="text-2xl font-semibold text-white">import</h1>
 					<p className="text-zinc-500 mt-1">bring your passwords from another manager</p>

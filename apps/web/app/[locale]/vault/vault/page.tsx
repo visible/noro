@@ -315,7 +315,7 @@ export default function Vault() {
 				</div>
 			</div>
 			<div className="flex-1 min-w-0 h-full overflow-y-auto scrollbar-hidden">
-				<div className="p-6 md:p-8 max-w-6xl mx-auto">
+				<div className="p-6 md:p-8">
 					<header className="mb-8">
 						<div className="flex items-start justify-between gap-4 mb-6">
 							<div>
