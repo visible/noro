@@ -42,7 +42,7 @@ export function PasswordField({ value, onChange, required, readOnly, showGenerat
 					onChange={(e) => onChange(e.target.value)}
 					required={required}
 					readOnly={readOnly}
-					className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-3 min-h-[48px] pr-28 focus:outline-none focus:border-[#FF6B00] transition-colors font-mono text-base read-only:opacity-60"
+					className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 min-h-[48px] pr-28 focus:outline-none focus:ring-2 focus:ring-[#d4b08c]/40 focus:border-[#d4b08c] transition-colors font-mono text-base text-white read-only:bg-white/[0.02] read-only:text-white/50"
 				/>
 				<div className="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
 					{showGenerator && !readOnly && (

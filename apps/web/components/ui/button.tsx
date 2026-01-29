@@ -14,8 +14,8 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 const variants: Record<Variant, string> = {
-  primary: "bg-[#FF6B00] text-black hover:bg-[#E65F00] active:bg-[#CC5500]",
-  secondary: "bg-white text-gray-900 border border-gray-300 hover:bg-gray-50 active:bg-gray-100",
+  primary: "bg-[#d4b08c] text-black hover:bg-[#c9a57e] active:bg-[#be9a70]",
+  secondary: "bg-white/10 text-white border border-white/20 hover:bg-white/15 active:bg-white/20",
   ghost: "text-white/70 hover:bg-white/10 active:bg-white/15",
   danger: "bg-red-600 text-white hover:bg-red-700 active:bg-red-800",
   icon: "text-white/70 hover:bg-white/10 active:bg-white/15",
@@ -36,7 +36,7 @@ const iconsizes: Record<Size, string> = {
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ variant = "primary", size = "md", loading = false, disabled, className = "", children, ...props }, ref) => {
     const isicon = variant === "icon";
-    const base = "inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#FF6B00]/50 disabled:opacity-50 disabled:pointer-events-none";
+    const base = "inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-[#d4b08c]/50 disabled:opacity-50 disabled:pointer-events-none";
     const variantclass = variants[variant];
     const sizeclass = isicon ? iconsizes[size] : sizes[size];
 

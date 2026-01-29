@@ -22,7 +22,7 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           className={`
             flex items-center gap-2 px-3 py-2.5 rounded-lg border bg-white/5
             transition-all duration-150
-            ${error ? "border-red-500 focus-within:ring-2 focus-within:ring-red-500/30" : "border-white/10 focus-within:border-[#FF6B00] focus-within:ring-2 focus-within:ring-[#FF6B00]/20"}
+            ${error ? "border-red-500 focus-within:ring-2 focus-within:ring-red-500/30" : "border-white/10 focus-within:border-[#d4b08c] focus-within:ring-2 focus-within:ring-[#d4b08c]/20"}
             ${disabled ? "opacity-50 cursor-not-allowed" : ""}
           `}
         >

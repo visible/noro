@@ -74,7 +74,7 @@ export function Select({ label, error, options, placeholder, value, onChange, di
 								type="button"
 								onClick={() => { onChange?.(opt.value); setOpen(false); }}
 								className={`w-full px-3 py-2 text-left text-sm transition-colors ${
-									opt.value === value ? "bg-[#FF6B00] text-white" : "text-white/80 hover:bg-white/5"
+									opt.value === value ? "bg-[#d4b08c] text-white" : "text-white/80 hover:bg-white/5"
 								}`}
 							>
 								{opt.label}

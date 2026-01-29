@@ -156,7 +156,7 @@ export function Import({ open, onclose, onimport }: Props) {
 								value={password}
 								onChange={(e) => setPassword(e.target.value)}
 								placeholder="encryption password"
-								className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-[#FF6B00]/50"
+								className="flex-1 px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-[#d4b08c]/50"
 							/>
 							<button
 								type="button"
@@ -201,7 +201,7 @@ export function Import({ open, onclose, onimport }: Props) {
 					type="button"
 					onClick={handleimport}
 					disabled={!preview.length}
-					className="flex-1 px-4 py-2.5 bg-[#FF6B00] text-black rounded-lg hover:bg-[#FF6B00]/90 transition-colors font-medium disabled:opacity-50"
+					className="flex-1 px-4 py-2.5 bg-[#d4b08c] text-black rounded-lg hover:bg-[#d4b08c]/90 transition-colors font-medium disabled:opacity-50"
 				>
 					import {preview.length} items
 				</button>

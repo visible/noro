@@ -33,7 +33,7 @@ export function TagInput({ tags, onChange, readOnly }: TagInputProps) {
 	}
 
 	return (
-		<div className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 focus-within:border-[#FF6B00] transition-colors">
+		<div className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 focus-within:border-[#d4b08c] transition-colors">
 			<div className="flex flex-wrap gap-2">
 				{tags.map((tag) => (
 					<span
@@ -139,7 +139,7 @@ export function TagFilter({ tags, selected, onSelect }: TagFilterProps) {
 					onClick={() => onSelect(selected === tag ? null : tag)}
 					className={`px-3 py-2 min-h-[36px] rounded-full text-xs transition-colors ${
 						selected === tag
-							? "bg-[#FF6B00] text-black"
+							? "bg-[#d4b08c] text-black"
 							: "bg-white/10 text-white/60 hover:bg-white/20 hover:text-white active:bg-white/20"
 					}`}
 				>

@@ -78,7 +78,7 @@ export function Generator({ onSelect, compact }: Props) {
           {onSelect && (
             <button
               onClick={select}
-              className="px-4 py-2 bg-[#FF6B00] text-black rounded-lg hover:bg-[#FF6B00]/90 transition-colors text-sm font-medium"
+              className="px-4 py-2 bg-[#d4b08c] text-black rounded-lg hover:bg-[#d4b08c]/90 transition-colors text-sm font-medium"
             >
               use
             </button>
@@ -97,7 +97,7 @@ export function Generator({ onSelect, compact }: Props) {
             max={128}
             value={length}
             onChange={(e) => setLength(Number(e.target.value))}
-            className="w-full accent-[#FF6B00]"
+            className="w-full accent-[#d4b08c]"
           />
         </div>
 

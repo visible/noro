@@ -119,7 +119,7 @@ export default function SharePage() {
   const canSubmit = mode === "text" ? !!secret : !!file;
 
   return (
-    <div className="min-h-screen bg-black text-white selection:bg-[#FF6B00] selection:text-black">
+    <div className="min-h-screen bg-[#0a0a0a] text-white selection:bg-[#d4b08c] selection:text-black">
       <LanguageToggle />
       <Link
         href="/"
@@ -131,7 +131,7 @@ export default function SharePage() {
       <section className="min-h-[100dvh] flex items-center justify-center px-4 sm:px-8 pb-32">
         <div className="w-full max-w-md">
           <div className="mb-8 sm:mb-16">
-            <h1 className="text-3xl sm:text-4xl font-bold tracking-tighter border-b-4 border-[#FF6B00] inline-block">
+            <h1 className="text-3xl sm:text-4xl font-bold tracking-tighter border-b-4 border-[#d4b08c] inline-block">
               {t("title")}
             </h1>
             <p className="mt-4 text-white/40 text-sm">{t("subtitle")}</p>
@@ -152,7 +152,7 @@ export default function SharePage() {
                   onClick={() => setMode("text")}
                   className={`px-4 py-2 text-xs tracking-widest transition-colors border ${
                     mode === "text"
-                      ? "bg-[#FF6B00] text-black border-[#FF6B00]"
+                      ? "bg-[#d4b08c] text-black border-[#d4b08c]"
                       : "border-white/10 text-white/40 hover:text-white hover:border-white/30"
                   }`}
                 >
@@ -163,7 +163,7 @@ export default function SharePage() {
                   onClick={() => setMode("file")}
                   className={`px-4 py-2 text-xs tracking-widest transition-colors border ${
                     mode === "file"
-                      ? "bg-[#FF6B00] text-black border-[#FF6B00]"
+                      ? "bg-[#d4b08c] text-black border-[#d4b08c]"
                       : "border-white/10 text-white/40 hover:text-white hover:border-white/30"
                   }`}
                 >
@@ -180,7 +180,7 @@ export default function SharePage() {
                   value={label}
                   onChange={(e) => setLabel(e.target.value)}
                   placeholder={t("labelPlaceholder")}
-                  className="w-full bg-transparent border border-white/10 px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-[#FF6B00] transition-colors font-mono text-sm"
+                  className="w-full bg-transparent border border-white/10 px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-[#d4b08c] transition-colors font-mono text-sm"
                 />
               </div>
 
@@ -194,7 +194,7 @@ export default function SharePage() {
                       value={secret}
                       onChange={(e) => setSecret(e.target.value)}
                       placeholder={t("secretPlaceholder")}
-                      className="w-full h-full bg-transparent border border-white/10 px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-[#FF6B00] transition-colors resize-none font-mono text-sm"
+                      className="w-full h-full bg-transparent border border-white/10 px-4 py-3 text-white placeholder:text-white/20 focus:outline-none focus:border-[#d4b08c] transition-colors resize-none font-mono text-sm"
                     />
                   ) : (
                     <div
@@ -207,9 +207,9 @@ export default function SharePage() {
                       onDrop={handleFileDrop}
                       className={`w-full h-full border px-4 flex items-center justify-center text-center cursor-pointer transition-colors ${
                         dragover
-                          ? "border-[#FF6B00] bg-[#FF6B00]/5"
+                          ? "border-[#d4b08c] bg-[#d4b08c]/5"
                           : file
-                            ? "border-[#FF6B00]/50 bg-[#FF6B00]/5"
+                            ? "border-[#d4b08c]/50 bg-[#d4b08c]/5"
                             : "border-white/10 hover:border-white/30"
                       }`}
                     >
@@ -221,7 +221,7 @@ export default function SharePage() {
                       />
                       <div>
                         {file ? (
-                          <p className="text-[#FF6B00] font-mono text-sm">{file.name}</p>
+                          <p className="text-[#d4b08c] font-mono text-sm">{file.name}</p>
                         ) : (
                           <>
                             <p className="text-white/40 text-sm mb-1">{t("dropzone")}</p>
@@ -247,7 +247,7 @@ export default function SharePage() {
                         onClick={() => setViews(n)}
                         className={`flex-1 h-9 text-sm transition-colors ${
                           views === n
-                            ? "bg-[#FF6B00] text-black"
+                            ? "bg-[#d4b08c] text-black"
                             : "border border-white/10 text-white/40 hover:text-white hover:border-white/30"
                         }`}
                       >
@@ -268,7 +268,7 @@ export default function SharePage() {
                         onClick={() => setTtl(v)}
                         className={`flex-1 h-9 text-sm transition-colors ${
                           ttl === v
-                            ? "bg-[#FF6B00] text-black"
+                            ? "bg-[#d4b08c] text-black"
                             : "border border-white/10 text-white/40 hover:text-white hover:border-white/30"
                         }`}
                       >
@@ -281,15 +281,15 @@ export default function SharePage() {
 
               <ul className="space-y-1">
                 <li className="text-xs text-white/30 flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[#FF6B00] rounded-full" />
+                  <span className="w-1 h-1 bg-[#d4b08c] rounded-full" />
                   {t("security.encrypted")}
                 </li>
                 <li className="text-xs text-white/30 flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[#FF6B00] rounded-full" />
+                  <span className="w-1 h-1 bg-[#d4b08c] rounded-full" />
                   {t("security.server")}
                 </li>
                 <li className="text-xs text-white/30 flex items-center gap-2">
-                  <span className="w-1 h-1 bg-[#FF6B00] rounded-full" />
+                  <span className="w-1 h-1 bg-[#d4b08c] rounded-full" />
                   {t("security.destruct")}
                 </li>
               </ul>
@@ -297,7 +297,7 @@ export default function SharePage() {
               <button
                 type="submit"
                 disabled={!canSubmit || isGenerating}
-                className="w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:opacity-80 transition-opacity disabled:opacity-30 disabled:cursor-not-allowed"
+                className="w-full bg-[#d4b08c] text-black py-3 text-sm tracking-widest font-bold hover:opacity-80 transition-opacity disabled:opacity-30 disabled:cursor-not-allowed"
               >
                 {isGenerating ? t("generating") : t("button")}
               </button>
@@ -311,7 +311,7 @@ export default function SharePage() {
               }}
             >
               <div className="h-[38px] mb-6">
-                <p className="text-[#FF6B00] text-sm">{t("success")}</p>
+                <p className="text-[#d4b08c] text-sm">{t("success")}</p>
               </div>
 
               <div className="mb-6">
@@ -333,7 +333,7 @@ export default function SharePage() {
               <button
                 type="button"
                 onClick={handleCopy}
-                className="w-full bg-[#FF6B00] text-black py-3 text-sm tracking-widest font-bold hover:opacity-80 transition-opacity mb-2"
+                className="w-full bg-[#d4b08c] text-black py-3 text-sm tracking-widest font-bold hover:opacity-80 transition-opacity mb-2"
               >
                 {copied ? t("copied") : t("copy")}
               </button>

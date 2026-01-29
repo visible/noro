@@ -7,9 +7,9 @@ interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
 }
 
 const variants: Record<Variant, string> = {
-	default: "bg-white border border-gray-200",
-	bordered: "bg-white border-2 border-gray-200",
-	elevated: "bg-white border border-gray-200 shadow-lg",
+	default: "bg-[#161616] border border-white/10",
+	bordered: "bg-[#161616] border-2 border-white/10",
+	elevated: "bg-[#161616] border border-white/10 shadow-lg",
 };
 
 export const Card = forwardRef<HTMLDivElement, CardProps>(
@@ -42,7 +42,7 @@ export const CardTitle = forwardRef<HTMLHeadingElement, CardTitleProps>(
 	({ className = "", ...props }, ref) => (
 		<h3
 			ref={ref}
-			className={`text-lg font-semibold text-gray-900 ${className}`}
+			className={`text-lg font-semibold text-white ${className}`}
 			{...props}
 		/>
 	)
@@ -55,7 +55,7 @@ export const CardDescription = forwardRef<HTMLParagraphElement, CardDescriptionP
 	({ className = "", ...props }, ref) => (
 		<p
 			ref={ref}
-			className={`text-sm text-gray-500 ${className}`}
+			className={`text-sm text-white/50 ${className}`}
 			{...props}
 		/>
 	)

@@ -122,7 +122,7 @@ export function Totp({ secret: initial, oncode }: Props) {
 					value={secret}
 					onChange={(e) => setSecret(e.target.value)}
 					placeholder="JBSWY3DPEHPK3PXP"
-					className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-[#FF6B00]/50 font-mono"
+					className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-lg focus:outline-none focus:border-[#d4b08c]/50 font-mono"
 				/>
 			</div>
 
@@ -142,7 +142,7 @@ export function Totp({ secret: initial, oncode }: Props) {
 
 					<div className="relative h-1 bg-white/10 rounded-full overflow-hidden">
 						<div
-							className="absolute inset-y-0 left-0 bg-[#FF6B00] transition-all duration-1000"
+							className="absolute inset-y-0 left-0 bg-[#d4b08c] transition-all duration-1000"
 							style={{ width: `${(remaining / 30) * 100}%` }}
 						/>
 					</div>

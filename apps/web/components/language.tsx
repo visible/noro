@@ -15,7 +15,7 @@ export function LanguageToggle() {
   return (
     <nav className="fixed top-0 right-0 p-4 sm:p-8 z-50">
       <div className="flex items-center gap-2 text-xs tracking-widest">
-        <span className="text-[#FF6B00]">{labels[locale]}</span>
+        <span className="text-[#d4b08c]">{labels[locale]}</span>
         <span className="text-white/20">/</span>
         <Link
           href={pathname}

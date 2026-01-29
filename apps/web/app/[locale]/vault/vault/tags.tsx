@@ -51,6 +51,69 @@ interface TagInputProps {
 	readOnly?: boolean;
 }
 
+export function TagInput({ tags, onChange, readOnly }: TagInputProps) {
+	const [input, setInput] = useState("");
+
+	function addTag(value: string) {
+		const tag = value.trim().toLowerCase();
+		if (tag && !tags.includes(tag)) {
+			onChange([...tags, tag]);
+		}
+		setInput("");
+	}
+
+	function removeTag(tag: string) {
+		onChange(tags.filter((t) => t !== tag));
+	}
+
+	function handleKeyDown(e: KeyboardEvent<HTMLInputElement>) {
+		if (e.key === "Enter" || e.key === ",") {
+			e.preventDefault();
+			addTag(input);
+		} else if (e.key === "Backspace" && !input && tags.length > 0) {
+			removeTag(tags[tags.length - 1]);
+		}
+	}
+
+	return (
+		<div className="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 min-h-[48px] focus-within:ring-2 focus-within:ring-[#d4b08c]/40 focus-within:border-[#d4b08c] transition-all">
+			<div className="flex flex-wrap gap-2 items-center">
+				{tags.map((tag) => (
+					<span
+						key={tag}
+						className="inline-flex items-center gap-1 px-3 py-1.5 bg-white/10 rounded-full text-sm text-white/70"
+					>
+						{tag}
+						{!readOnly && (
+							<button
+								type="button"
+								onClick={() => removeTag(tag)}
+								className="w-5 h-5 flex items-center justify-center text-white/40 hover:text-white transition-colors rounded"
+								aria-label={`remove ${tag}`}
+							>
+								<svg aria-hidden="true" className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+								</svg>
+							</button>
+						)}
+					</span>
+				))}
+				{!readOnly && (
+					<input
+						type="text"
+						value={input}
+						onChange={(e) => setInput(e.target.value)}
+						onKeyDown={handleKeyDown}
+						onBlur={() => input && addTag(input)}
+						placeholder={tags.length === 0 ? "add tags..." : ""}
+						className="flex-1 min-w-[100px] bg-transparent outline-none text-base text-white placeholder:text-white/40 py-1"
+					/>
+				)}
+			</div>
+		</div>
+	);
+}
+
 export function TagInputLight({ tags, onChange, readOnly }: TagInputProps) {
 	const [input, setInput] = useState("");
 

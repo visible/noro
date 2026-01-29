@@ -32,8 +32,8 @@ export const Toggle = forwardRef<HTMLInputElement, ToggleProps>(
             className={`
               w-11 h-6 rounded-full bg-white/20
               transition-colors duration-150
-              peer-checked:bg-[#FF6B00]
-              peer-focus-visible:ring-2 peer-focus-visible:ring-[#FF6B00]/20
+              peer-checked:bg-[#d4b08c]
+              peer-focus-visible:ring-2 peer-focus-visible:ring-[#d4b08c]/20
               ${className}
             `}
           />

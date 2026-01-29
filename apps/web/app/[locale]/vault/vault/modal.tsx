@@ -5,8 +5,8 @@ import type { ItemType } from "@/lib/generated/prisma/enums";
 import type { VaultItem } from "./store";
 import { fieldConfigs } from "./fields";
 import { typeIcons, typeIconsLarge, typeLabels, typeColors } from "./icons";
-import { PasswordFieldLight } from "./password";
-import { TagInputLight } from "./tags";
+import { PasswordField } from "./password";
+import { TagInput } from "./tags";
 
 interface Props {
 	item?: VaultItem | null;
@@ -83,11 +83,11 @@ export function ItemModal({ item, defaulttype, onSave, onDelete, onRestore, onCl
 	}
 
 	function renderField(field: (typeof fields)[0]) {
-		const inputClass = "w-full bg-white border border-stone-200 rounded-xl px-4 py-3 text-base text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-orange-500/40 focus:border-orange-500 transition-all read-only:bg-stone-50 read-only:text-stone-500";
+		const inputClass = "w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-base text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-[#d4b08c]/40 focus:border-[#d4b08c] transition-all read-only:bg-white/[0.02] read-only:text-white/50";
 
 		return (
 			<div>
-				<label className="block text-sm font-medium text-stone-600 mb-2">{field.label}</label>
+				<label className="block text-sm font-medium text-white/50 mb-2">{field.label}</label>
 				{field.type === "textarea" ? (
 					<textarea
 						value={(data[field.name] as string) || ""}
@@ -98,7 +98,7 @@ export function ItemModal({ item, defaulttype, onSave, onDelete, onRestore, onCl
 						className={`${inputClass} resize-none font-mono`}
 					/>
 				) : field.type === "password" ? (
-					<PasswordFieldLight
+					<PasswordField
 						value={(data[field.name] as string) || ""}
 						onChange={(v) => setData({ ...data, [field.name]: v })}
 						required={field.required}
@@ -128,24 +128,24 @@ export function ItemModal({ item, defaulttype, onSave, onDelete, onRestore, onCl
 			onClick={handleBackdrop}
 		>
 			<div
-				className={`bg-white rounded-t-3xl sm:rounded-2xl w-full sm:max-w-lg max-h-[90vh] sm:max-h-[85vh] flex flex-col shadow-2xl transition-all duration-200 ease-out ${isVisible ? "translate-y-0 opacity-100 sm:scale-100" : "translate-y-full sm:translate-y-0 sm:scale-95 opacity-0"}`}
+				className={`bg-[#161616] rounded-t-3xl sm:rounded-2xl w-full sm:max-w-lg max-h-[90vh] sm:max-h-[85vh] flex flex-col shadow-2xl transition-all duration-200 ease-out ${isVisible ? "translate-y-0 opacity-100 sm:scale-100" : "translate-y-full sm:translate-y-0 sm:scale-95 opacity-0"}`}
 			>
-				<div className="flex items-center justify-between px-6 py-5 border-b border-stone-100">
+				<div className="flex items-center justify-between px-6 py-5 border-b border-white/10">
 					<div className="flex items-center gap-4">
 						<div className={`w-11 h-11 rounded-xl flex items-center justify-center ${typeColors[type]}`}>
 							{typeIconsLarge[type]}
 						</div>
 						<div>
-							<h2 className="text-lg font-semibold text-stone-900">
+							<h2 className="text-lg font-semibold text-white">
 								{isTrash ? "view item" : item ? "edit item" : "new item"}
 							</h2>
-							<p className="text-sm text-stone-500">{typeLabels[type]}</p>
+							<p className="text-sm text-white/50">{typeLabels[type]}</p>
 						</div>
 					</div>
 					<button
 						type="button"
 						onClick={handleClose}
-						className="w-10 h-10 -mr-2 flex items-center justify-center text-stone-400 hover:text-stone-600 hover:bg-stone-100 rounded-xl transition-colors"
+						className="w-10 h-10 -mr-2 flex items-center justify-center text-white/40 hover:text-white hover:bg-white/5 rounded-xl transition-colors"
 						aria-label="close"
 					>
 						<svg aria-hidden="true" className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -158,8 +158,8 @@ export function ItemModal({ item, defaulttype, onSave, onDelete, onRestore, onCl
 					<div className="p-6 space-y-5">
 						{!item && (
 							<div>
-								<label className="block text-sm font-medium text-stone-600 mb-2">type</label>
-								<div className="flex flex-wrap gap-1.5 p-1.5 bg-stone-100 rounded-xl">
+								<label className="block text-sm font-medium text-white/50 mb-2">type</label>
+								<div className="flex flex-wrap gap-1.5 p-1.5 bg-white/5 rounded-xl">
 									{types.map((t) => (
 										<button
 											key={t}
@@ -167,8 +167,8 @@ export function ItemModal({ item, defaulttype, onSave, onDelete, onRestore, onCl
 											onClick={() => setType(t)}
 											className={`flex items-center gap-2 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
 												type === t
-													? "bg-white text-stone-900 shadow-sm"
-													: "text-stone-500 hover:text-stone-700 hover:bg-stone-50"
+													? "bg-white/10 text-white shadow-sm"
+													: "text-white/50 hover:text-white hover:bg-white/5"
 											}`}
 										>
 											{typeIcons[t]}
@@ -180,7 +180,7 @@ export function ItemModal({ item, defaulttype, onSave, onDelete, onRestore, onCl
 						)}
 
 						<div>
-							<label className="block text-sm font-medium text-stone-600 mb-2">title</label>
+							<label className="block text-sm font-medium text-white/50 mb-2">title</label>
 							<input
 								ref={titleRef}
 								type="text"
@@ -189,27 +189,27 @@ export function ItemModal({ item, defaulttype, onSave, onDelete, onRestore, onCl
 								placeholder={typeLabels[type]}
 								required
 								readOnly={!!readOnly}
-								className="w-full bg-white border border-stone-200 rounded-xl px-4 py-3 text-base text-stone-900 placeholder:text-stone-400 focus:outline-none focus:ring-2 focus:ring-orange-500/40 focus:border-orange-500 transition-all read-only:bg-stone-50 read-only:text-stone-500"
+								className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-base text-white placeholder:text-white/40 focus:outline-none focus:ring-2 focus:ring-[#d4b08c]/40 focus:border-[#d4b08c] transition-all read-only:bg-white/[0.02] read-only:text-white/50"
 							/>
 						</div>
 
 						{renderFields()}
 
 						<div>
-							<label className="block text-sm font-medium text-stone-600 mb-2">tags</label>
-							<TagInputLight tags={tags} onChange={setTags} readOnly={!!readOnly} />
+							<label className="block text-sm font-medium text-white/50 mb-2">tags</label>
+							<TagInput tags={tags} onChange={setTags} readOnly={!!readOnly} />
 						</div>
 					</div>
 				</form>
 
-				<div className="px-6 py-4 pb-safe bg-stone-50 border-t border-stone-100 flex flex-col-reverse sm:flex-row gap-3 rounded-b-3xl sm:rounded-b-2xl">
+				<div className="px-6 py-4 pb-safe bg-white/[0.02] border-t border-white/10 flex flex-col-reverse sm:flex-row gap-3 rounded-b-3xl sm:rounded-b-2xl">
 					{isTrash && item ? (
 						<>
 							<button
 								type="button"
 								onClick={handleClose}
 								disabled={saving}
-								className="flex-1 px-4 py-3 text-stone-600 font-medium rounded-xl border border-stone-200 hover:bg-stone-100 active:bg-stone-200 transition-colors disabled:opacity-50"
+								className="flex-1 px-4 py-3 text-white/50 font-medium rounded-xl border border-white/10 hover:bg-white/5 active:bg-white/10 transition-colors disabled:opacity-50"
 							>
 								close
 							</button>
@@ -218,7 +218,7 @@ export function ItemModal({ item, defaulttype, onSave, onDelete, onRestore, onCl
 									type="button"
 									onClick={onRestore}
 									disabled={saving}
-									className="flex-1 px-4 py-3 bg-orange-500 text-white font-medium rounded-xl hover:bg-orange-600 active:bg-orange-700 transition-colors disabled:opacity-50"
+									className="flex-1 px-4 py-3 bg-[#d4b08c] text-[#0a0a0a] font-medium rounded-xl hover:bg-[#c9a57f] active:bg-[#be9a74] transition-colors disabled:opacity-50"
 								>
 									{saving ? "restoring..." : "restore"}
 								</button>
@@ -228,7 +228,7 @@ export function ItemModal({ item, defaulttype, onSave, onDelete, onRestore, onCl
 									type="button"
 									onClick={onDelete}
 									disabled={saving}
-									className="px-4 py-3 text-red-600 font-medium rounded-xl border border-red-200 bg-red-50 hover:bg-red-100 active:bg-red-200 transition-colors disabled:opacity-50"
+									className="px-4 py-3 text-red-400 font-medium rounded-xl border border-red-500/20 bg-red-500/10 hover:bg-red-500/20 active:bg-red-500/30 transition-colors disabled:opacity-50"
 								>
 									{saving ? "deleting..." : "delete forever"}
 								</button>
@@ -241,7 +241,7 @@ export function ItemModal({ item, defaulttype, onSave, onDelete, onRestore, onCl
 									type="button"
 									onClick={onDelete}
 									disabled={saving}
-									className="sm:mr-auto px-4 py-3 text-red-500 font-medium rounded-xl hover:bg-red-50 active:bg-red-100 transition-colors disabled:opacity-50"
+									className="sm:mr-auto px-4 py-3 text-red-400 font-medium rounded-xl hover:bg-red-500/10 active:bg-red-500/20 transition-colors disabled:opacity-50"
 								>
 									{saving ? "deleting..." : "delete"}
 								</button>
@@ -250,7 +250,7 @@ export function ItemModal({ item, defaulttype, onSave, onDelete, onRestore, onCl
 								type="button"
 								onClick={handleClose}
 								disabled={saving}
-								className="flex-1 sm:flex-initial px-5 py-3 text-stone-600 font-medium rounded-xl border border-stone-200 hover:bg-stone-100 active:bg-stone-200 transition-colors disabled:opacity-50"
+								className="flex-1 sm:flex-initial px-5 py-3 text-white/50 font-medium rounded-xl border border-white/10 hover:bg-white/5 active:bg-white/10 transition-colors disabled:opacity-50"
 							>
 								cancel
 							</button>
@@ -258,7 +258,7 @@ export function ItemModal({ item, defaulttype, onSave, onDelete, onRestore, onCl
 								type="submit"
 								onClick={handleSubmit}
 								disabled={saving}
-								className="flex-1 sm:flex-initial px-6 py-3 bg-orange-500 text-white font-medium rounded-xl hover:bg-orange-600 active:bg-orange-700 transition-colors disabled:opacity-50"
+								className="flex-1 sm:flex-initial px-6 py-3 bg-[#d4b08c] text-[#0a0a0a] font-medium rounded-xl hover:bg-[#c9a57f] active:bg-[#be9a74] transition-colors disabled:opacity-50"
 							>
 								{saving ? "saving..." : "save"}
 							</button>
