@@ -7,13 +7,13 @@ import type { FolderData, SpecialFolder } from "@/lib/types";
 import type { VaultItem } from "./store";
 import type { LoginData } from "@/lib/types";
 import * as store from "./store";
-import { SearchBar } from "./search";
-import { TypeFilters } from "./filters";
-import { VaultTable } from "./table";
-import { ItemModal } from "./modal";
-import { TagFilter } from "./tags";
 import { Folders } from "@/components/folders";
 import { useSidebar } from "@/components/sidebar";
+import { ItemModal } from "./modal";
+import { VaultGrid } from "./grid";
+import { VaultSearch } from "./vaultsearch";
+import { VaultEmpty } from "./empty";
+import { VaultLoading } from "./loading";
 
 const itemtypes: ItemType[] = ["login", "note", "card", "identity", "ssh", "api", "otp", "passkey"];
 
@@ -289,15 +289,15 @@ export default function Vault() {
 
 	const isTrash = folder === "trash";
 	const titles: Record<string, { title: string; description: string }> = {
-		all: { title: "All Items", description: "View and manage all your stored credentials" },
-		favorites: { title: "Favorites", description: "Quick access to your starred items" },
-		trash: { title: "Trash", description: "Deleted items are permanently removed after 30 days" },
+		all: { title: "All Items", description: "Your secure vault" },
+		favorites: { title: "Favorites", description: "Quick access to starred items" },
+		trash: { title: "Trash", description: "Items deleted in the last 30 days" },
 	};
-	const { title, description } = titles[folder] || { title: "Vault", description: "Secure storage for your credentials" };
+	const { title, description } = titles[folder] || { title: "Vault", description: "Secure storage" };
 
 	return (
-		<div className="flex h-full">
-			<div className="hidden md:block w-56 shrink-0 border-r border-white/[0.06] h-full overflow-y-auto scrollbar-hidden">
+		<div className="flex h-full bg-[#0a0a0a]">
+			<div className="hidden md:block w-56 shrink-0 border-r border-white/[0.04] h-full overflow-y-auto scrollbar-hidden">
 				<div className="p-4">
 					<Folders
 						folders={folders}
@@ -315,65 +315,51 @@ export default function Vault() {
 				</div>
 			</div>
 			<div className="flex-1 min-w-0 h-full overflow-y-auto scrollbar-hidden">
-				<div className="p-8 max-w-5xl space-y-6">
-					<header className="flex items-start justify-between gap-6">
-						<div className="space-y-1">
-							<h1 className="text-xl font-semibold text-white tracking-tight">{title}</h1>
-							<p className="text-sm text-white/50">{description}</p>
+				<div className="p-6 md:p-8 max-w-6xl mx-auto">
+					<header className="mb-8">
+						<div className="flex items-start justify-between gap-4 mb-6">
+							<div>
+								<h1 className="text-2xl font-semibold text-white tracking-tight mb-1">{title}</h1>
+								<p className="text-sm text-white/40">{description}</p>
+							</div>
+							{!isTrash && (
+								<button
+									onClick={() => { setEditingItem(null); setShowModal(true); }}
+									className="shrink-0 inline-flex items-center gap-2 px-4 py-2.5 bg-[#d4b08c] text-[#0a0a0a] text-sm font-medium rounded-lg hover:bg-[#d4b08c]/90 transition-all shadow-lg shadow-[#d4b08c]/10"
+								>
+									<svg aria-hidden="true" className="w-4 h-4" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
+										<path strokeLinecap="round" strokeLinejoin="round" d="M12 4v16m8-8H4" />
+									</svg>
+									<span className="hidden sm:inline">New Item</span>
+								</button>
+							)}
 						</div>
-						{!isTrash && (
-							<button
-								onClick={() => { setEditingItem(null); setShowModal(true); }}
-								className="shrink-0 inline-flex items-center gap-2 px-4 py-2 bg-[#FF6B00] text-white text-sm font-medium rounded-lg hover:bg-[#FF6B00]/90 transition-colors"
-							>
-								<svg aria-hidden="true" className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-								</svg>
-								Add Item
-							</button>
-						)}
+
+						<VaultSearch
+							ref={searchRef}
+							search={search}
+							onSearchChange={setSearch}
+							typeFilter={typeFilter}
+							onTypeFilterChange={setTypeFilter}
+							tagFilter={tagFilter}
+							onTagFilterChange={setTagFilter}
+							counts={counts}
+							tags={allTags}
+							isTrash={isTrash}
+						/>
 					</header>
 
-					<div className="space-y-4">
-						<SearchBar ref={searchRef} value={search} onChange={setSearch} />
-						<div className="flex flex-wrap items-center gap-3">
-							{!isTrash && <TypeFilters selected={typeFilter} onSelect={setTypeFilter} counts={counts} />}
-							{!isTrash && allTags.length > 0 && (
-								<>
-									<div className="w-px h-5 bg-white/[0.08]" />
-									<TagFilter tags={allTags} selected={tagFilter} onSelect={setTagFilter} />
-								</>
-							)}
-						</div>
-					</div>
-
 					{loading ? (
-						<div className="text-center py-16">
-							<div className="w-8 h-8 mx-auto border-2 border-white/20 border-t-white/60 rounded-full animate-spin" />
-						</div>
+						<VaultLoading />
 					) : filtered.length === 0 ? (
-						<div className="text-center py-16 rounded-xl border border-white/[0.06] bg-white/[0.02]">
-							<div className="w-12 h-12 mx-auto mb-4 rounded-full bg-white/[0.04] flex items-center justify-center">
-								<svg aria-hidden="true" className="w-6 h-6 text-white/30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m6 4.125l2.25 2.25m0 0l2.25 2.25M12 13.875l2.25-2.25M12 13.875l-2.25 2.25M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z" />
-								</svg>
-							</div>
-							{items.length === 0 && !isTrash ? (
-								<>
-									<p className="text-white/70 font-medium mb-1">No items yet</p>
-									<p className="text-white/40 text-sm">Add your first password, note, or card to get started</p>
-								</>
-							) : isTrash && items.length === 0 ? (
-								<p className="text-white/40">Trash is empty</p>
-							) : (
-								<>
-									<p className="text-white/70 font-medium mb-1">No results found</p>
-									<p className="text-white/40 text-sm">Try adjusting your search or filters</p>
-								</>
-							)}
-						</div>
+						<VaultEmpty
+							hasItems={items.length > 0}
+							isTrash={isTrash}
+							hasSearch={!!search || !!tagFilter}
+							onAddItem={() => { setEditingItem(null); setShowModal(true); }}
+						/>
 					) : (
-						<VaultTable
+						<VaultGrid
 							items={filtered}
 							onItemClick={(item) => { setEditingItem(item); setShowModal(true); }}
 							onFavorite={handleFavorite}

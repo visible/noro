@@ -61,8 +61,8 @@ export function FolderItem({ folder, depth, selected, onSelect, onRename, onDele
 		<div>
 			<div
 				className={`group flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer transition-colors ${
-					selected ? "bg-[#FF6B00]/20 text-[#FF6B00]" : "text-white/60 hover:text-white hover:bg-white/5"
-				} ${dragover ? "ring-2 ring-[#FF6B00]" : ""}`}
+					selected ? "bg-[#d4b08c]/15 text-[#d4b08c]" : "text-white/60 hover:text-white hover:bg-white/[0.04]"
+				} ${dragover ? "ring-2 ring-[#d4b08c]" : ""}`}
 				style={{ paddingLeft: `${12 + depth * 16}px` }}
 				onClick={onSelect}
 				onDragOver={handleDragOver}
@@ -85,7 +85,7 @@ export function FolderItem({ folder, depth, selected, onSelect, onRename, onDele
 						<Icon name="chevron" className={`w-3 h-3 transition-transform ${expanded ? "rotate-90" : ""}`} />
 					</button>
 				)}
-				<Icon name={folder.icon} className={`w-4 h-4 shrink-0 ${selected ? "text-[#FF6B00]" : "text-white/40"}`} />
+				<Icon name={folder.icon} className={`w-4 h-4 shrink-0 ${selected ? "text-[#d4b08c]" : "text-white/40"}`} />
 				{editing ? (
 					<input
 						ref={inputRef}
@@ -93,19 +93,19 @@ export function FolderItem({ folder, depth, selected, onSelect, onRename, onDele
 						onChange={(e) => setName(e.target.value)}
 						onBlur={saveEdit}
 						onKeyDown={handleKeyDown}
-						className="flex-1 bg-transparent border-b border-white/20 outline-none text-sm text-white py-1"
+						className="flex-1 bg-transparent border-b border-white/10 outline-none text-sm text-white py-1 focus:border-[#d4b08c]/50"
 						onClick={(e) => e.stopPropagation()}
 					/>
 				) : (
 					<span className="flex-1 text-sm font-medium truncate">{folder.name}</span>
 				)}
-				{count > 0 && <span className={`text-xs ${selected ? "text-[#FF6B00]/80" : "text-white/40"}`}>{count}</span>}
+				{count > 0 && <span className={`text-xs ${selected ? "text-[#d4b08c]/80" : "text-white/40"}`}>{count}</span>}
 				<button
 					onClick={(e) => {
 						e.stopPropagation();
 						onDelete();
 					}}
-					className="opacity-0 group-hover:opacity-100 hover:text-red-500 p-2 -mr-1 transition-opacity"
+					className="opacity-0 group-hover:opacity-100 hover:text-red-400 p-2 -mr-1 transition-opacity"
 					aria-label="delete folder"
 				>
 					<Icon name="close" className="w-3 h-3" />

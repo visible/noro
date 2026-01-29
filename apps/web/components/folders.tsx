@@ -83,33 +83,33 @@ export function Folders({
 			<button
 				type="button"
 				className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
-					selected === "all" ? "bg-[#FF6B00]/20 text-[#FF6B00]" : "text-white/60 hover:text-white hover:bg-white/5"
+					selected === "all" ? "bg-[#d4b08c]/15 text-[#d4b08c]" : "text-white/60 hover:text-white hover:bg-white/[0.04]"
 				}`}
 				onClick={() => onSelect("all")}
 			>
-				<Icon name="all" className={`w-4 h-4 ${selected === "all" ? "text-[#FF6B00]" : "text-white/40"}`} />
+				<Icon name="all" className={`w-4 h-4 ${selected === "all" ? "text-[#d4b08c]" : "text-white/40"}`} />
 				<span className="flex-1 text-sm text-left font-medium">All Items</span>
-				<span className={`text-xs ${selected === "all" ? "text-[#FF6B00]/80" : "text-white/40"}`}>{totalCount}</span>
+				<span className={`text-xs ${selected === "all" ? "text-[#d4b08c]/80" : "text-white/40"}`}>{totalCount}</span>
 			</button>
 
 			<button
 				type="button"
 				className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
-					selected === "favorites" ? "bg-[#FF6B00]/20 text-[#FF6B00]" : "text-white/60 hover:text-white hover:bg-white/5"
+					selected === "favorites" ? "bg-[#d4b08c]/15 text-[#d4b08c]" : "text-white/60 hover:text-white hover:bg-white/[0.04]"
 				}`}
 				onClick={() => onSelect("favorites")}
 			>
-				<Icon name="star" className={`w-4 h-4 ${selected === "favorites" ? "text-[#FF6B00]" : "text-white/40"}`} />
+				<Icon name="star" className={`w-4 h-4 ${selected === "favorites" ? "text-[#d4b08c]" : "text-white/40"}`} />
 				<span className="flex-1 text-sm text-left font-medium">Favorites</span>
-				<span className={`text-xs ${selected === "favorites" ? "text-[#FF6B00]/80" : "text-white/40"}`}>{favoriteCount}</span>
+				<span className={`text-xs ${selected === "favorites" ? "text-[#d4b08c]/80" : "text-white/40"}`}>{favoriteCount}</span>
 			</button>
 
 			<div className="pt-4 pb-2">
 				<div className="flex items-center justify-between px-3">
-					<span className="text-xs text-white/40 uppercase tracking-wider font-medium">Folders</span>
+					<span className="text-xs text-white/30 uppercase tracking-wider font-medium">Folders</span>
 					<button
 						onClick={startCreate}
-						className="text-white/40 hover:text-white p-2 -mr-2 transition-colors"
+						className="text-white/30 hover:text-white p-2 -mr-2 transition-colors"
 						aria-label="create folder"
 					>
 						<Icon name="plus" className="w-4 h-4" />
@@ -127,7 +127,7 @@ export function Folders({
 						onBlur={saveCreate}
 						onKeyDown={handleKeyDown}
 						placeholder="Folder name"
-						className="flex-1 bg-transparent border-b border-white/20 outline-none text-sm text-white placeholder:text-white/30 py-1"
+						className="flex-1 bg-transparent border-b border-white/10 outline-none text-sm text-white placeholder:text-white/30 py-1 focus:border-[#d4b08c]/50"
 					/>
 				</div>
 			)}
@@ -138,13 +138,13 @@ export function Folders({
 				<button
 					type="button"
 					className={`w-full flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
-						selected === "trash" ? "bg-[#FF6B00]/20 text-[#FF6B00]" : "text-white/60 hover:text-white hover:bg-white/5"
+						selected === "trash" ? "bg-[#d4b08c]/15 text-[#d4b08c]" : "text-white/60 hover:text-white hover:bg-white/[0.04]"
 					}`}
 					onClick={() => onSelect("trash")}
 				>
-					<Icon name="trash" className={`w-4 h-4 ${selected === "trash" ? "text-[#FF6B00]" : "text-white/40"}`} />
+					<Icon name="trash" className={`w-4 h-4 ${selected === "trash" ? "text-[#d4b08c]" : "text-white/40"}`} />
 					<span className="flex-1 text-sm text-left font-medium">Trash</span>
-					{trashCount > 0 && <span className={`text-xs ${selected === "trash" ? "text-[#FF6B00]/80" : "text-white/40"}`}>{trashCount}</span>}
+					{trashCount > 0 && <span className={`text-xs ${selected === "trash" ? "text-[#d4b08c]/80" : "text-white/40"}`}>{trashCount}</span>}
 				</button>
 			</div>
 		</div>
