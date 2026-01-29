@@ -92,7 +92,7 @@ function tokenize(text: string): Token[] {
 }
 
 const colors: Record<Token["type"], string> = {
-  key: "#FF6B00",
+  key: "#d4b08c",
   string: "#22c55e",
   number: "#3b82f6",
   boolean: "#a855f7",

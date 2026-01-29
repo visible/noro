@@ -8,7 +8,7 @@ export const Divider = forwardRef<HTMLHRElement, DividerProps>(
 	({ className = "", orientation = "horizontal", ...props }, ref) => (
 		<hr
 			ref={ref}
-			className={`border-gray-200 ${
+			className={`border-white/10 ${
 				orientation === "vertical"
 					? "h-full w-px border-l"
 					: "w-full border-t"

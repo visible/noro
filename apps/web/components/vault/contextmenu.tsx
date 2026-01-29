@@ -49,7 +49,7 @@ export function ContextMenu({
 
 	return (
 		<div
-			className="fixed z-50 bg-zinc-900 border border-white/10 rounded-lg shadow-xl py-1 min-w-[160px]"
+			className="fixed z-50 bg-[#161616] border border-white/10 rounded-lg shadow-xl py-1 min-w-[160px]"
 			style={{ left: x, top: y }}
 			onClick={(e) => e.stopPropagation()}
 		>
@@ -75,7 +75,7 @@ export function ContextMenu({
 						<Icon name="chevron" className="w-3 h-3" />
 					</button>
 					{showColors && (
-						<div className="absolute left-full top-0 ml-1 bg-zinc-900 border border-white/10 rounded-lg shadow-xl p-2 flex gap-1">
+						<div className="absolute left-full top-0 ml-1 bg-[#161616] border border-white/10 rounded-lg shadow-xl p-2 flex gap-1">
 							{colors.map((color) => (
 								<button
 									key={color}

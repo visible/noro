@@ -52,7 +52,7 @@ export function VaultListItem({ item, onClick, onFavorite, onTagClick }: Props) 
 		<div
 			onClick={handleClick}
 			className={`flex items-center gap-3 px-3 py-2.5 rounded-lg cursor-pointer group transition-all duration-150 ${
-				isSelected ? "bg-white/10 ring-1 ring-[#FF6B00]/50" : "hover:bg-white/5"
+				isSelected ? "bg-white/10 ring-1 ring-[#d4b08c]/50" : "hover:bg-white/5"
 			}`}
 		>
 			<span className="text-white/40 shrink-0 w-5 h-5 flex items-center justify-center [&>svg]:w-4 [&>svg]:h-4">
@@ -81,7 +81,7 @@ export function VaultListItem({ item, onClick, onFavorite, onTagClick }: Props) 
 				}}
 				className={`w-8 h-8 flex items-center justify-center rounded transition-all duration-150 shrink-0 ${
 					item.favorite
-						? "text-[#FF6B00]"
+						? "text-[#d4b08c]"
 						: "text-white/20 hover:text-white/40 opacity-0 group-hover:opacity-100"
 				}`}
 				aria-label={item.favorite ? "remove from favorites" : "add to favorites"}

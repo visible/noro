@@ -187,7 +187,7 @@ export function ItemList({ items, selectedId, onSelect, onFavorite, onTagClick }
 						value={search}
 						onChange={(e) => setSearch(e.target.value)}
 						placeholder="Search items..."
-						className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-10 py-2.5 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-[#FF6B00]/50 focus:ring-1 focus:ring-[#FF6B00]/30 transition-all"
+						className="w-full bg-white/5 border border-white/10 rounded-lg pl-10 pr-10 py-2.5 text-sm text-white placeholder:text-white/40 focus:outline-none focus:border-[#d4b08c]/50 focus:ring-1 focus:ring-[#d4b08c]/30 transition-all"
 					/>
 					{search && (
 						<button
@@ -205,14 +205,14 @@ export function ItemList({ items, selectedId, onSelect, onFavorite, onTagClick }
 						onClick={() => setShowFilters(!showFilters)}
 						className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${
 							showFilters || activeFilters > 0
-								? "bg-[#FF6B00]/20 text-[#FF6B00]"
+								? "bg-[#d4b08c]/20 text-[#d4b08c]"
 								: "bg-white/5 text-white/60 hover:text-white hover:bg-white/10"
 						}`}
 					>
 						<Svg path={iconpaths.filter} className="w-3.5 h-3.5" />
 						filters
 						{activeFilters > 0 && (
-							<span className="w-4 h-4 rounded-full bg-[#FF6B00] text-black text-[10px] flex items-center justify-center">
+							<span className="w-4 h-4 rounded-full bg-[#d4b08c] text-black text-[10px] flex items-center justify-center">
 								{activeFilters}
 							</span>
 						)}
@@ -238,7 +238,7 @@ export function ItemList({ items, selectedId, onSelect, onFavorite, onTagClick }
 								onClick={() => setTypeFilter(null)}
 								className={`px-2.5 py-1.5 rounded text-xs font-medium transition-colors ${
 									typeFilter === null
-										? "bg-[#FF6B00]/20 text-[#FF6B00]"
+										? "bg-[#d4b08c]/20 text-[#d4b08c]"
 										: "bg-white/5 text-white/50 hover:text-white hover:bg-white/10"
 								}`}
 							>
@@ -254,7 +254,7 @@ export function ItemList({ items, selectedId, onSelect, onFavorite, onTagClick }
 										onClick={() => setTypeFilter(isactive ? null : type)}
 										className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded text-xs font-medium transition-colors ${
 											isactive
-												? "bg-[#FF6B00]/20 text-[#FF6B00]"
+												? "bg-[#d4b08c]/20 text-[#d4b08c]"
 												: "bg-white/5 text-white/50 hover:text-white hover:bg-white/10"
 										}`}
 									>
@@ -274,7 +274,7 @@ export function ItemList({ items, selectedId, onSelect, onFavorite, onTagClick }
 										onClick={() => handletagclick(tag)}
 										className={`px-2 py-1 rounded text-xs transition-colors ${
 											tagFilter === tag
-												? "bg-[#FF6B00]/20 text-[#FF6B00]"
+												? "bg-[#d4b08c]/20 text-[#d4b08c]"
 												: "bg-white/5 text-white/50 hover:text-white hover:bg-white/10"
 										}`}
 									>

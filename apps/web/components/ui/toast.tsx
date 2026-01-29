@@ -101,7 +101,7 @@ function ToastItem({ toast, onDismiss }: { toast: Toast; onDismiss: () => void }
 		<div
 			role="alert"
 			aria-live="polite"
-			className={`flex items-start gap-3 w-80 p-4 bg-stone-900 border border-white/10 rounded-xl shadow-lg transition-all duration-200 ${
+			className={`flex items-start gap-3 w-80 p-4 bg-[#161616] border border-white/10 rounded-xl shadow-lg transition-all duration-200 ${
 				exiting ? "opacity-0 translate-x-4" : "opacity-100 translate-x-0"
 			}`}
 		>
