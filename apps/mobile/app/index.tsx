@@ -10,6 +10,7 @@ import Animated, {
 import { Logo } from "./_components/logo";
 import { gettoken } from "../lib/storage";
 import { api } from "../lib/api";
+import { useauth } from "../stores/auth";
 
 export default function Splash() {
   const opacity = useSharedValue(0);
@@ -24,6 +25,12 @@ export default function Splash() {
 
   async function checkAuth() {
     await new Promise((r) => setTimeout(r, 1200));
+
+    const { isAuthenticated } = useauth.getState();
+    if (isAuthenticated) {
+      router.replace("/(app)");
+      return;
+    }
 
     const token = await gettoken();
 

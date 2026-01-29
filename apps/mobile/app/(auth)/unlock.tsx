@@ -89,7 +89,7 @@ export default function Unlock() {
 
     if (result.success) {
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      router.replace("/");
+      router.replace("/(app)");
     }
   }, []);
 
@@ -112,7 +112,7 @@ export default function Unlock() {
     try {
       await new Promise((r) => setTimeout(r, 800));
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
-      router.replace("/");
+      router.replace("/(app)");
     } catch (e) {
       setError("incorrect password");
       shake.value = withSequence(
