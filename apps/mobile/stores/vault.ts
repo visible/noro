@@ -84,12 +84,17 @@ type VaultState = {
 };
 
 import { gettoken } from "../lib/storage";
+import { useauth } from "./auth";
 
 const apihost = process.env.EXPO_PUBLIC_API_URL || "https://noro.sh";
 const baseurl = `${apihost}/api`;
 
 async function authfetch(path: string, options: RequestInit = {}) {
-	const token = await gettoken();
+	let token = await gettoken();
+	if (!token) {
+		const authstate = useauth.getState();
+		token = authstate.token;
+	}
 	const headers: Record<string, string> = {
 		"content-type": "application/json",
 		...(options.headers as Record<string, string>),
@@ -97,7 +102,14 @@ async function authfetch(path: string, options: RequestInit = {}) {
 	if (token) {
 		headers["authorization"] = `Bearer ${token}`;
 	}
-	return fetch(`${baseurl}${path}`, { ...options, headers });
+	const url = `${baseurl}${path}`;
+	try {
+		const res = await fetch(url, { ...options, headers });
+		return res;
+	} catch (err) {
+		const msg = err instanceof Error ? err.message : "network error";
+		throw new Error(`request failed: ${msg}`);
+	}
 }
 
 export const usevault = create<VaultState>()(
@@ -123,14 +135,20 @@ export const usevault = create<VaultState>()(
 				set({ loading: true, error: null });
 				try {
 					const res = await authfetch("/v1/vault/items");
-					if (!res.ok) throw new Error("failed to fetch");
+					if (!res.ok) {
+						const body = await res.text();
+						let msg = `fetch failed (${res.status})`;
+						try {
+							const json = JSON.parse(body);
+							msg = json.message || json.error || msg;
+						} catch {}
+						throw new Error(msg);
+					}
 					const data = await res.json();
 					set({ items: data.items || [], loading: false });
 				} catch (err) {
-					set({
-						error: err instanceof Error ? err.message : "unknown error",
-						loading: false,
-					});
+					const msg = err instanceof Error ? err.message : "unknown error";
+					set({ error: msg, loading: false });
 				}
 			},
 
@@ -141,17 +159,23 @@ export const usevault = create<VaultState>()(
 						method: "POST",
 						body: JSON.stringify(input),
 					});
-					if (!res.ok) throw new Error("failed to create");
+					if (!res.ok) {
+						const body = await res.text();
+						let msg = `create failed (${res.status})`;
+						try {
+							const json = JSON.parse(body);
+							msg = json.message || json.error || msg;
+						} catch {}
+						throw new Error(msg);
+					}
 					const data = await res.json();
 					set((state) => ({
 						items: [...state.items, data.item],
 						loading: false,
 					}));
 				} catch (err) {
-					set({
-						error: err instanceof Error ? err.message : "unknown error",
-						loading: false,
-					});
+					const msg = err instanceof Error ? err.message : "unknown error";
+					set({ error: msg, loading: false });
 				}
 			},
 
@@ -162,7 +186,15 @@ export const usevault = create<VaultState>()(
 						method: "PATCH",
 						body: JSON.stringify(input),
 					});
-					if (!res.ok) throw new Error("failed to update");
+					if (!res.ok) {
+						const body = await res.text();
+						let msg = `update failed (${res.status})`;
+						try {
+							const json = JSON.parse(body);
+							msg = json.message || json.error || msg;
+						} catch {}
+						throw new Error(msg);
+					}
 					const data = await res.json();
 					set((state) => ({
 						items: state.items.map((item) =>
@@ -171,10 +203,8 @@ export const usevault = create<VaultState>()(
 						loading: false,
 					}));
 				} catch (err) {
-					set({
-						error: err instanceof Error ? err.message : "unknown error",
-						loading: false,
-					});
+					const msg = err instanceof Error ? err.message : "unknown error";
+					set({ error: msg, loading: false });
 				}
 			},
 
@@ -184,16 +214,22 @@ export const usevault = create<VaultState>()(
 					const res = await authfetch(`/v1/vault/items/${id}`, {
 						method: "DELETE",
 					});
-					if (!res.ok) throw new Error("failed to delete");
+					if (!res.ok) {
+						const body = await res.text();
+						let msg = `delete failed (${res.status})`;
+						try {
+							const json = JSON.parse(body);
+							msg = json.message || json.error || msg;
+						} catch {}
+						throw new Error(msg);
+					}
 					set((state) => ({
 						items: state.items.filter((item) => item.id !== id),
 						loading: false,
 					}));
 				} catch (err) {
-					set({
-						error: err instanceof Error ? err.message : "unknown error",
-						loading: false,
-					});
+					const msg = err instanceof Error ? err.message : "unknown error";
+					set({ error: msg, loading: false });
 				}
 			},
 
