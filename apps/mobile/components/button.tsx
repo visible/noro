@@ -1,145 +1,127 @@
-import { forwardRef } from "react";
-import {
-  Pressable,
-  Text,
-  ActivityIndicator,
-  type PressableProps,
-  type ViewStyle,
-  type TextStyle,
-} from "react-native";
+import { Pressable, Text, StyleSheet, ActivityIndicator, type ViewStyle } from "react-native";
+import * as Haptics from "expo-haptics";
 import Animated, {
-  useSharedValue,
   useAnimatedStyle,
-  withSpring,
+  useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import * as Haptics from "expo-haptics";
-
-type Variant = "primary" | "secondary" | "ghost";
-type Size = "sm" | "md" | "lg";
-
-interface ButtonProps extends Omit<PressableProps, "style"> {
-  variant?: Variant;
-  size?: Size;
-  loading?: boolean;
-  children: string;
-  style?: ViewStyle;
-}
 
 const AnimatedPressable = Animated.createAnimatedComponent(Pressable);
 
-const variants: Record<Variant, { container: ViewStyle; text: TextStyle }> = {
+type Variant = "primary" | "secondary" | "ghost";
+
+interface ButtonProps {
+  children: string;
+  variant?: Variant;
+  loading?: boolean;
+  disabled?: boolean;
+  onPress?: () => void;
+  style?: ViewStyle;
+}
+
+export function Button({
+  children,
+  variant = "primary",
+  loading = false,
+  disabled = false,
+  onPress,
+  style,
+}: ButtonProps) {
+  const scale = useSharedValue(1);
+  const opacity = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+    opacity: opacity.value,
+  }));
+
+  function handlePressIn() {
+    scale.value = withTiming(0.97, { duration: 100 });
+    opacity.value = withTiming(0.9, { duration: 100 });
+  }
+
+  function handlePressOut() {
+    scale.value = withTiming(1, { duration: 150 });
+    opacity.value = withTiming(1, { duration: 150 });
+  }
+
+  async function handlePress() {
+    if (loading || disabled) return;
+    await Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    onPress?.();
+  }
+
+  const variantStyles = {
+    primary: styles.primary,
+    secondary: styles.secondary,
+    ghost: styles.ghost,
+  };
+
+  const textStyles = {
+    primary: styles.primaryText,
+    secondary: styles.secondaryText,
+    ghost: styles.ghostText,
+  };
+
+  return (
+    <AnimatedPressable
+      onPress={handlePress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      disabled={disabled || loading}
+      style={[
+        styles.button,
+        variantStyles[variant],
+        (disabled || loading) && styles.disabled,
+        animatedStyle,
+        style,
+      ]}
+    >
+      {loading ? (
+        <ActivityIndicator
+          size="small"
+          color={variant === "primary" ? "#0a0a0a" : "#FF6B00"}
+        />
+      ) : (
+        <Text style={[styles.text, textStyles[variant]]}>{children}</Text>
+      )}
+    </AnimatedPressable>
+  );
+}
+
+const styles = StyleSheet.create({
+  button: {
+    height: 52,
+    borderRadius: 12,
+    alignItems: "center",
+    justifyContent: "center",
+    width: "100%",
+  },
   primary: {
-    container: { backgroundColor: "#d4b08c" },
-    text: { color: "#0a0a0a" },
+    backgroundColor: "#FF6B00",
   },
   secondary: {
-    container: {
-      backgroundColor: "transparent",
-      borderWidth: 1,
-      borderColor: "rgba(255,255,255,0.2)",
-    },
-    text: { color: "#ffffff" },
+    backgroundColor: "rgba(255,255,255,0.1)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.1)",
   },
   ghost: {
-    container: { backgroundColor: "transparent" },
-    text: { color: "rgba(255,255,255,0.7)" },
+    backgroundColor: "transparent",
   },
-};
-
-const sizes: Record<Size, { container: ViewStyle; text: TextStyle }> = {
-  sm: {
-    container: { height: 36, paddingHorizontal: 14, borderRadius: 8 },
-    text: { fontSize: 13, fontWeight: "500" },
+  disabled: {
+    opacity: 0.5,
   },
-  md: {
-    container: { height: 44, paddingHorizontal: 18, borderRadius: 10 },
-    text: { fontSize: 15, fontWeight: "600" },
+  text: {
+    fontSize: 16,
+    fontWeight: "600",
   },
-  lg: {
-    container: { height: 52, paddingHorizontal: 24, borderRadius: 12 },
-    text: { fontSize: 16, fontWeight: "600" },
+  primaryText: {
+    color: "#0a0a0a",
   },
-};
-
-export const Button = forwardRef<typeof Pressable, ButtonProps>(
-  (
-    {
-      variant = "primary",
-      size = "md",
-      loading = false,
-      disabled,
-      children,
-      onPressIn,
-      onPressOut,
-      onPress,
-      style,
-      ...props
-    },
-    ref
-  ) => {
-    const scale = useSharedValue(1);
-    const opacity = useSharedValue(1);
-
-    const animatedStyle = useAnimatedStyle(() => ({
-      transform: [{ scale: scale.value }],
-      opacity: opacity.value,
-    }));
-
-    function handlePressIn(e: any) {
-      scale.value = withSpring(0.97, { damping: 15, stiffness: 400 });
-      opacity.value = withTiming(0.9, { duration: 100 });
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-      onPressIn?.(e);
-    }
-
-    function handlePressOut(e: any) {
-      scale.value = withSpring(1, { damping: 15, stiffness: 400 });
-      opacity.value = withTiming(1, { duration: 100 });
-      onPressOut?.(e);
-    }
-
-    function handlePress(e: any) {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
-      onPress?.(e);
-    }
-
-    const isDisabled = disabled || loading;
-    const variantStyle = variants[variant];
-    const sizeStyle = sizes[size];
-
-    return (
-      <AnimatedPressable
-        ref={ref as any}
-        disabled={isDisabled}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
-        onPress={handlePress}
-        style={[
-          {
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-          },
-          variantStyle.container,
-          sizeStyle.container,
-          isDisabled && { opacity: 0.5 },
-          animatedStyle,
-          style,
-        ]}
-        {...props}
-      >
-        {loading ? (
-          <ActivityIndicator
-            size="small"
-            color={variant === "primary" ? "#0a0a0a" : "#ffffff"}
-            style={{ marginRight: 8 }}
-          />
-        ) : null}
-        <Text style={[variantStyle.text, sizeStyle.text]}>{children}</Text>
-      </AnimatedPressable>
-    );
-  }
-);
-
-Button.displayName = "Button";
+  secondaryText: {
+    color: "#ffffff",
+  },
+  ghostText: {
+    color: "#FF6B00",
+  },
+});

@@ -1,194 +1,150 @@
-import { forwardRef, useState } from "react";
+import { useState } from "react";
 import {
   View,
   TextInput,
   Text,
   Pressable,
+  StyleSheet,
   type TextInputProps,
-  type ViewStyle,
 } from "react-native";
 import Animated, {
-  useSharedValue,
   useAnimatedStyle,
+  useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import * as Haptics from "expo-haptics";
+import Svg, { Path } from "react-native-svg";
 
-interface InputProps extends Omit<TextInputProps, "style"> {
+interface InputProps extends TextInputProps {
   label?: string;
   error?: string;
-  containerStyle?: ViewStyle;
+  type?: "text" | "email" | "password";
 }
 
-const AnimatedView = Animated.createAnimatedComponent(View);
-
-export const Input = forwardRef<TextInput, InputProps>(
-  ({ label, error, secureTextEntry, containerStyle, onFocus, onBlur, ...props }, ref) => {
-    const [focused, setFocused] = useState(false);
-    const [showPassword, setShowPassword] = useState(false);
-    const borderOpacity = useSharedValue(0.1);
-
-    const borderStyle = useAnimatedStyle(() => ({
-      borderColor: error
-        ? "rgba(239,68,68,1)"
-        : `rgba(212,176,140,${borderOpacity.value})`,
-    }));
-
-    function handleFocus(e: any) {
-      setFocused(true);
-      borderOpacity.value = withTiming(0.8, { duration: 150 });
-      onFocus?.(e);
-    }
-
-    function handleBlur(e: any) {
-      setFocused(false);
-      borderOpacity.value = withTiming(0.1, { duration: 150 });
-      onBlur?.(e);
-    }
-
-    function togglePassword() {
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-      setShowPassword((prev) => !prev);
-    }
-
-    const isPassword = secureTextEntry !== undefined;
-
+function EyeIcon({ visible }: { visible: boolean }) {
+  if (visible) {
     return (
-      <View style={containerStyle}>
-        {label ? (
-          <Text
-            style={{
-              fontSize: 13,
-              fontWeight: "500",
-              color: "rgba(255,255,255,0.7)",
-              marginBottom: 8,
-            }}
-          >
-            {label}
-          </Text>
-        ) : null}
-        <AnimatedView
-          style={[
-            {
-              flexDirection: "row",
-              alignItems: "center",
-              backgroundColor: "rgba(255,255,255,0.05)",
-              borderWidth: 1,
-              borderRadius: 12,
-              paddingHorizontal: 14,
-            },
-            borderStyle,
-          ]}
-        >
-          <TextInput
-            ref={ref}
-            placeholderTextColor="rgba(255,255,255,0.3)"
-            secureTextEntry={isPassword && !showPassword}
-            onFocus={handleFocus}
-            onBlur={handleBlur}
-            style={{
-              flex: 1,
-              height: 48,
-              fontSize: 15,
-              color: "#ffffff",
-            }}
-            {...props}
-          />
-          {isPassword ? (
-            <Pressable onPress={togglePassword} hitSlop={8}>
-              {showPassword ? (
-                <EyeOffIcon />
-              ) : (
-                <EyeIcon />
-              )}
-            </Pressable>
-          ) : null}
-        </AnimatedView>
-        {error ? (
-          <Text
-            style={{
-              fontSize: 12,
-              color: "#ef4444",
-              marginTop: 6,
-            }}
-          >
-            {error}
-          </Text>
-        ) : null}
-      </View>
+      <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
+        <Path
+          stroke="rgba(255,255,255,0.4)"
+          strokeWidth={1.5}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0"
+        />
+        <Path
+          stroke="rgba(255,255,255,0.4)"
+          strokeWidth={1.5}
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0"
+        />
+      </Svg>
     );
   }
-);
-
-Input.displayName = "Input";
-
-function EyeIcon() {
   return (
-    <View style={{ width: 20, height: 20 }}>
-      <View
-        style={{
-          position: "absolute",
-          width: 14,
-          height: 10,
-          borderWidth: 1.5,
-          borderColor: "rgba(255,255,255,0.4)",
-          borderRadius: 7,
-          top: 5,
-          left: 3,
-        }}
+    <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
+      <Path
+        stroke="rgba(255,255,255,0.4)"
+        strokeWidth={1.5}
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        d="M3.98 8.223A10.477 10.477 0 0 0 1.934 12c1.292 4.338 5.31 7.5 10.066 7.5.993 0 1.953-.138 2.863-.395M6.228 6.228A10.451 10.451 0 0 1 12 4.5c4.756 0 8.773 3.162 10.065 7.498a10.522 10.522 0 0 1-4.293 5.774M6.228 6.228 3 3m3.228 3.228 3.65 3.65m7.894 7.894L21 21m-3.228-3.228-3.65-3.65m0 0a3 3 0 1 0-4.243-4.243m4.242 4.242L9.88 9.88"
       />
-      <View
-        style={{
-          position: "absolute",
-          width: 4,
-          height: 4,
-          backgroundColor: "rgba(255,255,255,0.4)",
-          borderRadius: 2,
-          top: 8,
-          left: 8,
-        }}
-      />
+    </Svg>
+  );
+}
+
+export function Input({ label, error, type = "text", style, ...props }: InputProps) {
+  const [focused, setFocused] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const borderColor = useSharedValue("rgba(255,255,255,0.1)");
+
+  const animatedBorder = useAnimatedStyle(() => ({
+    borderColor: borderColor.value,
+  }));
+
+  function handleFocus() {
+    setFocused(true);
+    borderColor.value = withTiming(error ? "#ef4444" : "#FF6B00", { duration: 150 });
+  }
+
+  function handleBlur() {
+    setFocused(false);
+    borderColor.value = withTiming(error ? "#ef4444" : "rgba(255,255,255,0.1)", { duration: 150 });
+  }
+
+  return (
+    <View style={styles.container}>
+      {label && <Text style={styles.label}>{label}</Text>}
+      <Animated.View
+        style={[
+          styles.inputContainer,
+          animatedBorder,
+          error && styles.inputError,
+        ]}
+      >
+        <TextInput
+          style={[styles.input, style]}
+          placeholderTextColor="rgba(255,255,255,0.3)"
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          secureTextEntry={type === "password" && !showPassword}
+          keyboardType={type === "email" ? "email-address" : "default"}
+          autoCapitalize={type === "email" ? "none" : "sentences"}
+          autoCorrect={type !== "email" && type !== "password"}
+          {...props}
+        />
+        {type === "password" && (
+          <Pressable
+            onPress={() => setShowPassword(!showPassword)}
+            style={styles.toggle}
+            hitSlop={8}
+          >
+            <EyeIcon visible={showPassword} />
+          </Pressable>
+        )}
+      </Animated.View>
+      {error && <Text style={styles.error}>{error}</Text>}
     </View>
   );
 }
 
-function EyeOffIcon() {
-  return (
-    <View style={{ width: 20, height: 20 }}>
-      <View
-        style={{
-          position: "absolute",
-          width: 14,
-          height: 10,
-          borderWidth: 1.5,
-          borderColor: "rgba(255,255,255,0.4)",
-          borderRadius: 7,
-          top: 5,
-          left: 3,
-        }}
-      />
-      <View
-        style={{
-          position: "absolute",
-          width: 4,
-          height: 4,
-          backgroundColor: "rgba(255,255,255,0.4)",
-          borderRadius: 2,
-          top: 8,
-          left: 8,
-        }}
-      />
-      <View
-        style={{
-          position: "absolute",
-          width: 20,
-          height: 1.5,
-          backgroundColor: "rgba(255,255,255,0.4)",
-          top: 9,
-          left: 0,
-          transform: [{ rotate: "-45deg" }],
-        }}
-      />
-    </View>
-  );
-}
+const styles = StyleSheet.create({
+  container: {
+    width: "100%",
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: "rgba(255,255,255,0.8)",
+    marginBottom: 8,
+  },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(255,255,255,0.05)",
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.1)",
+    borderRadius: 12,
+    paddingHorizontal: 16,
+    height: 52,
+  },
+  inputError: {
+    borderColor: "#ef4444",
+  },
+  input: {
+    flex: 1,
+    fontSize: 16,
+    color: "#ffffff",
+    height: "100%",
+  },
+  toggle: {
+    padding: 4,
+    marginLeft: 8,
+  },
+  error: {
+    fontSize: 12,
+    color: "#ef4444",
+    marginTop: 6,
+  },
+});

@@ -1,6 +1,6 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
-import { CopyIcon, EyeIcon, EyeSlashIcon, CheckIcon } from "../../../../components/icons";
+import { CopyIcon, EyeIcon, EyeSlashIcon, CheckIcon } from "../icons";
 import { colors } from "./constants";
 
 interface FieldCardProps {

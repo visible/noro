@@ -21,10 +21,10 @@ import Animated, {
   FadeIn,
 } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Logo } from "../_components/logo";
-import { Input } from "../_components/input";
-import { Button } from "../_components/button";
-import { FaceIdIcon, FingerprintIcon } from "../_components/icons";
+import { Logo } from "../../components/logo";
+import { Input } from "../../components/input";
+import { Button } from "../../components/button";
+import { FaceIdIcon, FingerprintIcon } from "../../components/icons";
 import { api } from "../../lib/api";
 import { settoken, gettoken } from "../../lib/storage";
 import { useauth } from "../../stores/auth";

@@ -1,4 +1,4 @@
-import type { ItemType } from "../../../../stores";
+import type { ItemType } from "../../stores";
 
 export const colors = {
   bg: "#0a0a0a",

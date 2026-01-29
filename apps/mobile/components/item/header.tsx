@@ -1,9 +1,9 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import Animated, { FadeIn } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
-import { TypeIcon, XIcon, ChevronRightIcon } from "../../../../components/icons";
+import { TypeIcon, XIcon, ChevronRightIcon } from "../icons";
 import { colors, typeColors } from "./constants";
-import type { ItemType } from "../../../../stores";
+import type { ItemType } from "../../stores";
 
 interface FormHeaderProps {
   type?: ItemType;

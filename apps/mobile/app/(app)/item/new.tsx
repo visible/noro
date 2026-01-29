@@ -7,10 +7,10 @@ import * as Haptics from "expo-haptics";
 import { usevault, type ItemType, type CreateItemInput } from "../../../stores";
 import { TypeIcon, ChevronRightIcon } from "../../../components/icons";
 import { fieldConfigs, typeLabels } from "../../../components/types";
-import { colors, typeColors } from "./_components/constants";
-import { FormHeader } from "./_components/header";
-import { FieldInput } from "./_components/field";
-import { TagsInput } from "./_components/tags";
+import { colors, typeColors } from "../../../components/item/constants";
+import { FormHeader } from "../../../components/item/header";
+import { FieldInput } from "../../../components/item/field";
+import { TagsInput } from "../../../components/item/tags";
 
 const types: ItemType[] = ["login", "note", "card", "identity", "ssh", "api", "otp", "passkey"];
 

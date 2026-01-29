@@ -1,7 +1,7 @@
 import { View, TextInput, Text, Pressable, StyleSheet } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
-import { XIcon, PlusIcon, TagIcon } from "../../../../components/icons";
+import { XIcon, PlusIcon, TagIcon } from "../icons";
 import { colors } from "./constants";
 
 interface TagsInputProps {

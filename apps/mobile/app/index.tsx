@@ -7,7 +7,7 @@ import Animated, {
   withTiming,
   Easing,
 } from "react-native-reanimated";
-import { Logo } from "./_components/logo";
+import { Logo } from "../components/logo";
 import { gettoken } from "../lib/storage";
 import { api } from "../lib/api";
 import { useauth } from "../stores/auth";
