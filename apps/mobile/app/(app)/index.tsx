@@ -78,6 +78,8 @@ function TypeBadge({ type }: { type: ItemType }) {
     identity: "id",
     ssh: "ssh",
     api: "api",
+    otp: "otp",
+    passkey: "key",
   };
   return (
     <View style={badgeStyles.badge}>
