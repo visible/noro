@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, {
   useAnimatedStyle,
   useSharedValue,
-  interpolate,
+  withSpring,
 } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 import { Svg, Path, Rect, Circle, Line } from "react-native-svg";
@@ -130,23 +130,29 @@ function TabBarIcon({
   children: React.ReactNode;
   focused: boolean;
 }) {
-  const scale = useSharedValue(1);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-    opacity: interpolate(scale.value, [0.9, 1], [0.7, 1]),
-  }));
-
   return (
-    <Animated.View style={[styles.iconContainer, animatedStyle]}>
+    <View style={styles.iconContainer}>
       {children}
       {focused && <View style={styles.indicator} />}
-    </Animated.View>
+    </View>
   );
 }
 
 function TabBarButton(props: any) {
-  const { children, onPress } = props;
+  const { children, onPress, accessibilityState } = props;
+  const scale = useSharedValue(1);
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ scale: scale.value }],
+  }));
+
+  const handlePressIn = () => {
+    scale.value = withSpring(0.9, { damping: 15, stiffness: 400 });
+  };
+
+  const handlePressOut = () => {
+    scale.value = withSpring(1, { damping: 15, stiffness: 400 });
+  };
 
   const handlePress = () => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
@@ -154,21 +160,38 @@ function TabBarButton(props: any) {
   };
 
   return (
-    <Pressable onPress={handlePress} style={styles.tabButton}>
-      {children}
+    <Pressable
+      onPress={handlePress}
+      onPressIn={handlePressIn}
+      onPressOut={handlePressOut}
+      style={styles.tabButton}
+      hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
+    >
+      <Animated.View style={animatedStyle}>{children}</Animated.View>
     </Pressable>
   );
 }
 
 export default function AppLayout() {
   const insets = useSafeAreaInsets();
+  const tabBarHeight = 56;
+  const bottomPadding = Math.max(insets.bottom, 8);
 
   return (
-    <View style={[styles.container, { paddingBottom: insets.bottom }]}>
+    <View style={styles.container}>
       <Tabs
         screenOptions={{
           headerShown: false,
-          tabBarStyle: [styles.tabBar, { height: 60 + Math.max(insets.bottom, 10) }],
+          tabBarStyle: {
+            backgroundColor: colors.surface,
+            borderTopWidth: 1,
+            borderTopColor: colors.border,
+            height: tabBarHeight + bottomPadding,
+            paddingBottom: bottomPadding,
+            paddingTop: 8,
+            elevation: 0,
+            shadowOpacity: 0,
+          },
           tabBarShowLabel: false,
           tabBarActiveTintColor: colors.accent,
           tabBarInactiveTintColor: colors.muted,
@@ -215,6 +238,18 @@ export default function AppLayout() {
             ),
           }}
         />
+        <Tabs.Screen
+          name="item/new"
+          options={{ href: null }}
+        />
+        <Tabs.Screen
+          name="item/edit"
+          options={{ href: null }}
+        />
+        <Tabs.Screen
+          name="item/[id]"
+          options={{ href: null }}
+        />
       </Tabs>
     </View>
   );
@@ -225,32 +260,25 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.bg,
   },
-  tabBar: {
-    backgroundColor: colors.surface,
-    borderTopWidth: 1,
-    borderTopColor: colors.border,
-    elevation: 0,
-    shadowOpacity: 0,
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-  },
   tabButton: {
     flex: 1,
     alignItems: "center",
     justifyContent: "center",
+    minWidth: 64,
+    minHeight: 48,
   },
   iconContainer: {
     alignItems: "center",
     justifyContent: "center",
-    paddingTop: 8,
+    width: 48,
+    height: 48,
   },
   indicator: {
+    position: "absolute",
+    bottom: 4,
     width: 4,
     height: 4,
     borderRadius: 2,
     backgroundColor: colors.accent,
-    marginTop: 6,
   },
 });

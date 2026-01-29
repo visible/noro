@@ -1,6 +1,6 @@
 import { View, Text, Pressable, StyleSheet } from "react-native";
 import Animated, { FadeInDown } from "react-native-reanimated";
-import { CopyIcon, CheckIcon } from "../../../components/icons";
+import { CopyIcon, CheckIcon } from "../../../../components/icons";
 import { colors } from "./constants";
 
 interface TotpSectionProps {

@@ -8,11 +8,11 @@ import * as Haptics from "expo-haptics";
 import { usevault, type VaultItem } from "../../../stores";
 import { TypeIcon, StarIcon, StarOutlineIcon, CopyIcon, TrashIcon, PencilIcon, ChevronDownIcon, TagIcon } from "../../../components/icons";
 import { fieldConfigs } from "../../../components/types";
-import { colors, typeColors } from "./constants";
-import { Sheet, SheetItem, SheetDivider } from "./sheet";
-import { TotpSection } from "./totp";
-import { FieldCard } from "./card";
-import { MoreIcon, formatDate } from "./utils";
+import { colors, typeColors } from "./_components/constants";
+import { Sheet, SheetItem, SheetDivider } from "./_components/sheet";
+import { TotpSection } from "./_components/totp";
+import { FieldCard } from "./_components/card";
+import { MoreIcon, formatDate } from "./_components/utils";
 
 export default function ItemDetail() {
   const { id } = useLocalSearchParams<{ id: string }>();

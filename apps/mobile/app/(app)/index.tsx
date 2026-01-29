@@ -154,6 +154,7 @@ function FilterChip({
         onPress();
       }}
       style={[styles.filterChip, active && styles.filterChipActive]}
+      hitSlop={{ top: 8, bottom: 8, left: 4, right: 4 }}
     >
       <Text style={[styles.filterChipText, active && styles.filterChipTextActive]}>{label}</Text>
     </Pressable>
@@ -438,7 +439,11 @@ export default function VaultScreen() {
 
       <Pressable
         onPress={handleAddItem}
-        style={({ pressed }) => [styles.fab, pressed && styles.fabPressed]}
+        style={({ pressed }) => [
+          styles.fab,
+          { bottom: 80 + insets.bottom },
+          pressed && styles.fabPressed,
+        ]}
       >
         <PlusIcon />
       </Pressable>
@@ -487,8 +492,8 @@ const styles = StyleSheet.create({
     borderColor: colors.border,
   },
   searchIcon: {
-    paddingLeft: 14,
-    paddingRight: 4,
+    paddingLeft: 16,
+    paddingRight: 8,
   },
   searchInput: {
     flex: 1,
@@ -651,7 +656,6 @@ const styles = StyleSheet.create({
   },
   fab: {
     position: "absolute",
-    bottom: 90,
     right: 20,
     width: 56,
     height: 56,

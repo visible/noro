@@ -21,10 +21,10 @@ import Animated, {
   FadeIn,
 } from "react-native-reanimated";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Logo } from "../components/logo";
-import { Input } from "../components/input";
-import { Button } from "../components/button";
-import { FaceIdIcon, FingerprintIcon } from "../components/icons";
+import { Logo } from "../_components/logo";
+import { Input } from "../_components/input";
+import { Button } from "../_components/button";
+import { FaceIdIcon, FingerprintIcon } from "../_components/icons";
 import { api } from "../../lib/api";
 import { settoken, gettoken } from "../../lib/storage";
 import { useauth } from "../../stores/auth";
@@ -86,8 +86,8 @@ export default function Login() {
     setLoading(true);
     try {
       const response = await api.auth.login(email, password);
-      await settoken(response.session.token);
-      useauth.getState().login(response.user, response.session.token);
+      await settoken(response.token);
+      useauth.getState().login(response.user, response.token);
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       router.replace("/(app)");
     } catch (e) {

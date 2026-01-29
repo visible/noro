@@ -9,7 +9,13 @@
     "newArchEnabled": true,
     "ios": {
       "bundleIdentifier": "sh.noro.app",
-      "supportsTablet": true
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": true,
+          "NSAllowsLocalNetworking": true
+        }
+      }
     },
     "android": {
       "package": "sh.noro.app",

@@ -7,10 +7,10 @@ import * as Haptics from "expo-haptics";
 import { usevault, type VaultItem, type UpdateItemInput } from "../../../stores";
 import { TrashIcon } from "../../../components/icons";
 import { fieldConfigs } from "../../../components/types";
-import { colors, typeColors } from "./constants";
-import { FormHeader } from "./header";
-import { FieldInput } from "./field";
-import { TagsInput } from "./tags";
+import { colors, typeColors } from "./_components/constants";
+import { FormHeader } from "./_components/header";
+import { FieldInput } from "./_components/field";
+import { TagsInput } from "./_components/tags";
 
 export default function EditItem() {
   const { id } = useLocalSearchParams<{ id: string }>();

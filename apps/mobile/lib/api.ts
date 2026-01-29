@@ -95,15 +95,8 @@ export const FoldersResponseSchema = z.object({
   counts: z.record(z.number()),
 });
 
-export const SessionSchema = z.object({
-  id: z.string(),
-  token: z.string(),
-  userId: z.string(),
-  expiresAt: z.string(),
-});
-
 export const AuthResponseSchema = z.object({
-  session: SessionSchema,
+  token: z.string(),
   user: UserSchema,
 });
 
