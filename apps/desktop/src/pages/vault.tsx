@@ -9,7 +9,7 @@ interface Props {
 	onNavigate: (view: "vault" | "generator") => void;
 }
 
-const typeIcons: Record<string, JSX.Element> = {
+const typeIcons: Record<string, React.ReactNode> = {
 	login: (
 		<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
 			<rect x="3" y="11" width="18" height="11" rx="2" ry="2" />

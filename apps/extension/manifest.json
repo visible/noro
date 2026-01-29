@@ -3,7 +3,7 @@
   "name": "noro",
   "version": "0.1.0",
   "description": "one-time secret sharing with end-to-end encryption",
-  "permissions": ["contextMenus", "storage", "clipboardWrite", "notifications", "tabs"],
+  "permissions": ["contextMenus", "storage", "clipboardWrite", "notifications", "tabs", "activeTab"],
   "host_permissions": ["https://noro.sh/*", "<all_urls>"],
   "action": {
     "default_popup": "popup.html",
@@ -31,6 +31,15 @@
       "run_at": "document_idle"
     }
   ],
+  "commands": {
+    "open-popup": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+P",
+        "mac": "Command+Shift+P"
+      },
+      "description": "open noro popup"
+    }
+  },
   "browser_specific_settings": {
     "gecko": {
       "id": "owl@noro.sh",

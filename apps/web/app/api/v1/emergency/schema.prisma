@@ -1,0 +1,37 @@
+model EmergencyAccess {
+	id                String                @id @default(cuid())
+	grantorId         String
+	granteeId         String
+	status            EmergencyAccessStatus @default(pending)
+	waitDays          Int                   @default(7)
+	requestedAt       DateTime?
+	approvedAt        DateTime?
+	deniedAt          DateTime?
+	expiresAt         DateTime?
+	grantorPublicKey  String?
+	grantorPrivateKey String?
+	encryptedVaultKey String?
+	createdAt         DateTime              @default(now())
+	updatedAt         DateTime              @updatedAt
+
+	grantor User @relation("EmergencyGrantor", fields: [grantorId], references: [id], onDelete: Cascade)
+	grantee User @relation("EmergencyGrantee", fields: [granteeId], references: [id], onDelete: Cascade)
+
+	@@unique([grantorId, granteeId])
+	@@index([grantorId])
+	@@index([granteeId])
+	@@index([status])
+	@@map("emergency_access")
+}
+
+enum EmergencyAccessStatus {
+	pending
+	requested
+	approved
+	denied
+	expired
+}
+
+User model additions:
+	emergencyGrantor EmergencyAccess[] @relation("EmergencyGrantor")
+	emergencyGrantee EmergencyAccess[] @relation("EmergencyGrantee")

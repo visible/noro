@@ -19,11 +19,17 @@ model User {
 	keyHash       String?
 	salt          String?
 
-	sessions  Session[]
-	accounts  Account[]
-	vault     Vault?
-	apiKeys   ApiKey[]
-	auditLogs AuditLog[]
+	sessions           Session[]
+	accounts           Account[]
+	vault              Vault?
+	apiKeys            ApiKey[]
+	auditLogs          AuditLog[]
+	recoveryCodes      RecoveryCode[]
+	shares             Share[]
+	emergencyAsGrantor EmergencyAccess[] @relation("EmergencyGrantor")
+	emergencyAsGrantee EmergencyAccess[] @relation("EmergencyGrantee")
+	secretEngines      SecretEngine[]
+	folders            Folder[]
 
 	@@map("user")
 }
@@ -92,6 +98,7 @@ model Vault {
 model Item {
 	id        String   @id @default(cuid())
 	vaultId   String
+	folderId  String?
 	type      ItemType
 	title     String
 	data      String
@@ -101,10 +108,13 @@ model Item {
 	createdAt DateTime @default(now())
 	updatedAt DateTime @updatedAt
 
-	vault Vault @relation(fields: [vaultId], references: [id], onDelete: Cascade)
-	tags  Tag[]
+	vault  Vault   @relation(fields: [vaultId], references: [id], onDelete: Cascade)
+	folder Folder? @relation(fields: [folderId], references: [id], onDelete: SetNull)
+	tags   Tag[]
+	shares Share[]
 
 	@@index([vaultId])
+	@@index([folderId])
 	@@index([type])
 	@@map("item")
 }
@@ -118,6 +128,28 @@ model Tag {
 
 	@@unique([itemId, name])
 	@@map("tag")
+}
+
+model Folder {
+	id        String   @id @default(cuid())
+	name      String
+	parentId  String?
+	userId    String
+	color     String   @default("default")
+	icon      String   @default("folder")
+	order     Int      @default(0)
+	createdAt DateTime @default(now())
+	updatedAt DateTime @updatedAt
+
+	user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+	parent   Folder?  @relation("FolderTree", fields: [parentId], references: [id], onDelete: SetNull)
+	children Folder[] @relation("FolderTree")
+	items    Item[]
+
+	@@index([userId])
+	@@index([parentId])
+	@@index([order])
+	@@map("folder")
 }
 
 model ApiKey {
@@ -153,6 +185,79 @@ model AuditLog {
 	@@map("audit_log")
 }
 
+model RecoveryCode {
+	id        String    @id @default(cuid())
+	userId    String
+	hash      String
+	used      Boolean   @default(false)
+	usedAt    DateTime?
+	createdAt DateTime  @default(now())
+
+	user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+	@@index([userId])
+	@@index([hash])
+	@@map("recovery_code")
+}
+
+model Share {
+	id            String   @id @default(cuid())
+	userId        String
+	itemId        String
+	encryptedData String   @db.Text
+	publicKey     String
+	expiresAt     DateTime
+	maxViews      Int      @default(1)
+	viewCount     Int      @default(0)
+	passwordHash  String?
+	revoked       Boolean  @default(false)
+	createdAt     DateTime @default(now())
+	updatedAt     DateTime @updatedAt
+
+	user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+	item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
+
+	@@index([userId])
+	@@index([itemId])
+	@@index([expiresAt])
+	@@map("share")
+}
+
+model EmergencyAccess {
+	id                String                @id @default(cuid())
+	grantorId         String
+	granteeId         String
+	granteeEmail      String?
+	status            EmergencyAccessStatus @default(pending)
+	waitDays          Int                   @default(7)
+	requestedAt       DateTime?
+	approvedAt        DateTime?
+	deniedAt          DateTime?
+	expiresAt         DateTime?
+	grantorPublicKey  String?
+	grantorPrivateKey String?               @db.Text
+	encryptedVaultKey String?               @db.Text
+	createdAt         DateTime              @default(now())
+	updatedAt         DateTime              @updatedAt
+
+	grantor User @relation("EmergencyGrantor", fields: [grantorId], references: [id], onDelete: Cascade)
+	grantee User @relation("EmergencyGrantee", fields: [granteeId], references: [id], onDelete: Cascade)
+
+	@@unique([grantorId, granteeId])
+	@@index([grantorId])
+	@@index([granteeId])
+	@@index([status])
+	@@map("emergency_access")
+}
+
+enum EmergencyAccessStatus {
+	pending
+	requested
+	approved
+	denied
+	expired
+}
+
 enum ItemType {
 	login
 	note
@@ -162,4 +267,41 @@ enum ItemType {
 	api
 	otp
 	passkey
+}
+
+enum EngineType {
+	database
+	aws
+}
+
+model SecretEngine {
+	id        String     @id @default(cuid())
+	userId    String
+	type      EngineType
+	name      String
+	config    String     @db.Text
+	createdAt DateTime   @default(now())
+	updatedAt DateTime   @updatedAt
+
+	user   User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+	leases SecretLease[]
+
+	@@index([userId])
+	@@index([type])
+	@@map("secret_engine")
+}
+
+model SecretLease {
+	id          String   @id @default(cuid())
+	engineId    String
+	credentials String   @db.Text
+	expiresAt   DateTime
+	revoked     Boolean  @default(false)
+	createdAt   DateTime @default(now())
+
+	engine SecretEngine @relation(fields: [engineId], references: [id], onDelete: Cascade)
+
+	@@index([engineId])
+	@@index([expiresAt])
+	@@map("secret_lease")
 }

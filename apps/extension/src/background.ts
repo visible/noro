@@ -1,8 +1,12 @@
 import { encrypt, generatekey } from "./crypto";
 import { store } from "./api";
 import { getcredentials, savecredential } from "./credentials";
+import { matchurl, type VaultItem } from "./vault";
 
 const baseurl = "https://noro.sh/api";
+
+let cachedvault: VaultItem[] = [];
+let vaultexpiry = 0;
 
 chrome.runtime.onInstalled.addListener(() => {
 	chrome.contextMenus.create({
@@ -58,6 +62,53 @@ async function getsession() {
 	return session || null;
 }
 
+async function fetchvaultitems(): Promise<VaultItem[]> {
+	const now = Date.now();
+	if (cachedvault.length > 0 && now < vaultexpiry) {
+		return cachedvault;
+	}
+
+	const session = await getsession();
+	if (!session) return [];
+
+	try {
+		const res = await fetch(`${baseurl}/v1/vault/items`, {
+			headers: { authorization: `Bearer ${session.token}` },
+		});
+
+		if (!res.ok) {
+			if (res.status === 401) {
+				await chrome.storage.local.remove("session");
+			}
+			return [];
+		}
+
+		const data = await res.json();
+		cachedvault = (data.items || []).map((item: Record<string, unknown>) => {
+			const parsed = typeof item.data === "string" ? JSON.parse(item.data as string) : item.data;
+			return {
+				id: item.id,
+				type: item.type,
+				title: item.title,
+				username: parsed?.username,
+				password: parsed?.password,
+				url: parsed?.url,
+				notes: parsed?.notes,
+				favorite: item.favorite || false,
+			};
+		});
+		vaultexpiry = now + 60000;
+		return cachedvault;
+	} catch {
+		return [];
+	}
+}
+
+function clearvaultcache() {
+	cachedvault = [];
+	vaultexpiry = 0;
+}
+
 chrome.runtime.onMessage.addListener((message, _, respond) => {
 	if (message.type === "share") {
 		(async () => {
@@ -101,6 +152,7 @@ chrome.runtime.onMessage.addListener((message, _, respond) => {
 				}
 
 				const data = await res.json();
+				clearvaultcache();
 				respond({ success: true, token: data.token || "session" });
 			} catch {
 				respond({ success: false, error: "connection failed" });
@@ -112,45 +164,23 @@ chrome.runtime.onMessage.addListener((message, _, respond) => {
 	if (message.type === "items") {
 		(async () => {
 			try {
-				const session = await getsession();
-				if (!session) {
-					respond({ success: false, error: "not authenticated" });
-					return;
-				}
-
-				const res = await fetch(`${baseurl}/v1/vault/items`, {
-					headers: {
-						authorization: `Bearer ${session.token}`,
-					},
-				});
-
-				if (!res.ok) {
-					if (res.status === 401) {
-						await chrome.storage.local.remove("session");
-						respond({ success: false, error: "session expired" });
-						return;
-					}
-					respond({ success: false, error: "failed to load items" });
-					return;
-				}
-
-				const data = await res.json();
-				const items = (data.items || []).map((item: Record<string, unknown>) => {
-					const parsed = typeof item.data === "string" ? JSON.parse(item.data) : item.data;
-					return {
-						id: item.id,
-						type: item.type,
-						title: item.title,
-						username: parsed?.username,
-						password: parsed?.password,
-						url: parsed?.url,
-						notes: parsed?.notes,
-						favorite: item.favorite || false,
-					};
-				});
+				const items = await fetchvaultitems();
 				respond({ success: true, items });
 			} catch {
 				respond({ success: false, error: "connection failed" });
+			}
+		})();
+		return true;
+	}
+
+	if (message.type === "vaultmatch") {
+		(async () => {
+			try {
+				const items = await fetchvaultitems();
+				const matched = items.filter((item) => item.type === "login" && matchurl(item.url, message.url));
+				respond(matched);
+			} catch {
+				respond([]);
 			}
 		})();
 		return true;
@@ -172,5 +202,27 @@ chrome.runtime.onMessage.addListener((message, _, respond) => {
 			respond({ success: true });
 		});
 		return true;
+	}
+
+	if (message.type === "autofill") {
+		chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+			if (tabs[0]?.id) {
+				chrome.tabs.sendMessage(tabs[0].id, { type: "autofill", item: message.item });
+			}
+		});
+		respond({ success: true });
+		return true;
+	}
+
+	if (message.type === "clearcache") {
+		clearvaultcache();
+		respond({ success: true });
+		return true;
+	}
+});
+
+chrome.commands.onCommand.addListener((command) => {
+	if (command === "open-popup") {
+		chrome.action.openPopup();
 	}
 });

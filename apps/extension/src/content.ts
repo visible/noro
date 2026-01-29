@@ -1,4 +1,7 @@
-import { createpopup, createicon } from "./autofill";
+import { createpopup, createicon, fill, fillpassword } from "./autofill";
+import { findloginforms, getsite, observeforms } from "./detector";
+import type { LoginForm } from "./detector";
+import type { VaultItem } from "./vault";
 
 interface Credential {
 	id: string;
@@ -8,65 +11,9 @@ interface Credential {
 	created: number;
 }
 
-interface LoginForm {
-	form: HTMLFormElement | null;
-	username: HTMLInputElement;
-	password: HTMLInputElement;
-}
+type CredentialOrVaultItem = Credential | VaultItem;
 
 let currentform: LoginForm | null = null;
-
-function findloginforms(): LoginForm[] {
-	const forms: LoginForm[] = [];
-	const passwords = document.querySelectorAll<HTMLInputElement>('input[type="password"]');
-
-	for (const password of passwords) {
-		if (!password.offsetParent) continue;
-
-		const form = password.closest("form");
-		const container = form || password.parentElement;
-		if (!container) continue;
-
-		const inputs = container.querySelectorAll<HTMLInputElement>("input");
-		let username: HTMLInputElement | null = null;
-
-		for (const input of inputs) {
-			if (input === password) continue;
-			if (input.type === "hidden" || input.type === "submit") continue;
-
-			const type = input.type.toLowerCase();
-			const name = (input.name || "").toLowerCase();
-			const id = (input.id || "").toLowerCase();
-			const autocomplete = (input.autocomplete || "").toLowerCase();
-
-			if (
-				type === "email" ||
-				type === "text" ||
-				name.includes("user") ||
-				name.includes("email") ||
-				name.includes("login") ||
-				id.includes("user") ||
-				id.includes("email") ||
-				id.includes("login") ||
-				autocomplete === "username" ||
-				autocomplete === "email"
-			) {
-				username = input;
-				break;
-			}
-		}
-
-		if (username) {
-			forms.push({ form, username, password });
-		}
-	}
-
-	return forms;
-}
-
-function getsite(): string {
-	return window.location.hostname.replace(/^www\./, "");
-}
 
 async function getcredentials(): Promise<Credential[]> {
 	return new Promise((resolve) => {
@@ -76,20 +23,12 @@ async function getcredentials(): Promise<Credential[]> {
 	});
 }
 
-function fill(cred: Credential): void {
-	if (!currentform) return;
-
-	const { username, password } = currentform;
-
-	setvalue(username, cred.username);
-	setvalue(password, cred.password);
-}
-
-function setvalue(input: HTMLInputElement, value: string): void {
-	input.focus();
-	input.value = value;
-	input.dispatchEvent(new Event("input", { bubbles: true }));
-	input.dispatchEvent(new Event("change", { bubbles: true }));
+async function getvaultitems(): Promise<VaultItem[]> {
+	return new Promise((resolve) => {
+		chrome.runtime.sendMessage({ type: "vaultmatch", url: window.location.href }, (response) => {
+			resolve(response || []);
+		});
+	});
 }
 
 function enablesaveonsubmit(): void {
@@ -123,6 +62,16 @@ function enablesaveonsubmit(): void {
 	}
 }
 
+function handleselect(cred: CredentialOrVaultItem): void {
+	if (!currentform) return;
+	fill(currentform, cred);
+}
+
+function handlegenerate(password: string): void {
+	if (!currentform) return;
+	fillpassword(currentform, password);
+}
+
 function addicons(): void {
 	const forms = findloginforms();
 
@@ -141,8 +90,12 @@ function addicons(): void {
 
 			const icon = createicon(async () => {
 				currentform = loginform;
-				const credentials = await getcredentials();
-				createpopup(credentials, loginform.username, fill, enablesaveonsubmit);
+				const [credentials, vaultitems] = await Promise.all([
+					getcredentials(),
+					getvaultitems(),
+				]);
+				const combined: CredentialOrVaultItem[] = [...vaultitems, ...credentials];
+				createpopup(combined, loginform.username, handleselect, enablesaveonsubmit, handlegenerate);
 			});
 
 			wrapper.appendChild(icon);
@@ -152,16 +105,26 @@ function addicons(): void {
 
 function init(): void {
 	addicons();
-
-	const observer = new MutationObserver(() => {
-		addicons();
-	});
-
-	observer.observe(document.body, {
-		childList: true,
-		subtree: true,
-	});
+	observeforms(addicons);
 }
+
+chrome.runtime.onMessage.addListener((message, _, respond) => {
+	if (message.type === "autofill") {
+		const forms = findloginforms();
+		if (forms.length > 0 && message.item) {
+			currentform = forms[0];
+			fill(currentform, message.item);
+		}
+		respond({ success: true });
+		return true;
+	}
+
+	if (message.type === "getforms") {
+		const forms = findloginforms();
+		respond({ hasforms: forms.length > 0 });
+		return true;
+	}
+});
 
 if (document.readyState === "loading") {
 	document.addEventListener("DOMContentLoaded", init);

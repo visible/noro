@@ -12,6 +12,7 @@
 	"dependencies": {
 		"@cloudworxx/tauri-plugin-mac-rounded-corners": "^1.1.1",
 		"@tauri-apps/api": "^2.9.1",
+		"@tauri-apps/plugin-clipboard-manager": "^2.3.2",
 		"react": "^19.2.4",
 		"react-dom": "^19.2.4"
 	},

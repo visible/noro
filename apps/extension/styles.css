@@ -363,3 +363,32 @@ button.ghost:hover {
 	width: 14px;
 	height: 14px;
 }
+
+.field.autofill {
+	padding: 0;
+	background: transparent;
+	border: none;
+}
+
+.autofillbtn {
+	width: 100%;
+	padding: 12px 16px;
+	border: none;
+	border-radius: 10px;
+	background: #d4b08c;
+	color: #0a0a0a;
+	font-family: inherit;
+	font-weight: 700;
+	font-size: 11px;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	cursor: pointer;
+	transition: opacity 0.15s;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+
+.autofillbtn:hover {
+	opacity: 0.85;
+}

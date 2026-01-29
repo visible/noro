@@ -1,11 +1,15 @@
 mod auth;
+mod biometric;
 mod commands;
 mod plugins;
 mod storage;
 mod sync;
+mod tray;
+mod twoskd;
 
 use rand::Rng;
 use serde::{Deserialize, Serialize};
+use tauri::Manager;
 
 #[derive(Debug, Deserialize)]
 pub struct GeneratorOptions {
@@ -89,6 +93,7 @@ pub fn run() {
                         .build(),
                 )?;
             }
+            tray::create(app.handle())?;
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
@@ -117,6 +122,15 @@ pub fn run() {
             sync::sync_delete,
             sync::sync_login,
             plugins::rounded::enable_rounded_corners,
+            biometric::biometric_available,
+            biometric::biometric_authenticate,
+            biometric::biometric_enabled,
+            biometric::biometric_enable,
+            biometric::biometric_disable,
+            biometric::biometric_unlock,
+            tray::tray_show_notification,
+            tray::tray_set_autostart,
+            tray::tray_get_autostart,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

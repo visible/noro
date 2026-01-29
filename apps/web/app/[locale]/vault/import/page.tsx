@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, type ReactNode } from "react";
 
 type Source = "1password" | "bitwarden" | "lastpass" | "chrome" | "firefox" | "csv";
 
-const sources: { id: Source; name: string; icon: JSX.Element }[] = [
+const sources: { id: Source; name: string; icon: ReactNode }[] = [
 	{
 		id: "1password",
 		name: "1Password",

@@ -116,6 +116,7 @@ signinbtn.addEventListener("click", async () => {
 
 signoutbtn.addEventListener("click", async () => {
 	await setsession(null);
+	await chrome.runtime.sendMessage({ type: "clearcache" });
 	items = [];
 	searchinput.value = "";
 	show("login");
@@ -134,7 +135,8 @@ function renderitems() {
 	const filtered = items.filter(
 		(item) =>
 			item.title.toLowerCase().includes(query) ||
-			(item.username && item.username.toLowerCase().includes(query)),
+			(item.username && item.username.toLowerCase().includes(query)) ||
+			(item.url && item.url.toLowerCase().includes(query)),
 	);
 
 	itemslist.innerHTML = "";
@@ -212,6 +214,10 @@ function showdetail(item: Item) {
 
 	if (item.notes) {
 		fieldscontainer.appendChild(createfield("notes", item.notes, false));
+	}
+
+	if (item.type === "login" && (item.username || item.password)) {
+		fieldscontainer.appendChild(createautofillbtn(item));
 	}
 
 	show("detail");
@@ -292,6 +298,23 @@ function createfield(
 	field.appendChild(valueel);
 
 	return field;
+}
+
+function createautofillbtn(item: Item): HTMLDivElement {
+	const wrapper = document.createElement("div");
+	wrapper.className = "field autofill";
+
+	const btn = document.createElement("button");
+	btn.type = "button";
+	btn.className = "autofillbtn";
+	btn.innerHTML = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" style="width:14px;height:14px;margin-right:8px"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"/></svg>autofill on page`;
+	btn.addEventListener("click", async () => {
+		await chrome.runtime.sendMessage({ type: "autofill", item });
+		window.close();
+	});
+
+	wrapper.appendChild(btn);
+	return wrapper;
 }
 
 backbtn.addEventListener("click", () => {
