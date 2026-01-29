@@ -211,7 +211,7 @@ function GeneratorLight({ onSelect }: GeneratorProps) {
 				<button
 					type="button"
 					onClick={() => onSelect(password)}
-					className="px-3.5 py-2.5 text-sm font-medium text-white bg-orange-500 rounded-lg hover:bg-orange-600 active:bg-orange-700 transition-colors"
+					className="px-3.5 py-2.5 text-sm font-medium text-[#0a0a0a] bg-[#d4b08c] rounded-lg hover:bg-[#d4b08c]/90 active:bg-[#d4b08c]/80 transition-colors"
 				>
 					use
 				</button>
@@ -228,7 +228,7 @@ function GeneratorLight({ onSelect }: GeneratorProps) {
 					max={128}
 					value={length}
 					onChange={(e) => setLength(Number(e.target.value))}
-					className="w-full accent-orange-500"
+					className="w-full accent-[#d4b08c]"
 				/>
 			</div>
 

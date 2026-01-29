@@ -110,7 +110,7 @@ export function CommandPalette() {
 				className="absolute inset-0 bg-black/60 backdrop-blur-sm"
 				onClick={() => setOpen(false)}
 			/>
-			<div className="relative bg-black border border-white/10 rounded-xl shadow-2xl w-full max-w-xs overflow-hidden">
+			<div className="relative bg-[#161616] border border-white/10 rounded-xl shadow-2xl w-full max-w-xs overflow-hidden">
 				<div className="px-4 py-3 border-b border-white/10">
 					<span className="text-[10px] tracking-widest text-white/30 uppercase">shortcuts</span>
 				</div>
