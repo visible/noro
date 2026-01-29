@@ -104,8 +104,8 @@ async function checkCycle(folderId: string, newParentId: string, userId: string)
 	while (currentId) {
 		if (currentId === folderId || visited.has(currentId)) return true;
 		visited.add(currentId);
-		const folder = await db.folder.findFirst({ where: { id: currentId, userId }, select: { parentId: true } });
-		currentId = folder?.parentId || null;
+		const result: { parentId: string | null } | null = await db.folder.findFirst({ where: { id: currentId, userId }, select: { parentId: true } });
+		currentId = result?.parentId ?? null;
 	}
 
 	return false;
