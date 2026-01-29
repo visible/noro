@@ -22,8 +22,7 @@ export async function GET() {
         lastused: p.lastused,
       })),
     });
-  } catch (err) {
-    console.error("list passkeys error:", err);
+  } catch {
     return NextResponse.json(
       { error: "failed to list passkeys" },
       { status: 500 }
@@ -72,8 +71,7 @@ export async function PATCH(req: Request) {
     }
 
     return NextResponse.json({ updated: true });
-  } catch (err) {
-    console.error("rename passkey error:", err);
+  } catch {
     return NextResponse.json(
       { error: "failed to rename passkey" },
       { status: 500 }
@@ -108,8 +106,7 @@ export async function DELETE(req: Request) {
     }
 
     return NextResponse.json({ deleted: true });
-  } catch (err) {
-    console.error("delete passkey error:", err);
+  } catch {
     return NextResponse.json(
       { error: "failed to delete passkey" },
       { status: 500 }

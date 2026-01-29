@@ -1,11 +1,6 @@
 import { forwardRef, type ReactNode } from "react";
 import { View, type ViewProps, type ViewStyle } from "react-native";
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  FadeIn,
-} from "react-native-reanimated";
+import Animated, { FadeIn } from "react-native-reanimated";
 
 type Variant = "default" | "bordered" | "elevated";
 

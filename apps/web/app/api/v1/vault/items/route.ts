@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { upload, vaultkey } from "@/lib/r2";
+import { vaultkey, createemptyvault } from "@/lib/r2";
 import { validateitemdata, isvaliditemtype } from "@/lib/validate";
 
 async function getorvault(userId: string) {
@@ -11,8 +11,7 @@ async function getorvault(userId: string) {
 	});
 	if (!vault) {
 		const blobKey = vaultkey(userId);
-		const emptyVault = Buffer.from(JSON.stringify({ items: [], version: 1 }));
-		await upload(blobKey, emptyVault);
+		const emptyVault = await createemptyvault(blobKey);
 		vault = await db.vault.create({
 			data: {
 				userId,
@@ -49,8 +48,7 @@ export async function GET(req: Request) {
 		});
 
 		return NextResponse.json({ items });
-	} catch (error) {
-		console.error("items get error:", error);
+	} catch {
 		return NextResponse.json({ error: "failed to get items" }, { status: 500 });
 	}
 }
@@ -101,8 +99,7 @@ export async function POST(req: Request) {
 		});
 
 		return NextResponse.json({ item });
-	} catch (error) {
-		console.error("item create error:", error);
+	} catch {
 		return NextResponse.json({ error: "failed to create item" }, { status: 500 });
 	}
 }

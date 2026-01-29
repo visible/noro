@@ -48,8 +48,7 @@ export async function GET() {
       kit,
       count: codes.length,
     });
-  } catch (error) {
-    console.error("recovery codes error:", error);
+  } catch {
     return NextResponse.json(
       { error: "failed to generate recovery codes" },
       { status: 500 }

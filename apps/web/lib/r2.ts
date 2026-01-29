@@ -59,3 +59,9 @@ export async function remove(key: string): Promise<void> {
 export function vaultkey(userId: string): string {
 	return `vaults/${userId}/vault.enc`;
 }
+
+export async function createemptyvault(blobKey: string): Promise<Buffer> {
+	const emptyVault = Buffer.from(JSON.stringify({ items: [], version: 1 }));
+	await upload(blobKey, emptyVault);
+	return emptyVault;
+}

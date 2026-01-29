@@ -35,8 +35,7 @@ export async function GET(req: Request) {
       options,
       discoverable: !userid,
     });
-  } catch (err) {
-    console.error("webauthn auth options error:", err);
+  } catch {
     return NextResponse.json(
       { error: "failed to generate authentication options" },
       { status: 500 }
@@ -110,8 +109,7 @@ export async function POST(req: Request) {
       credentialid: result.credentialid,
       prfsupported: hasprfoutput,
     });
-  } catch (err) {
-    console.error("webauthn auth error:", err);
+  } catch {
     return NextResponse.json(
       { error: "authentication failed" },
       { status: 500 }

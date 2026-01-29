@@ -71,8 +71,7 @@ export async function GET(
 		}
 
 		return NextResponse.json(response);
-	} catch (error) {
-		console.error("emergency get error:", error);
+	} catch {
 		return NextResponse.json({ error: "failed to get access" }, { status: 500 });
 	}
 }
@@ -151,8 +150,7 @@ export async function POST(
 			approvedAt: updated.approvedAt,
 			publicKey: keypair.publicKey,
 		});
-	} catch (error) {
-		console.error("emergency respond error:", error);
+	} catch {
 		return NextResponse.json({ error: "failed to respond" }, { status: 500 });
 	}
 }
@@ -184,8 +182,7 @@ export async function DELETE(
 		await db.emergencyAccess.delete({ where: { id } });
 
 		return NextResponse.json({ deleted: true });
-	} catch (error) {
-		console.error("emergency delete error:", error);
+	} catch {
 		return NextResponse.json({ error: "failed to delete" }, { status: 500 });
 	}
 }

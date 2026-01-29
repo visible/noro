@@ -56,12 +56,6 @@ export function getsite(): string {
 	return window.location.hostname.replace(/^www\./, "");
 }
 
-export function isinputvisible(input: HTMLInputElement): boolean {
-	if (!input.offsetParent) return false;
-	const rect = input.getBoundingClientRect();
-	return rect.width > 0 && rect.height > 0;
-}
-
 export function setvalue(input: HTMLInputElement, value: string): void {
 	input.focus();
 	input.value = value;

@@ -1,3 +1,6 @@
+import type { VaultItem } from "./types";
+import { getsession, setsession } from "./session";
+
 const loginview = document.getElementById("login") as HTMLDivElement;
 const vaultview = document.getElementById("vault") as HTMLDivElement;
 const detailview = document.getElementById("detail") as HTMLDivElement;
@@ -18,24 +21,8 @@ const detailtitle = document.getElementById("detailtitle") as HTMLHeadingElement
 const detailtype = document.getElementById("detailtype") as HTMLParagraphElement;
 const fieldscontainer = document.getElementById("fields") as HTMLDivElement;
 
-interface Item {
-	id: string;
-	type: string;
-	title: string;
-	username?: string;
-	password?: string;
-	url?: string;
-	notes?: string;
-	favorite: boolean;
-}
-
-interface Session {
-	email: string;
-	token: string;
-}
-
-let items: Item[] = [];
-let currentitem: Item | null = null;
+let items: VaultItem[] = [];
+let currentitem: VaultItem | null = null;
 
 const icons: Record<string, string> = {
 	login: "K",
@@ -50,19 +37,6 @@ function show(view: "login" | "vault" | "detail") {
 	loginview.classList.toggle("active", view === "login");
 	vaultview.classList.toggle("active", view === "vault");
 	detailview.classList.toggle("active", view === "detail");
-}
-
-async function getsession(): Promise<Session | null> {
-	const { session } = await chrome.storage.local.get("session");
-	return session || null;
-}
-
-async function setsession(session: Session | null) {
-	if (session) {
-		await chrome.storage.local.set({ session });
-	} else {
-		await chrome.storage.local.remove("session");
-	}
 }
 
 async function init() {
@@ -192,7 +166,7 @@ function renderitems() {
 
 searchinput.addEventListener("input", renderitems);
 
-function showdetail(item: Item) {
+function showdetail(item: VaultItem) {
 	currentitem = item;
 	detailicon.textContent = icons[item.type] || "?";
 	detailtitle.textContent = item.title;
@@ -300,7 +274,7 @@ function createfield(
 	return field;
 }
 
-function createautofillbtn(item: Item): HTMLDivElement {
+function createautofillbtn(item: VaultItem): HTMLDivElement {
 	const wrapper = document.createElement("div");
 	wrapper.className = "field autofill";
 

@@ -12,8 +12,6 @@ import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
-  withSpring,
-  runOnJS,
   SlideInUp,
   SlideOutUp,
 } from "react-native-reanimated";

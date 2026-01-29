@@ -30,8 +30,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
       orderBy: { invitedAt: "asc" },
     });
     return json({ members });
-  } catch (e) {
-    console.error("members list error:", e);
+  } catch {
     return json({ error: "failed to list members" }, { status: 500 });
   }
 }
@@ -56,8 +55,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     });
     await audit(id, session.user.id, "member.invited", { email, role });
     return json({ member: { id: invite.id, email: invite.email, role: invite.role, status: invite.status } });
-  } catch (e) {
-    console.error("member invite error:", e);
+  } catch {
     return json({ error: "failed to invite member" }, { status: 500 });
   }
 }
@@ -93,8 +91,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
       return json({ success: true });
     }
     return json({ error: "invalid request" }, { status: 400 });
-  } catch (e) {
-    console.error("member update error:", e);
+  } catch {
     return json({ error: "failed to update member" }, { status: 500 });
   }
 }
@@ -121,8 +118,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     await db.teamMember.delete({ where: { id: member.id } });
     await audit(id, session.user.id, "member.left");
     return json({ success: true });
-  } catch (e) {
-    console.error("member remove error:", e);
+  } catch {
     return json({ error: "failed to remove member" }, { status: 500 });
   }
 }

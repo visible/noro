@@ -1,4 +1,6 @@
-const baseurl = "https://noro.sh/api";
+import { baseurl } from "./constants";
+
+export { baseurl };
 
 export interface StoreResponse {
 	id: string;

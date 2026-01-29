@@ -51,8 +51,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
       orderBy: { updatedAt: "desc" },
     });
     return json({ items, revision: vault.revision });
-  } catch (e) {
-    console.error("team vault get error:", e);
+  } catch {
     return json({ error: "failed to get vault" }, { status: 500 });
   }
 }
@@ -77,8 +76,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     await db.teamVault.update({ where: { id: vault.id }, data: { revision: vault.revision + 1 } });
     await audit(id, session.user.id, "item.created", { itemId: item.id, type, title });
     return json({ item });
-  } catch (e) {
-    console.error("team item create error:", e);
+  } catch {
     return json({ error: "failed to create item" }, { status: 500 });
   }
 }
@@ -114,8 +112,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     await db.teamVault.update({ where: { id: vault.id }, data: { revision: vault.revision + 1 } });
     await audit(id, session.user.id, "item.updated", { itemId });
     return json({ item });
-  } catch (e) {
-    console.error("team item update error:", e);
+  } catch {
     return json({ error: "failed to update item" }, { status: 500 });
   }
 }
@@ -138,8 +135,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     await db.teamVault.update({ where: { id: vault.id }, data: { revision: vault.revision + 1 } });
     await audit(id, session.user.id, "item.deleted", { itemId, title: existing.title });
     return json({ success: true });
-  } catch (e) {
-    console.error("team item delete error:", e);
+  } catch {
     return json({ error: "failed to delete item" }, { status: 500 });
   }
 }

@@ -3,12 +3,11 @@ import { View, StyleSheet, Pressable } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, {
   useAnimatedStyle,
-  withSpring,
   useSharedValue,
   interpolate,
 } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
-import { Svg, Path, Rect, Circle, G, Line } from "react-native-svg";
+import { Svg, Path, Rect, Circle, Line } from "react-native-svg";
 
 const colors = {
   bg: "#0a0a0a",
@@ -98,10 +97,8 @@ function GeneratorIcon({ focused }: { focused: boolean }) {
         stroke={focused ? colors.accent : colors.muted}
         strokeWidth={1.5}
       />
-      <G stroke={focused ? colors.accent : colors.muted} strokeWidth={1.5} strokeLinecap="round">
-        <Line x1={17.5} y1={14} x2={17.5} y2={21} />
-        <Line x1={14} y1={17.5} x2={21} y2={17.5} />
-      </G>
+      <Line x1={17.5} y1={14} x2={17.5} y2={21} stroke={focused ? colors.accent : colors.muted} strokeWidth={1.5} strokeLinecap="round" />
+      <Line x1={14} y1={17.5} x2={21} y2={17.5} stroke={focused ? colors.accent : colors.muted} strokeWidth={1.5} strokeLinecap="round" />
     </Svg>
   );
 }

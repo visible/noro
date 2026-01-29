@@ -2,15 +2,7 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-
-async function hashpassword(password: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password);
-  const hash = await crypto.subtle.digest("SHA-256", data);
-  return Array.from(new Uint8Array(hash))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
-}
+import { hashpassword } from "@/lib/crypto";
 
 interface ShareParams {
   params: Promise<{ id: string }>;
@@ -71,8 +63,7 @@ export async function GET(req: Request, { params }: ShareParams) {
       maxViews: share.maxViews,
       expiresAt: share.expiresAt.toISOString(),
     });
-  } catch (error) {
-    console.error("share get error:", error);
+  } catch {
     return NextResponse.json({ error: "failed to get share" }, { status: 500 });
   }
 }
@@ -108,8 +99,7 @@ export async function DELETE(_req: Request, { params }: ShareParams) {
     });
 
     return NextResponse.json({ success: true, revoked: true });
-  } catch (error) {
-    console.error("share revoke error:", error);
+  } catch {
     return NextResponse.json({ error: "failed to revoke share" }, { status: 500 });
   }
 }

@@ -52,8 +52,7 @@ export async function GET() {
     }));
 
     return NextResponse.json({ teams });
-  } catch (e) {
-    console.error("teams list error:", e);
+  } catch {
     return NextResponse.json({ error: "failed to list teams" }, { status: 500 });
   }
 }
@@ -114,8 +113,7 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({ team: { id: team.id, name: team.name } });
-  } catch (e) {
-    console.error("team create error:", e);
+  } catch {
     return NextResponse.json({ error: "failed to create team" }, { status: 500 });
   }
 }

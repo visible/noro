@@ -6,7 +6,7 @@ import { decrypt } from "@/lib/crypto";
 import { highlight } from "@/lib/highlight";
 import { Link } from "@/i18n/navigation";
 import { Logo } from "@/components/logo";
-import { LanguageToggle } from "@/components/languagetoggle";
+import { LanguageToggle } from "@/components/language";
 
 type Status = "loading" | "confirm" | "claiming" | "success" | "notfound" | "error";
 

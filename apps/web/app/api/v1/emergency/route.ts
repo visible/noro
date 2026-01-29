@@ -68,8 +68,7 @@ export async function POST(req: Request) {
 				name: updated.grantor.name,
 			},
 		});
-	} catch (error) {
-		console.error("emergency request error:", error);
+	} catch {
 		return NextResponse.json({ error: "failed to request access" }, { status: 500 });
 	}
 }
@@ -123,8 +122,7 @@ export async function GET() {
 		}));
 
 		return NextResponse.json({ contacts, requests });
-	} catch (error) {
-		console.error("emergency list error:", error);
+	} catch {
 		return NextResponse.json({ error: "failed to list access" }, { status: 500 });
 	}
 }

@@ -78,8 +78,7 @@ export async function POST(req: Request) {
 			waitDays: access.waitDays,
 			createdAt: access.createdAt,
 		});
-	} catch (error) {
-		console.error("emergency contact create error:", error);
+	} catch {
 		return NextResponse.json({ error: "failed to add contact" }, { status: 500 });
 	}
 }
@@ -111,8 +110,7 @@ export async function GET() {
 				createdAt: c.createdAt,
 			})),
 		});
-	} catch (error) {
-		console.error("emergency contacts list error:", error);
+	} catch {
 		return NextResponse.json({ error: "failed to list contacts" }, { status: 500 });
 	}
 }
@@ -174,8 +172,7 @@ export async function PATCH(req: Request) {
 			waitDays: updated.waitDays,
 			createdAt: updated.createdAt,
 		});
-	} catch (error) {
-		console.error("emergency contact update error:", error);
+	} catch {
 		return NextResponse.json({ error: "failed to update contact" }, { status: 500 });
 	}
 }

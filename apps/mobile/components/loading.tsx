@@ -72,7 +72,7 @@ export function Spinner({
 }
 
 interface SkeletonProps {
-  width?: number | string;
+  width?: number | `${number}%`;
   height?: number;
   radius?: number;
   style?: ViewStyle;

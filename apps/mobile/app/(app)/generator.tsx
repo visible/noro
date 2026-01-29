@@ -13,7 +13,6 @@ import Animated, {
   useAnimatedStyle,
   withSpring,
   useSharedValue,
-  interpolateColor,
 } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
 import * as Clipboard from "expo-clipboard";

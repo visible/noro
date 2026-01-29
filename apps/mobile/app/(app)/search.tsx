@@ -11,8 +11,6 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, {
   FadeIn,
-  FadeOut,
-  SlideInRight,
   Layout,
   useAnimatedStyle,
   withSpring,

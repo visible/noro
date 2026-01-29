@@ -1,15 +1,7 @@
 import { createpopup, createicon, fill, fillpassword } from "./autofill";
 import { findloginforms, getsite, observeforms } from "./detector";
 import type { LoginForm } from "./detector";
-import type { VaultItem } from "./vault";
-
-interface Credential {
-	id: string;
-	site: string;
-	username: string;
-	password: string;
-	created: number;
-}
+import type { Credential, VaultItem } from "./types";
 
 type CredentialOrVaultItem = Credential | VaultItem;
 

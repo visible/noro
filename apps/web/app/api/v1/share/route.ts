@@ -1,41 +1,9 @@
-/*
-Prisma Schema Addition:
-
-model Share {
-  id              String    @id @default(cuid())
-  userId          String
-  itemId          String
-  encryptedData   String    @db.Text
-  publicKey       String
-  expiresAt       DateTime
-  maxViews        Int       @default(1)
-  viewCount       Int       @default(0)
-  passwordHash    String?
-  revoked         Boolean   @default(false)
-  createdAt       DateTime  @default(now())
-  updatedAt       DateTime  @updatedAt
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-  item Item @relation(fields: [itemId], references: [id], onDelete: Cascade)
-
-  @@index([userId])
-  @@index([itemId])
-  @@index([expiresAt])
-  @@map("share")
-}
-
-Add to User model:
-  shares Share[]
-
-Add to Item model:
-  shares Share[]
-*/
-
 import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
 import { chars } from "@/lib/chars";
+import { hashpassword } from "@/lib/crypto";
 
 function generateid(): string {
   const bytes = crypto.getRandomValues(new Uint8Array(16));
@@ -44,15 +12,6 @@ function generateid(): string {
     id += chars[bytes[i] % chars.length];
   }
   return id;
-}
-
-async function hashpassword(password: string): Promise<string> {
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password);
-  const hash = await crypto.subtle.digest("SHA-256", data);
-  return Array.from(new Uint8Array(hash))
-    .map((b) => b.toString(16).padStart(2, "0"))
-    .join("");
 }
 
 function parseexpiry(hours: number): Date {
@@ -132,8 +91,7 @@ export async function POST(req: Request) {
       maxViews: share.maxViews,
       requiresPassword: !!passwordHash,
     });
-  } catch (error) {
-    console.error("share create error:", error);
+  } catch {
     return NextResponse.json({ error: "failed to create share" }, { status: 500 });
   }
 }
@@ -186,8 +144,7 @@ export async function GET() {
     }));
 
     return NextResponse.json({ shares: formatted });
-  } catch (error) {
-    console.error("shares list error:", error);
+  } catch {
     return NextResponse.json({ error: "failed to list shares" }, { status: 500 });
   }
 }

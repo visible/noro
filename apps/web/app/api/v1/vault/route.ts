@@ -2,12 +2,11 @@ import { NextResponse } from "next/server";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { db } from "@/lib/db";
-import { download, upload, vaultkey } from "@/lib/r2";
+import { download, upload, vaultkey, createemptyvault } from "@/lib/r2";
 
 async function createvault(userId: string) {
 	const blobKey = vaultkey(userId);
-	const emptyVault = Buffer.from(JSON.stringify({ items: [], version: 1 }));
-	await upload(blobKey, emptyVault);
+	const emptyVault = await createemptyvault(blobKey);
 	return db.vault.create({
 		data: {
 			userId,
@@ -42,8 +41,7 @@ export async function GET() {
 			data: data.toString("base64"),
 			revision: vault.revision,
 		});
-	} catch (error) {
-		console.error("vault get error:", error);
+	} catch {
 		return NextResponse.json({ error: "failed to get vault" }, { status: 500 });
 	}
 }
@@ -90,8 +88,7 @@ export async function PUT(req: Request) {
 			success: true,
 			revision: updated.revision,
 		});
-	} catch (error) {
-		console.error("vault put error:", error);
+	} catch {
 		return NextResponse.json({ error: "failed to update vault" }, { status: 500 });
 	}
 }

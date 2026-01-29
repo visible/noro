@@ -5,7 +5,7 @@ import { useTranslations } from "next-intl";
 import { encrypt } from "@/lib/crypto";
 import { Link } from "@/i18n/navigation";
 import { Logo } from "@/components/logo";
-import { LanguageToggle } from "@/components/languagetoggle";
+import { LanguageToggle } from "@/components/language";
 
 type Mode = "text" | "file";
 

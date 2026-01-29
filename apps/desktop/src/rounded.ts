@@ -8,7 +8,5 @@ export async function enableRoundedCorners(radius = 12): Promise<void> {
 			window,
 			cornerRadius: radius,
 		});
-	} catch (error) {
-		console.error("Failed to enable rounded corners:", error);
-	}
+	} catch {}
 }

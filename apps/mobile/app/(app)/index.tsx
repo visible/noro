@@ -11,14 +11,13 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import Animated, {
   FadeIn,
-  FadeOut,
   Layout,
   useAnimatedStyle,
   withSpring,
   useSharedValue,
 } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
-import { Svg, Path, Rect, Circle, G } from "react-native-svg";
+import { Svg, Path, Rect, Circle } from "react-native-svg";
 
 const colors = {
   bg: "#0a0a0a",

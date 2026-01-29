@@ -37,12 +37,12 @@ const strengthLabels: Record<string, string> = {
 	excellent: "excellent",
 };
 
-const navItems = [
+const navitems = [
 	{
 		id: "vault",
 		label: "vault",
 		icon: (
-			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
 				<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
 			</svg>
 		),
@@ -51,7 +51,7 @@ const navItems = [
 		id: "generator",
 		label: "generator",
 		icon: (
-			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
 				<path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
 			</svg>
 		),
@@ -60,7 +60,7 @@ const navItems = [
 		id: "settings",
 		label: "settings",
 		icon: (
-			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+			<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true">
 				<circle cx="12" cy="12" r="3" />
 				<path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42" />
 			</svg>
@@ -87,9 +87,7 @@ export function Generator({ user, onLogout, onBack }: Props) {
 			setPassword(result.password);
 			setStrength(result.strength);
 			setCopied(false);
-		} catch (err) {
-			console.error(err);
-		}
+		} catch {}
 	}
 
 	async function copy() {
@@ -125,7 +123,7 @@ export function Generator({ user, onLogout, onBack }: Props) {
 					</div>
 
 					<nav className="sidebar-nav">
-						{navItems.map((item) => (
+						{navitems.map((item) => (
 							<button
 								key={item.id}
 								type="button"
@@ -151,6 +149,7 @@ export function Generator({ user, onLogout, onBack }: Props) {
 								fill="none"
 								stroke="currentColor"
 								strokeWidth="2"
+								aria-hidden="true"
 							>
 								<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
 								<polyline points="16 17 21 12 16 7" />
@@ -168,6 +167,7 @@ export function Generator({ user, onLogout, onBack }: Props) {
 								fill="none"
 								stroke="currentColor"
 								strokeWidth="2"
+								aria-hidden="true"
 							>
 								<path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
 							</svg>
@@ -191,6 +191,7 @@ export function Generator({ user, onLogout, onBack }: Props) {
 												fill="none"
 												stroke="currentColor"
 												strokeWidth="2"
+												aria-hidden="true"
 											>
 												<polyline points="20 6 9 17 4 12" />
 											</svg>
@@ -200,6 +201,7 @@ export function Generator({ user, onLogout, onBack }: Props) {
 												fill="none"
 												stroke="currentColor"
 												strokeWidth="2"
+												aria-hidden="true"
 											>
 												<rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
 												<path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
@@ -310,6 +312,7 @@ export function Generator({ user, onLogout, onBack }: Props) {
 								fill="none"
 								stroke="currentColor"
 								strokeWidth="2"
+								aria-hidden="true"
 							>
 								<path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83" />
 							</svg>

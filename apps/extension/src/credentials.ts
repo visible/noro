@@ -1,10 +1,8 @@
-export interface Credential {
-	id: string;
-	site: string;
-	username: string;
-	password: string;
-	created: number;
-}
+import type { Credential } from "./types";
+
+export type { Credential };
+
+export { getsession, setsession } from "./session";
 
 export async function getcredentials(site: string): Promise<Credential[]> {
 	const { credentials = [] } = await chrome.storage.local.get("credentials");

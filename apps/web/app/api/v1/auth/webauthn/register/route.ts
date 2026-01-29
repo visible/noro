@@ -28,8 +28,7 @@ export async function GET() {
     );
 
     return NextResponse.json({ options });
-  } catch (err) {
-    console.error("webauthn registration options error:", err);
+  } catch {
     return NextResponse.json(
       { error: "failed to generate registration options" },
       { status: 500 }
@@ -85,8 +84,7 @@ export async function POST(req: Request) {
         devicetype: result.credential?.devicetype,
       },
     });
-  } catch (err) {
-    console.error("webauthn registration error:", err);
+  } catch {
     return NextResponse.json(
       { error: "registration failed" },
       { status: 500 }

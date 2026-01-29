@@ -116,8 +116,7 @@ export async function POST(req: Request) {
 				"x-export-warning": encrypted ? "" : "unencrypted",
 			},
 		});
-	} catch (error) {
-		console.error("export error:", error);
+	} catch {
 		return NextResponse.json({ error: "export failed" }, { status: 500 });
 	}
 }

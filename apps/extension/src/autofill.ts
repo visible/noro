@@ -1,14 +1,7 @@
-import type { VaultItem } from "./vault";
+import type { Credential, VaultItem } from "./types";
 import type { LoginForm } from "./detector";
 import { setvalue } from "./detector";
-
-interface Credential {
-	id: string;
-	site: string;
-	username: string;
-	password: string;
-	created: number;
-}
+import { generatepassword } from "./crypto";
 
 type CredentialLike = Credential | VaultItem;
 
@@ -359,32 +352,4 @@ export function fill(form: LoginForm, cred: { username?: string; password?: stri
 
 export function fillpassword(form: LoginForm, password: string): void {
 	setvalue(form.password, password);
-}
-
-function generatepassword(length = 20): string {
-	const lower = "abcdefghijklmnopqrstuvwxyz";
-	const upper = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	const digits = "0123456789";
-	const symbols = "!@#$%^&*";
-	const all = lower + upper + digits + symbols;
-
-	const bytes = crypto.getRandomValues(new Uint8Array(length));
-	let password = "";
-
-	password += lower[bytes[0] % lower.length];
-	password += upper[bytes[1] % upper.length];
-	password += digits[bytes[2] % digits.length];
-	password += symbols[bytes[3] % symbols.length];
-
-	for (let i = 4; i < length; i++) {
-		password += all[bytes[i] % all.length];
-	}
-
-	const shuffled = password.split("");
-	for (let i = shuffled.length - 1; i > 0; i--) {
-		const j = bytes[i % bytes.length] % (i + 1);
-		[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-	}
-
-	return shuffled.join("");
 }

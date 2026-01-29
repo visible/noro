@@ -3,7 +3,7 @@ import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
 import { Sidebar, SidebarProvider, MobileHeader } from "@/components/sidebar";
-import { CommandWrapper } from "@/components/commandwrapper";
+import { CommandWrapper } from "@/components/wrapper";
 import { ToastProvider, Toaster } from "@/components/ui/toast";
 
 export default async function AppLayout({ children }: { children: React.ReactNode }) {

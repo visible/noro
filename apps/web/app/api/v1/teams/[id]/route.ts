@@ -34,8 +34,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     });
     if (!team) return json({ error: "team not found" }, { status: 404 });
     return json({ team: { id: team.id, name: team.name, role: member.role, members: team.members, vault: team.vault, createdAt: team.createdAt } });
-  } catch (e) {
-    console.error("team get error:", e);
+  } catch {
     return json({ error: "failed to get team" }, { status: 500 });
   }
 }
@@ -68,8 +67,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
       return json({ team: { id: updated.id, name: updated.name } });
     }
     return json({ error: "nothing to update" }, { status: 400 });
-  } catch (e) {
-    console.error("team update error:", e);
+  } catch {
     return json({ error: "failed to update team" }, { status: 500 });
   }
 }
@@ -86,8 +84,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     if (vault) await remove(vault.blobKey);
     await db.team.delete({ where: { id } });
     return json({ success: true });
-  } catch (e) {
-    console.error("team delete error:", e);
+  } catch {
     return json({ error: "failed to delete team" }, { status: 500 });
   }
 }

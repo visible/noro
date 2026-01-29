@@ -67,8 +67,7 @@ export async function POST(req: Request) {
       userId: user.id,
       remaining,
     });
-  } catch (error) {
-    console.error("recovery verify error:", error);
+  } catch {
     return NextResponse.json(
       { error: "verification failed" },
       { status: 500 }

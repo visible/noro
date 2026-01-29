@@ -24,8 +24,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
 		}
 
 		return NextResponse.json({ item });
-	} catch (error) {
-		console.error("item get error:", error);
+	} catch {
 		return NextResponse.json({ error: "failed to get item" }, { status: 500 });
 	}
 }
@@ -83,8 +82,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
 		});
 
 		return NextResponse.json({ item });
-	} catch (error) {
-		console.error("item update error:", error);
+	} catch {
 		return NextResponse.json({ error: "failed to update item" }, { status: 500 });
 	}
 }
@@ -118,8 +116,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
 		});
 
 		return NextResponse.json({ success: true });
-	} catch (error) {
-		console.error("item delete error:", error);
+	} catch {
 		return NextResponse.json({ error: "failed to delete item" }, { status: 500 });
 	}
 }

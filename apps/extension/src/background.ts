@@ -1,9 +1,9 @@
 import { encrypt, generatekey } from "./crypto";
 import { store } from "./api";
+import { baseurl } from "./constants";
 import { getcredentials, savecredential } from "./credentials";
-import { matchurl, type VaultItem } from "./vault";
-
-const baseurl = "https://noro.sh/api";
+import { matchurl, fetchitems } from "./vault";
+import type { VaultItem, RecentSecret } from "./types";
 
 let cachedvault: VaultItem[] = [];
 let vaultexpiry = 0;
@@ -44,22 +44,10 @@ chrome.contextMenus.onClicked.addListener(async (info) => {
 	}
 });
 
-interface RecentSecret {
-	id: string;
-	url: string;
-	preview: string;
-	created: number;
-}
-
 async function saverecent(secret: RecentSecret) {
 	const { recents = [] } = await chrome.storage.local.get("recents");
 	const updated = [secret, ...recents.slice(0, 9)];
 	await chrome.storage.local.set({ recents: updated });
-}
-
-async function getsession() {
-	const { session } = await chrome.storage.local.get("session");
-	return session || null;
 }
 
 async function fetchvaultitems(): Promise<VaultItem[]> {
@@ -68,40 +56,13 @@ async function fetchvaultitems(): Promise<VaultItem[]> {
 		return cachedvault;
 	}
 
-	const session = await getsession();
-	if (!session) return [];
-
-	try {
-		const res = await fetch(`${baseurl}/v1/vault/items`, {
-			headers: { authorization: `Bearer ${session.token}` },
-		});
-
-		if (!res.ok) {
-			if (res.status === 401) {
-				await chrome.storage.local.remove("session");
-			}
-			return [];
-		}
-
-		const data = await res.json();
-		cachedvault = (data.items || []).map((item: Record<string, unknown>) => {
-			const parsed = typeof item.data === "string" ? JSON.parse(item.data as string) : item.data;
-			return {
-				id: item.id,
-				type: item.type,
-				title: item.title,
-				username: parsed?.username,
-				password: parsed?.password,
-				url: parsed?.url,
-				notes: parsed?.notes,
-				favorite: item.favorite || false,
-			};
-		});
+	const result = await fetchitems();
+	if (result.success && result.items) {
+		cachedvault = result.items;
 		vaultexpiry = now + 60000;
 		return cachedvault;
-	} catch {
-		return [];
 	}
+	return [];
 }
 
 function clearvaultcache() {
