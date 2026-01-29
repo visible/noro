@@ -32,10 +32,10 @@ export function Settings({
 	];
 
 	return (
-		<div className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-5">
+		<div className="bg-[#161616]/80 backdrop-blur-sm border border-white/5 rounded-xl p-5 hover:border-white/10 transition-colors">
 			<div className="space-y-6">
 				<div>
-					<label className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-3">Type</label>
+					<label className="block text-xs font-medium text-white/40 uppercase tracking-wider mb-3">Type</label>
 					<div className="flex gap-2">
 						{(["random", "diceware", "pin"] as Mode[]).map((m) => (
 							<button
@@ -43,8 +43,8 @@ export function Settings({
 								onClick={() => onModeChange(m)}
 								className={`px-4 py-1.5 rounded-full text-sm font-medium transition-all ${
 									mode === m
-										? "bg-orange-500 text-white"
-										: "bg-zinc-800 text-zinc-400 hover:bg-zinc-700 hover:text-zinc-300"
+										? "bg-[#d4b08c] text-[#0a0a0a]"
+										: "bg-white/5 text-white/50 hover:bg-white/10 hover:text-white/70"
 								}`}
 							>
 								{m}
@@ -55,17 +55,17 @@ export function Settings({
 
 				<div>
 					<div className="flex items-center justify-between mb-3">
-						<label className="text-xs font-medium text-zinc-500 uppercase tracking-wider">
+						<label className="text-xs font-medium text-white/40 uppercase tracking-wider">
 							Length{mode === "diceware" && " (words)"}
 						</label>
-						<span className="text-sm font-mono text-zinc-300 bg-zinc-800 px-2.5 py-1 rounded-md">
+						<span className="text-sm font-mono text-[#ededed] bg-white/5 px-2.5 py-1 rounded-md">
 							{length}
 						</span>
 					</div>
 					<div className="relative">
-						<div className="h-1.5 bg-zinc-800 rounded-full">
+						<div className="h-1.5 bg-white/5 rounded-full">
 							<div
-								className="h-full bg-gradient-to-r from-orange-500 to-orange-400 rounded-full transition-all"
+								className="h-full bg-gradient-to-r from-[#d4b08c] to-[#d4b08c]/70 rounded-full transition-all"
 								style={{ width: `${percent}%` }}
 							/>
 						</div>
@@ -78,19 +78,19 @@ export function Settings({
 							className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
 						/>
 						<div
-							className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-white rounded-full shadow-lg shadow-black/20 pointer-events-none transition-all"
+							className="absolute top-1/2 -translate-y-1/2 w-4 h-4 bg-[#ededed] rounded-full shadow-lg shadow-black/20 pointer-events-none transition-all"
 							style={{ left: `calc(${percent}% - 8px)` }}
 						/>
 					</div>
 					<div className="flex justify-between mt-2">
-						<span className="text-xs text-zinc-600">{minLength}</span>
-						<span className="text-xs text-zinc-600">{maxLength}</span>
+						<span className="text-xs text-white/30">{minLength}</span>
+						<span className="text-xs text-white/30">{maxLength}</span>
 					</div>
 				</div>
 
 				{mode === "random" && (
 					<div>
-						<label className="block text-xs font-medium text-zinc-500 uppercase tracking-wider mb-3">Include</label>
+						<label className="block text-xs font-medium text-white/40 uppercase tracking-wider mb-3">Include</label>
 						<div className="grid grid-cols-2 gap-2">
 							{options.map((opt) => (
 								<button
@@ -98,20 +98,20 @@ export function Settings({
 									onClick={() => opt.set(!opt.value)}
 									className={`flex items-center gap-3 px-3 py-3 rounded-lg transition-all ${
 										opt.value
-											? "bg-zinc-800 border border-zinc-700"
-											: "bg-zinc-800/50 border border-transparent hover:bg-zinc-800"
+											? "bg-white/5 border border-white/10"
+											: "bg-white/[0.02] border border-transparent hover:bg-white/5"
 									}`}
 								>
 									<div
 										className={`w-5 h-5 rounded-md flex items-center justify-center transition-all ${
-											opt.value ? "bg-orange-500" : "bg-zinc-700"
+											opt.value ? "bg-[#d4b08c]" : "bg-white/10"
 										}`}
 									>
 										{opt.value && Icons.checkSmall}
 									</div>
 									<div className="text-left">
-										<span className="block text-sm font-mono text-zinc-300">{opt.label}</span>
-										<span className="block text-xs text-zinc-500">{opt.desc}</span>
+										<span className="block text-sm font-mono text-[#ededed]">{opt.label}</span>
+										<span className="block text-xs text-white/40">{opt.desc}</span>
 									</div>
 								</button>
 							))}

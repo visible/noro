@@ -18,7 +18,7 @@ export default async function AppLayout({ children }: { children: React.ReactNod
 	return (
 		<ToastProvider>
 			<SidebarProvider>
-				<div className="h-screen bg-black text-white flex overflow-hidden">
+				<div className="h-screen bg-[#0a0a0a] text-white flex overflow-hidden">
 					<Suspense fallback={<div className="hidden md:block w-56 shrink-0 border-r border-white/5" />}>
 						<Sidebar user={session.user} />
 					</Suspense>

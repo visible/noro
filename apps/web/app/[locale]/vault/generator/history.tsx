@@ -10,17 +10,17 @@ export function History({ history, onCopy }: Props) {
 
 	return (
 		<div className="pt-2">
-			<h2 className="text-xs font-medium text-zinc-500 uppercase tracking-wider mb-3">Recent</h2>
+			<h2 className="text-xs font-medium text-white/40 uppercase tracking-wider mb-3">Recent</h2>
 			<div className="space-y-1.5">
 				{history.map((pw, i) => (
 					<div
 						key={i}
-						className="flex items-center gap-3 px-4 py-2.5 bg-zinc-900/30 border border-zinc-800/50 rounded-lg group hover:bg-zinc-900/50 transition-colors"
+						className="flex items-center gap-3 px-4 py-2.5 bg-[#161616]/50 border border-white/5 rounded-lg group hover:bg-[#161616]/80 hover:border-white/10 transition-colors"
 					>
-						<p className="flex-1 font-mono text-sm text-zinc-500 truncate">{pw}</p>
+						<p className="flex-1 font-mono text-sm text-white/40 truncate">{pw}</p>
 						<button
 							onClick={() => onCopy(pw)}
-							className="p-1.5 rounded-md text-zinc-600 hover:text-zinc-300 hover:bg-zinc-800 opacity-0 group-hover:opacity-100 transition-all"
+							className="p-1.5 rounded-md text-white/30 hover:text-white/80 hover:bg-white/5 opacity-0 group-hover:opacity-100 transition-all"
 						>
 							{Icons.copy}
 						</button>

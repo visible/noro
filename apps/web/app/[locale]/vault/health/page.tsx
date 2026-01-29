@@ -35,11 +35,11 @@ export default function Health() {
 			<div className="h-full overflow-y-auto scrollbar-hidden px-8 py-10">
 				<div className="max-w-4xl mx-auto">
 					<header className="text-center mb-12">
-						<h1 className="text-2xl font-semibold text-white">security health</h1>
-						<p className="text-zinc-500 mt-1">analyzing your vault...</p>
+						<h1 className="text-2xl font-serif text-white">security health</h1>
+						<p className="text-white/40 mt-1">analyzing your vault...</p>
 					</header>
 					<div className="flex items-center justify-center py-24">
-						<div className="w-10 h-10 border-2 border-zinc-800 border-t-emerald-500 rounded-full animate-spin" />
+						<div className="w-10 h-10 border-2 border-white/10 border-t-[#d4b08c] rounded-full animate-spin" />
 					</div>
 				</div>
 			</div>
@@ -51,11 +51,11 @@ export default function Health() {
 			<div className="h-full overflow-y-auto scrollbar-hidden px-8 py-10">
 				<div className="max-w-4xl mx-auto">
 					<header className="text-center mb-12">
-						<h1 className="text-2xl font-semibold text-white">security health</h1>
-						<p className="text-zinc-500 mt-1">check the security of your passwords</p>
+						<h1 className="text-2xl font-serif text-white">security health</h1>
+						<p className="text-white/40 mt-1">check the security of your passwords</p>
 					</header>
-					<div className="bg-zinc-900 rounded-xl p-10 text-center">
-						<p className="text-zinc-500">failed to analyze vault</p>
+					<div className="bg-[#161616]/80 backdrop-blur-sm border border-white/5 rounded-xl p-10 text-center">
+						<p className="text-white/50">failed to analyze vault</p>
 					</div>
 				</div>
 			</div>
@@ -67,13 +67,13 @@ export default function Health() {
 			<div className="max-w-4xl mx-auto">
 				<header className="flex items-center justify-between mb-12">
 					<div>
-						<h1 className="text-2xl font-semibold text-white">security health</h1>
-						<p className="text-zinc-500 mt-1">check the security of your passwords</p>
+						<h1 className="text-2xl font-serif text-white">security health</h1>
+						<p className="text-white/40 mt-1">check the security of your passwords</p>
 					</div>
 					<button
 						onClick={recheck}
 						disabled={checking}
-						className="px-4 py-2 text-sm font-medium text-white bg-zinc-900 rounded-lg hover:bg-zinc-800 transition-colors disabled:opacity-50"
+						className="px-4 py-2 text-sm font-medium text-white bg-[#161616]/80 backdrop-blur-sm border border-white/5 rounded-lg hover:border-white/10 hover:bg-[#161616] transition-all disabled:opacity-50"
 					>
 						{checking ? "checking..." : "recheck"}
 					</button>

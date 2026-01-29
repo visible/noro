@@ -111,7 +111,7 @@ function NavItem({ href, icon, label, isActive, collapsed, onClick }: {
 				collapsed ? "w-9 h-9 justify-center" : "px-3 py-2"
 			} ${
 				isActive
-					? "bg-[#FF6B00]/15 text-[#FF6B00]"
+					? "bg-[#d4b08c]/15 text-[#d4b08c]"
 					: "text-white/50 hover:text-white hover:bg-white/5"
 			}`}
 			title={collapsed ? label : undefined}
@@ -151,19 +151,19 @@ export function Sidebar({ user }: Props) {
 						<>
 							<button
 								onClick={toggleCollapsed}
-								className="hidden md:flex w-9 h-9 items-center justify-center hover:bg-white/5 rounded-lg transition-colors text-[#FF6B00]"
+								className="hidden md:flex w-9 h-9 items-center justify-center hover:bg-white/5 rounded-lg transition-colors text-[#d4b08c]"
 								title="Expand sidebar"
 							>
 								<Logo />
 							</button>
-							<Link href="/" className="flex md:hidden w-9 h-9 items-center justify-center hover:bg-white/5 rounded-lg transition-colors text-[#FF6B00]">
+							<Link href="/" className="flex md:hidden w-9 h-9 items-center justify-center hover:bg-white/5 rounded-lg transition-colors text-[#d4b08c]">
 								<Logo />
 							</Link>
 						</>
 					) : (
 						<>
 							<Link href="/" className="flex items-center gap-2 p-2 hover:bg-white/5 rounded-lg transition-colors flex-1">
-								<span className="text-[#FF6B00]">
+								<span className="text-[#d4b08c]">
 									<Logo />
 								</span>
 								<span className="font-semibold text-white">noro</span>
@@ -243,7 +243,7 @@ export function Sidebar({ user }: Props) {
 						}`}
 						title={collapsed ? user.name : undefined}
 					>
-						<div className="w-7 h-7 rounded-full bg-[#FF6B00]/20 flex items-center justify-center text-[#FF6B00] text-sm font-medium shrink-0">
+						<div className="w-7 h-7 rounded-full bg-[#d4b08c]/20 flex items-center justify-center text-[#d4b08c] text-sm font-medium shrink-0">
 							{initial(user.name)}
 						</div>
 						{!collapsed && (

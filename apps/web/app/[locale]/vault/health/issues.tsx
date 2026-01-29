@@ -15,9 +15,9 @@ const typeLabels: Record<IssueType, string> = {
 };
 
 const severityStyles: Record<IssueSeverity, { badge: string }> = {
-	critical: { badge: "bg-red-500/10 text-red-400" },
-	warning: { badge: "bg-amber-500/10 text-amber-400" },
-	info: { badge: "bg-blue-500/10 text-blue-400" },
+	critical: { badge: "bg-red-500/10 text-red-400 border border-red-500/20" },
+	warning: { badge: "bg-amber-500/10 text-amber-400 border border-amber-500/20" },
+	info: { badge: "bg-[#d4b08c]/10 text-[#d4b08c] border border-[#d4b08c]/20" },
 };
 
 export function Issues({ issues }: Props) {
@@ -29,10 +29,10 @@ export function Issues({ issues }: Props) {
 
 	if (issues.length === 0) {
 		return (
-			<div className="bg-emerald-500/5 rounded-xl p-12 text-center border border-emerald-500/10">
-				<div className="w-14 h-14 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-4">
+			<div className="bg-[#d4b08c]/5 rounded-xl p-12 text-center border border-[#d4b08c]/10">
+				<div className="w-14 h-14 bg-gradient-to-br from-[#d4b08c]/20 to-[#d4b08c]/5 rounded-full flex items-center justify-center mx-auto mb-4">
 					<svg
-						className="w-7 h-7 text-emerald-400"
+						className="w-7 h-7 text-[#d4b08c]"
 						viewBox="0 0 24 24"
 						fill="none"
 						stroke="currentColor"
@@ -44,8 +44,8 @@ export function Issues({ issues }: Props) {
 						<path d="M20 6L9 17l-5-5" />
 					</svg>
 				</div>
-				<p className="text-lg font-medium text-white">all clear</p>
-				<p className="text-sm text-zinc-500 mt-1">no security issues found</p>
+				<p className="text-lg font-serif text-white">all clear</p>
+				<p className="text-sm text-white/40 mt-1">no security issues found</p>
 			</div>
 		);
 	}
@@ -53,27 +53,27 @@ export function Issues({ issues }: Props) {
 	return (
 		<div>
 			<div className="flex items-center justify-between mb-4">
-				<h2 className="text-sm font-medium text-zinc-500 uppercase tracking-wider">
+				<h2 className="text-sm font-medium text-white/40 uppercase tracking-wider">
 					issues
 				</h2>
-				<span className="text-sm text-zinc-500">
+				<span className="text-sm text-white/40">
 					{issues.length} found
 				</span>
 			</div>
-			<div className="bg-zinc-900 rounded-xl overflow-hidden">
+			<div className="bg-[#161616]/80 backdrop-blur-sm border border-white/5 rounded-xl overflow-hidden">
 				<table className="w-full">
 					<thead>
-						<tr className="border-b border-zinc-800">
-							<th className="px-5 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
+						<tr className="border-b border-white/5">
+							<th className="px-5 py-3 text-left text-xs font-medium text-white/40 uppercase tracking-wider">
 								item
 							</th>
-							<th className="px-5 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
+							<th className="px-5 py-3 text-left text-xs font-medium text-white/40 uppercase tracking-wider">
 								issue
 							</th>
-							<th className="px-5 py-3 text-left text-xs font-medium text-zinc-500 uppercase tracking-wider">
+							<th className="px-5 py-3 text-left text-xs font-medium text-white/40 uppercase tracking-wider">
 								severity
 							</th>
-							<th className="px-5 py-3 text-right text-xs font-medium text-zinc-500 uppercase tracking-wider">
+							<th className="px-5 py-3 text-right text-xs font-medium text-white/40 uppercase tracking-wider">
 								action
 							</th>
 						</tr>
@@ -82,14 +82,14 @@ export function Issues({ issues }: Props) {
 						{issues.map((issue, i) => (
 							<tr
 								key={issue.id}
-								className={i !== issues.length - 1 ? "border-b border-zinc-800/50" : ""}
+								className={i !== issues.length - 1 ? "border-b border-white/5" : ""}
 							>
 								<td className="px-5 py-4">
 									<p className="font-medium text-white">{issue.itemTitle}</p>
-									<p className="text-sm text-zinc-500 mt-0.5">{issue.message}</p>
+									<p className="text-sm text-white/40 mt-0.5">{issue.message}</p>
 								</td>
 								<td className="px-5 py-4">
-									<span className="text-sm text-zinc-400">
+									<span className="text-sm text-white/50">
 										{typeLabels[issue.type]}
 									</span>
 								</td>
@@ -103,7 +103,7 @@ export function Issues({ issues }: Props) {
 								<td className="px-5 py-4 text-right">
 									<button
 										onClick={() => handleFix(issue.itemId)}
-										className="px-3.5 py-1.5 text-sm font-medium text-white bg-zinc-800 rounded-lg hover:bg-zinc-700 transition-colors"
+										className="px-3.5 py-1.5 text-sm font-medium text-white bg-white/5 border border-white/10 rounded-lg hover:bg-white/10 hover:border-white/20 transition-all"
 									>
 										fix
 									</button>

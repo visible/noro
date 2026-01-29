@@ -70,7 +70,7 @@ export default function Generator() {
 		<div className="h-full overflow-y-auto scrollbar-hidden">
 			<div className="max-w-2xl mx-auto px-6 py-12">
 				<header className="mb-10">
-					<h1 className="text-2xl font-semibold tracking-tight text-white">Password Generator</h1>
+					<h1 className="text-2xl font-serif text-[#ededed] tracking-tight">Password Generator</h1>
 					<p className="mt-2 text-white/50">Generate secure passwords, passphrases, and PINs.</p>
 				</header>
 
@@ -103,7 +103,7 @@ export default function Generator() {
 
 					<button
 						onClick={generate}
-						className="w-full py-3 bg-[#FF6B00] text-white font-medium rounded-xl hover:bg-[#FF6B00]/90 transition-colors"
+						className="w-full h-14 bg-[#d4b08c] text-[#0a0a0a] font-medium rounded-full hover:bg-[#d4b08c]/90 transition-all duration-500 shadow-[0_0_30px_rgba(212,176,140,0.2)] hover:shadow-[0_0_40px_rgba(212,176,140,0.3)]"
 					>
 						Generate Password
 					</button>

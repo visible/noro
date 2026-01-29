@@ -5,17 +5,18 @@ type Props = {
 	scanned: boolean;
 	progress: number;
 	onScan: () => void;
+	itemCount: number;
 };
 
-export function Scan({ scanning, scanned, progress, onScan }: Props) {
+export function Scan({ scanning, scanned, progress, onScan, itemCount }: Props) {
 	return (
-		<div className="bg-zinc-900 border border-white/[0.08] rounded-xl p-6 mb-8">
+		<div className="bg-[#161616] border border-white/5 rounded-2xl p-6 mb-8">
 			<div className="flex items-center justify-between">
 				<div className="flex items-center gap-5">
 					<div className="relative">
-						<div className="w-14 h-14 rounded-xl bg-white/[0.04] flex items-center justify-center">
+						<div className="w-14 h-14 rounded-xl bg-gradient-to-br from-[#d4b08c]/20 to-[#d4b08c]/5 flex items-center justify-center">
 							<svg
-								className="w-7 h-7 text-white/70"
+								className="w-7 h-7 text-[#d4b08c]"
 								viewBox="0 0 24 24"
 								fill="none"
 								stroke="currentColor"
@@ -58,14 +59,14 @@ export function Scan({ scanning, scanned, progress, onScan }: Props) {
 								? `checking ${progress}% of passwords`
 								: scanned
 								? "last checked just now"
-								: "check your passwords against known breaches"}
+								: `${itemCount} credential${itemCount !== 1 ? "s" : ""} to check`}
 						</p>
 					</div>
 				</div>
 				<button
 					onClick={onScan}
-					disabled={scanning}
-					className="px-5 py-2.5 bg-orange-500 text-white text-sm font-medium rounded-lg hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-orange-500/20"
+					disabled={scanning || itemCount === 0}
+					className="px-5 py-2.5 bg-[#d4b08c] text-[#0a0a0a] text-sm font-medium rounded-full hover:bg-[#d4b08c]/90 transition-all duration-500 disabled:opacity-50 disabled:cursor-not-allowed shadow-[0_0_20px_rgba(212,176,140,0.15)] hover:shadow-[0_0_30px_rgba(212,176,140,0.25)]"
 				>
 					{scanning ? "scanning..." : "check now"}
 				</button>
@@ -73,9 +74,9 @@ export function Scan({ scanning, scanned, progress, onScan }: Props) {
 
 			{scanning && (
 				<div className="mt-5">
-					<div className="h-1 bg-white/[0.06] rounded-full overflow-hidden">
+					<div className="h-1 bg-white/5 rounded-full overflow-hidden">
 						<div
-							className="h-full bg-gradient-to-r from-orange-500 to-orange-400 transition-all duration-150"
+							className="h-full bg-gradient-to-r from-[#d4b08c]/60 to-[#d4b08c] transition-all duration-150"
 							style={{ width: `${progress}%` }}
 						/>
 					</div>

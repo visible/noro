@@ -6,7 +6,7 @@ type Props = {
 };
 
 function color(score: number): string {
-	if (score >= 80) return "#22c55e";
+	if (score >= 80) return "#d4b08c";
 	if (score >= 60) return "#eab308";
 	if (score >= 40) return "#f97316";
 	return "#ef4444";
@@ -31,7 +31,7 @@ export function Score({ value, total }: Props) {
 		<div className="flex flex-col items-center mb-10">
 			<div className="relative" style={{ width: size, height: size }}>
 				<div
-					className="absolute inset-0 rounded-full blur-2xl opacity-30"
+					className="absolute inset-0 rounded-full blur-2xl opacity-20"
 					style={{ backgroundColor: c }}
 				/>
 				<svg
@@ -43,7 +43,7 @@ export function Score({ value, total }: Props) {
 				>
 					<defs>
 						<linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-							<stop offset="0%" stopColor={c} stopOpacity="0.5" />
+							<stop offset="0%" stopColor={c} stopOpacity="0.3" />
 							<stop offset="100%" stopColor={c} />
 						</linearGradient>
 					</defs>
@@ -78,7 +78,7 @@ export function Score({ value, total }: Props) {
 					</span>
 				</div>
 			</div>
-			<p className="text-zinc-500 text-sm mt-4">
+			<p className="text-white/40 text-sm mt-4">
 				{total > 0
 					? `based on ${total} password${total !== 1 ? "s" : ""}`
 					: "add passwords to calculate score"}

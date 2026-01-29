@@ -88,7 +88,7 @@ function FilterSelect({ value, onChange, options }: { value: string; onChange: (
 			<button
 				type="button"
 				onClick={() => setOpen(!open)}
-				className="px-3 py-1.5 bg-white/10 border border-white/10 rounded-lg text-white text-sm flex items-center gap-2 hover:bg-white/15 transition-colors"
+				className="px-4 py-2 bg-[#161616] border border-white/5 rounded-lg text-white/80 text-sm flex items-center gap-2 hover:border-[#d4b08c]/30 transition-colors"
 			>
 				<span>{selected?.label}</span>
 				<svg aria-hidden="true" className={`w-4 h-4 text-white/40 transition-transform ${open ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -96,14 +96,14 @@ function FilterSelect({ value, onChange, options }: { value: string; onChange: (
 				</svg>
 			</button>
 			{open && (
-				<div className="absolute right-0 top-full mt-1 w-32 bg-[#1a1a1a] border border-white/10 rounded-lg shadow-xl z-50 py-1 max-h-48 overflow-y-auto scrollbar-hidden">
+				<div className="absolute right-0 top-full mt-2 w-36 bg-[#161616]/95 backdrop-blur-md border border-white/5 rounded-xl shadow-xl z-50 py-1.5 max-h-56 overflow-y-auto scrollbar-hidden">
 					{options.map((opt) => (
 						<button
 							key={opt.value}
 							type="button"
 							onClick={() => { onChange(opt.value as ActivityAction | "all"); setOpen(false); }}
-							className={`w-full px-3 py-2 text-left text-sm transition-colors ${
-								opt.value === value ? "bg-[#FF6B00] text-white" : "text-white/80 hover:bg-white/5"
+							className={`w-full px-4 py-2.5 text-left text-sm transition-colors ${
+								opt.value === value ? "bg-[#d4b08c]/15 text-[#d4b08c]" : "text-white/70 hover:bg-white/5 hover:text-white"
 							}`}
 						>
 							{opt.label}
@@ -139,57 +139,57 @@ export default function Activity() {
 		<div className="h-full overflow-y-auto scrollbar-hidden">
 			<div className="px-6 py-8 md:px-8 md:py-10">
 				<div className="max-w-4xl">
-					<div className="mb-8">
-						<h1 className="text-2xl font-semibold text-white tracking-tight">Activity</h1>
-						<p className="text-white/50 text-sm mt-1">Recent changes to your vault</p>
+					<div className="mb-10">
+						<h1 className="text-3xl font-serif text-[#ededed] tracking-tight">Activity</h1>
+						<p className="text-white/50 text-sm mt-2">Recent changes to your vault</p>
 					</div>
 
-					<div className="rounded-xl border border-white/10 overflow-hidden">
-						<div className="px-5 py-4 border-b border-white/10 bg-white/[0.02]">
+					<div className="rounded-xl bg-[#161616]/80 backdrop-blur-sm border border-white/5 overflow-hidden">
+						<div className="px-6 py-5 border-b border-white/5">
 							<div className="flex items-center justify-between">
-								<span className="text-sm font-medium text-white/50">Filter by type</span>
+								<span className="text-sm text-white/50">Filter by type</span>
 								<FilterSelect value={filter} onChange={setFilter} options={actions} />
 							</div>
 						</div>
 
 					{entries.length === 0 ? (
-						<div className="px-6 py-20 text-center">
-							<div className="w-12 h-12 rounded-full bg-white/[0.06] flex items-center justify-center mx-auto mb-4">
-								<svg className="w-5 h-5 text-white/30" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+						<div className="px-6 py-24 text-center">
+							<div className="w-14 h-14 rounded-full bg-[#d4b08c]/10 border border-[#d4b08c]/20 flex items-center justify-center mx-auto mb-5">
+								<svg className="w-6 h-6 text-[#d4b08c]/60" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
 									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
 								</svg>
 							</div>
-							<p className="text-white/60 text-sm font-medium">No activity yet</p>
-							<p className="text-white/40 text-sm mt-1">Your recent actions will appear here</p>
+							<p className="text-white/70 text-sm font-medium">No activity yet</p>
+							<p className="text-white/40 text-sm mt-1.5">Your recent actions will appear here</p>
 						</div>
 					) : (
-						<div className="divide-y divide-white/[0.06]">
+						<div className="divide-y divide-white/5">
 							{entries.map((entry) => {
 								const isExpanded = expanded === entry.id;
 								return (
 									<div key={entry.id}>
 										<button
 											onClick={() => setExpanded(isExpanded ? null : entry.id)}
-											className="w-full px-5 py-4 flex items-center gap-4 hover:bg-white/[0.02] transition-colors text-left"
+											className="w-full px-6 py-5 flex items-center gap-5 hover:bg-white/[0.02] transition-colors text-left group"
 										>
-											<div className="w-9 h-9 rounded-lg bg-white/[0.06] flex items-center justify-center text-white/50 shrink-0">
+											<div className="w-10 h-10 rounded-lg bg-[#d4b08c]/10 border border-[#d4b08c]/20 flex items-center justify-center text-[#d4b08c]/70 shrink-0 group-hover:border-[#d4b08c]/30 transition-colors">
 												{icons[entry.action]}
 											</div>
 											<div className="flex-1 min-w-0">
-												<div className="flex items-center gap-2.5">
-													<span className="text-sm font-medium text-white">{activity.labels[entry.action]}</span>
-													<span className="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-emerald-500/15 text-emerald-400">
+												<div className="flex items-center gap-3">
+													<span className="text-sm font-medium text-[#ededed]">{activity.labels[entry.action]}</span>
+													<span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
 														Success
 													</span>
 												</div>
-												<p className="text-sm text-white/40 mt-0.5 truncate">{entry.details}</p>
+												<p className="text-sm text-white/40 mt-1 truncate">{entry.details}</p>
 											</div>
 											<div className="text-right shrink-0">
-												<p className="text-sm text-white/40">{activity.relative(entry.timestamp)}</p>
-												{entry.ip && <p className="text-xs text-white/30 mt-0.5">{entry.ip}</p>}
+												<p className="text-sm text-white/50">{activity.relative(entry.timestamp)}</p>
+												{entry.ip && <p className="text-xs text-white/30 mt-1">{entry.ip}</p>}
 											</div>
 											<svg
-												className={`w-4 h-4 text-white/30 transition-transform ${isExpanded ? "rotate-180" : ""}`}
+												className={`w-4 h-4 text-white/30 transition-transform group-hover:text-white/50 ${isExpanded ? "rotate-180" : ""}`}
 												fill="none"
 												viewBox="0 0 24 24"
 												stroke="currentColor"
@@ -199,24 +199,24 @@ export default function Activity() {
 											</svg>
 										</button>
 										{isExpanded && (
-											<div className="px-5 pb-4">
-												<div className="ml-13 p-4 bg-white/[0.02] rounded-lg border border-white/[0.06]">
-													<div className="grid grid-cols-2 gap-4 text-sm">
+											<div className="px-6 pb-5">
+												<div className="ml-[60px] p-5 bg-[#0a0a0a] rounded-lg border border-white/5">
+													<div className="grid grid-cols-2 gap-5 text-sm">
 														<div>
-															<p className="text-white/30 text-xs mb-1">Timestamp</p>
+															<p className="text-white/30 text-xs mb-1.5 uppercase tracking-wider">Timestamp</p>
 															<p className="text-white/70">{new Date(entry.timestamp).toLocaleString()}</p>
 														</div>
 														<div>
-															<p className="text-white/30 text-xs mb-1">Action</p>
+															<p className="text-white/30 text-xs mb-1.5 uppercase tracking-wider">Action</p>
 															<p className="text-white/70">{entry.action}</p>
 														</div>
 														<div className="col-span-2">
-															<p className="text-white/30 text-xs mb-1">Details</p>
+															<p className="text-white/30 text-xs mb-1.5 uppercase tracking-wider">Details</p>
 															<p className="text-white/70">{entry.details || "No additional details"}</p>
 														</div>
 														{entry.ip && (
 															<div className="col-span-2">
-																<p className="text-white/30 text-xs mb-1">IP Address</p>
+																<p className="text-white/30 text-xs mb-1.5 uppercase tracking-wider">IP Address</p>
 																<p className="text-white/70">{entry.ip}</p>
 															</div>
 														)}
@@ -231,22 +231,22 @@ export default function Activity() {
 					)}
 
 					{pages > 1 && (
-						<div className="px-5 py-4 border-t border-white/[0.06] bg-white/[0.02] flex items-center justify-between">
+						<div className="px-6 py-5 border-t border-white/5 flex items-center justify-between">
 							<p className="text-sm text-white/40">
 								Showing {page * PER_PAGE + 1}-{Math.min((page + 1) * PER_PAGE, total)} of {total}
 							</p>
-							<div className="flex items-center gap-2">
+							<div className="flex items-center gap-3">
 								<button
 									onClick={() => setPage(Math.max(0, page - 1))}
 									disabled={page === 0}
-									className="px-3 py-1.5 text-sm bg-white/[0.06] border border-white/[0.08] rounded-lg hover:bg-white/[0.1] transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-white"
+									className="px-4 py-2 text-sm bg-[#161616] border border-white/5 rounded-lg hover:border-[#d4b08c]/30 transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-white/5 text-white/80"
 								>
 									Previous
 								</button>
 								<button
 									onClick={() => setPage(Math.min(pages - 1, page + 1))}
 									disabled={page >= pages - 1}
-									className="px-3 py-1.5 text-sm bg-white/[0.06] border border-white/[0.08] rounded-lg hover:bg-white/[0.1] transition-colors disabled:opacity-40 disabled:cursor-not-allowed text-white"
+									className="px-4 py-2 text-sm bg-[#161616] border border-white/5 rounded-lg hover:border-[#d4b08c]/30 transition-colors disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:border-white/5 text-white/80"
 								>
 									Next
 								</button>
