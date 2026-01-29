@@ -1,7 +1,30 @@
 {
   "home": {
-    "title": "noro",
-    "tagline": "安全分享秘密。阅后即焚的一次性链接。"
+    "title": "安全分享秘密",
+    "tagline": "创建查看后自动销毁的加密一次性链接。您的数据绝不会以未加密状态接触我们的服务器。",
+    "badge": "开源",
+    "nav": {
+      "login": "登录",
+      "register": "注册"
+    },
+    "cta": {
+      "share": "分享秘密",
+      "docs": "文档"
+    },
+    "features": {
+      "encryption": {
+        "title": "端到端加密",
+        "description": "秘密在传输前就在浏览器中加密。我们永远看不到您的数据。"
+      },
+      "expiry": {
+        "title": "自动销毁",
+        "description": "链接在单次查看或设定时间后过期。不留任何痕迹。"
+      },
+      "zerotrust": {
+        "title": "零信任",
+        "description": "解密密钥保留在URL片段中。服务器只存储加密数据。"
+      }
+    }
   },
   "share": {
     "title": "分享",

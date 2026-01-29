@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-	themeColor: "#F5F3EF",
+	themeColor: "#0a0a0a",
 };
 
 export default function Auth() {
@@ -20,28 +20,28 @@ export default function Auth() {
 			/>
 
 			<Section id="api-keys" title="API Keys">
-				<p className="text-black/60 mb-4 max-w-2xl">
+				<p className="text-white/60 mb-4 max-w-2xl">
 					API keys are used to authenticate all requests to the noro API. keys have the format:
 				</p>
 				<Code>noro_a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6</Code>
-				<p className="text-black/60 mt-4 max-w-2xl">
-					the <code className="text-[#C53D43]">noro_</code> prefix followed by 32 alphanumeric characters.
+				<p className="text-white/60 mt-4 max-w-2xl">
+					the <code className="text-[#d4b08c]">noro_</code> prefix followed by 32 alphanumeric characters.
 				</p>
 			</Section>
 
 			<Section id="generate" title="Generate a key">
-				<p className="text-black/60 mb-4 max-w-2xl">
+				<p className="text-white/60 mb-4 max-w-2xl">
 					create a new API key by calling the keys endpoint:
 				</p>
 				<Code>{`curl -X POST https://noro.sh/api/v1/keys`}</Code>
-				<p className="text-black/60 mt-4 mb-4 max-w-2xl">
+				<p className="text-white/60 mt-4 mb-4 max-w-2xl">
 					response:
 				</p>
 				<Code>{`{
   "key": "noro_a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6",
   "expires": 1714000000000
 }`}</Code>
-				<p className="text-black/60 mt-4 max-w-2xl">
+				<p className="text-white/60 mt-4 max-w-2xl">
 					optionally, include a webhook URL to receive notifications:
 				</p>
 				<Code className="mt-4">{`curl -X POST https://noro.sh/api/v1/keys \\
@@ -50,21 +50,21 @@ export default function Auth() {
 			</Section>
 
 			<Section id="expiration" title="Key expiration">
-				<p className="text-black/60 mb-4 max-w-2xl">
-					API keys expire after <strong className="text-black">90 days</strong> by default. the <code className="text-[#C53D43]">expires</code> field in the response is a unix timestamp in milliseconds.
+				<p className="text-white/60 mb-4 max-w-2xl">
+					API keys expire after <strong className="text-[#ededed]">90 days</strong> by default. the <code className="text-[#d4b08c]">expires</code> field in the response is a unix timestamp in milliseconds.
 				</p>
-				<p className="text-black/60 mb-4 max-w-2xl">
+				<p className="text-white/60 mb-4 max-w-2xl">
 					check your key&apos;s expiration date:
 				</p>
 				<Code>{`curl https://noro.sh/api/v1/keys \\
   -H "Authorization: Bearer noro_..."`}</Code>
-				<p className="text-black/60 mt-4 max-w-2xl">
+				<p className="text-white/60 mt-4 max-w-2xl">
 					generate a new key before expiration to avoid service interruption.
 				</p>
 			</Section>
 
 			<Section id="revoke" title="Revoke a key">
-				<p className="text-black/60 mb-4 max-w-2xl">
+				<p className="text-white/60 mb-4 max-w-2xl">
 					delete your API key if it&apos;s compromised or no longer needed:
 				</p>
 				<Code>{`curl -X DELETE https://noro.sh/api/v1/keys \\
@@ -72,24 +72,24 @@ export default function Auth() {
 			</Section>
 
 			<Section id="update" title="Update webhook">
-				<p className="text-black/60 mb-4 max-w-2xl">
+				<p className="text-white/60 mb-4 max-w-2xl">
 					change or remove the webhook URL for your key:
 				</p>
 				<Code>{`curl -X PATCH https://noro.sh/api/v1/keys \\
   -H "Authorization: Bearer noro_..." \\
   -H "Content-Type: application/json" \\
   -d '{"webhook":"https://new-url.com/webhook"}'`}</Code>
-				<p className="text-black/60 mt-4 max-w-2xl">
+				<p className="text-white/60 mt-4 max-w-2xl">
 					set webhook to empty string to remove it.
 				</p>
 			</Section>
 
 			<Section id="usage" title="Using your key">
-				<p className="text-black/60 mb-4 max-w-2xl">
-					include your API key in the <code className="text-[#C53D43]">Authorization</code> header with the <code className="text-[#C53D43]">Bearer</code> scheme:
+				<p className="text-white/60 mb-4 max-w-2xl">
+					include your API key in the <code className="text-[#d4b08c]">Authorization</code> header with the <code className="text-[#d4b08c]">Bearer</code> scheme:
 				</p>
 				<Code>{`Authorization: Bearer noro_a1b2c3d4e5f6g7h8i9j0k1l2m3n4o5p6`}</Code>
-				<p className="text-black/60 mt-4 mb-4 max-w-2xl">
+				<p className="text-white/60 mt-4 mb-4 max-w-2xl">
 					example request:
 				</p>
 				<Code>{`curl https://noro.sh/api/v1/secrets/abc123 \\
@@ -97,45 +97,45 @@ export default function Auth() {
 			</Section>
 
 			<Section id="security" title="Security">
-				<ul className="space-y-2 text-black/60 max-w-2xl">
+				<ul className="space-y-2 text-white/60 max-w-2xl">
 					<li className="flex items-start gap-2">
-						<span className="text-[#C53D43]">•</span>
+						<span className="text-[#d4b08c]">•</span>
 						<span>store keys securely in environment variables</span>
 					</li>
 					<li className="flex items-start gap-2">
-						<span className="text-[#C53D43]">•</span>
+						<span className="text-[#d4b08c]">•</span>
 						<span>never commit keys to version control</span>
 					</li>
 					<li className="flex items-start gap-2">
-						<span className="text-[#C53D43]">•</span>
+						<span className="text-[#d4b08c]">•</span>
 						<span>rotate keys periodically</span>
 					</li>
 					<li className="flex items-start gap-2">
-						<span className="text-[#C53D43]">•</span>
+						<span className="text-[#d4b08c]">•</span>
 						<span>use separate keys for different environments</span>
 					</li>
 				</ul>
 			</Section>
 
 			<Section id="rate-limits" title="Rate limits">
-				<p className="text-black/60 mb-4 max-w-2xl">
+				<p className="text-white/60 mb-4 max-w-2xl">
 					API requests are rate limited to prevent abuse:
 				</p>
-				<ul className="space-y-2 text-black/60 max-w-2xl">
+				<ul className="space-y-2 text-white/60 max-w-2xl">
 					<li className="flex items-start gap-2">
-						<span className="text-[#C53D43]">•</span>
-						<span><strong className="text-black">100 requests per minute</strong> per API key</span>
+						<span className="text-[#d4b08c]">•</span>
+						<span><strong className="text-[#ededed]">100 requests per minute</strong> per API key</span>
 					</li>
 					<li className="flex items-start gap-2">
-						<span className="text-[#C53D43]">•</span>
+						<span className="text-[#d4b08c]">•</span>
 						<span>sliding window algorithm</span>
 					</li>
 					<li className="flex items-start gap-2">
-						<span className="text-[#C53D43]">•</span>
-						<span>returns <code className="text-[#C53D43]">429</code> when exceeded</span>
+						<span className="text-[#d4b08c]">•</span>
+						<span>returns <code className="text-[#d4b08c]">429</code> when exceeded</span>
 					</li>
 				</ul>
-				<p className="text-black/60 mt-4 mb-4 max-w-2xl">
+				<p className="text-white/60 mt-4 mb-4 max-w-2xl">
 					responses include rate limit headers:
 				</p>
 				<Code>{`x-ratelimit-limit: 100

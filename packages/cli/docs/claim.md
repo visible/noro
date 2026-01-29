@@ -22,8 +22,7 @@ When claiming multiple variables, select which ones to save:
 ◆ select variables to save
 │ ◼ API_KEY          sk-12****5678
 │ ◼ DATABASE_URL     postgres****
-│ ◻ DEBUG            true
-└
+└ ◻ DEBUG            true
 ```
 
 Then choose where to save:
@@ -34,8 +33,7 @@ Then choose where to save:
 │ ○ .env.local (append)
 │ ○ new file...
 │ ○ custom path...
-│ ○ copy to clipboard
-└
+└ ○ copy to clipboard
 ```
 
 ## Peek first

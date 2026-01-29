@@ -1,7 +1,30 @@
 {
   "home": {
     "title": "noro",
-    "tagline": "share secrets securely. one-time links that self-destruct."
+    "tagline": "share secrets securely. one-time links that self-destruct.",
+    "badge": "open source",
+    "nav": {
+      "login": "login",
+      "register": "register"
+    },
+    "cta": {
+      "share": "share a secret",
+      "docs": "documentation"
+    },
+    "features": {
+      "encryption": {
+        "title": "end-to-end encrypted",
+        "description": "secrets are encrypted in your browser before transmission. we never see your data."
+      },
+      "expiry": {
+        "title": "auto-destruct",
+        "description": "links expire after a single view or set time limit. no trace left behind."
+      },
+      "zerotrust": {
+        "title": "zero trust",
+        "description": "decryption keys stay in the url fragment. server only stores encrypted blobs."
+      }
+    }
   },
   "share": {
     "title": "share",

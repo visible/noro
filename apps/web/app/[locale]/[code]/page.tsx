@@ -6,7 +6,7 @@ import { decrypt } from "@/lib/crypto";
 import { highlight } from "@/lib/highlight";
 import { Link } from "@/i18n/navigation";
 import { Logo } from "@/components/logo";
-import { LanguageToggle } from "@/components/languagetoggle";
+import { LanguageToggle } from "@/components/language";
 
 type Status = "loading" | "confirm" | "claiming" | "success" | "notfound" | "error";
 
@@ -118,7 +118,7 @@ export default function ClaimPage({
 
   const handleDownload = () => {
     if (!secret || secret.type !== "file" || !secret.bytes) return;
-    const blob = new Blob([secret.bytes], {
+    const blob = new Blob([new Uint8Array(secret.bytes)], {
       type: secret.mimetype || "application/octet-stream",
     });
     const url = URL.createObjectURL(blob);

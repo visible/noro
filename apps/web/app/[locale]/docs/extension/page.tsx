@@ -1,5 +1,5 @@
 import type { Metadata, Viewport } from "next";
-import { Header, Section, Prevnext } from "../components";
+import { Header, Prevnext } from "../components";
 
 export const metadata: Metadata = {
 	title: "Extension",
@@ -7,8 +7,111 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-	themeColor: "#F5F3EF",
+	themeColor: "#0a0a0a",
 };
+
+const features = [
+	{
+		icon: (
+			<svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+				<path d="M5 12h14" />
+				<path d="M12 5l7 7-7 7" />
+			</svg>
+		),
+		title: "Auto-fill",
+		description: "Automatically fill passwords and login forms. Works on any website.",
+	},
+	{
+		icon: (
+			<svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+				<path d="M12 2v4m0 12v4M4.93 4.93l2.83 2.83m8.48 8.48l2.83 2.83M2 12h4m12 0h4M4.93 19.07l2.83-2.83m8.48-8.48l2.83-2.83" />
+			</svg>
+		),
+		title: "Password Generator",
+		description: "Generate strong, unique passwords for every site. Customize length and character types.",
+	},
+	{
+		icon: (
+			<svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+				<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+				<path d="M9 12l2 2 4-4" />
+			</svg>
+		),
+		title: "OTP Auto-fill",
+		description: "Automatically fill two-factor codes. No need to switch apps or type codes manually.",
+	},
+	{
+		icon: (
+			<svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+				<path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z" />
+				<path d="M17 21v-8H7v8" />
+				<path d="M7 3v5h8" />
+			</svg>
+		),
+		title: "Auto-save",
+		description: "Automatically capture new logins when you sign up for sites.",
+	},
+];
+
+const browsers = [
+	{
+		name: "Chrome",
+		icon: (
+			<svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+				<path d="M12 0C8.21 0 4.831 1.757 2.632 4.501l3.953 6.848A5.454 5.454 0 0 1 12 6.545h10.691A12 12 0 0 0 12 0zM1.931 5.47A11.943 11.943 0 0 0 0 12c0 6.012 4.42 10.991 10.189 11.864l3.953-6.847a5.45 5.45 0 0 1-6.865-2.29zm13.342 2.166a5.446 5.446 0 0 1 1.45 7.09l.002.001h-.002l-5.344 9.257c.206.01.413.016.621.016 6.627 0 12-5.373 12-12 0-1.54-.29-3.011-.818-4.364zM12 16.364a4.364 4.364 0 1 1 0-8.728 4.364 4.364 0 0 1 0 8.728z" />
+			</svg>
+		),
+	},
+	{
+		name: "Firefox",
+		icon: (
+			<svg className="w-5 h-5" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+				<path d="M23.551 7.933c-0.062-0.061-0.125-0.122-0.189-0.182 0.063 0.060 0.125 0.121 0.189 0.182zM5.207 14.009c0 0-0.032 0.039-0.080 0.104-0.007 0.036-0.014 0.071-0.020 0.107 0.030-0.084 0.064-0.156 0.101-0.211zM8.386 8.874c0.021-0.021 0.041-0.042 0.061-0.063 0.958-0.958 2.074-1.711 3.316-2.236 1.286-0.544 2.652-0.82 4.061-0.82 1.33 0 2.621 0.246 3.844 0.731 0.714 0.123 1.665 0.361 2.458 0.812-1.779-1.264-3.954-2.006-6.302-2.006-3.044 0-5.797 1.249-7.774 3.262 0.092 0.112 0.203 0.22 0.335 0.32zM12.255 17.069c-0.076-0.063-0.141-0.131-0.196-0.201-0.019 0.156-0.031 0.323-0.031 0.499-0 0.328 0.041 0.681 0.153 1.032s0.294 0.698 0.581 1.021c0.191 0.215 0.43 0.42 0.728 0.605l-0.017 0.027c0.56 0.010 1.472-0.001 1.934-0.155 0.695-0.232 1.808-1.113 1.808-1.113 0.278-0.278 0.603-0.139 0.881-0.139s0.371-0.417 0-0.835c-0.371-0.417-1.669-0.835-2.643-0.185s-2.365 0.139-3.199-0.556zM12.927 10.95c-0.062 0.231-0.116 0.524-0.116 0.843 0 0.322 0.054 0.668 0.205 1.009 0.121 0.273 0.236 0.474 0.34 0.635 0.073 0.113 0.142 0.207 0.206 0.293 0.131-0.12 0.283-0.241 0.408-0.324 0.278-0.185 1.345-0.696 1.484-0.835s0.417-0.881 0.185-1.113c-0.232-0.232-1.716-0.093-2.179-0.185-0.195-0.039-0.382-0.177-0.533-0.323zM13.226 15.487c0.001 0.004 0.002 0.006 0.002 0.006 0.002-0.004 0.003-0.007 0.005-0.011l-0.007 0.005zM26.953 13.406c0 0.377-0.34 0.905-0.406 1.004 0.014-0.035 0.035-0.145 0.035-0.494 0-0.51 0.139-1.808-0.51-3.246s-1.623-2.133-1.623-2.133v0.325c-0.139-0.464-1.437-1.345-1.437-1.345v0.464c2.318 2.133 2.55 3.617 2.55 3.617-0.417-1.345-1.623-2.365-2.643-3.338s-3.153-1.484-3.153-1.484c2.272 1.298 3.385 3.338 3.385 3.338-1.159-1.113-2.087-1.020-2.087-1.020 0.696 0.51 1.020 1.066 1.669 2.087s0.603 3.431 0.603 3.431c-0.325-0.788-0.974-1.113-0.974-1.113s0.139 1.391 0.232 2.179c0.093 0.788-0.325 2.272-0.325 2.272 0-0.556-0.325-0.696-0.325-0.696s0.093 0.325-0.371 1.808c-0.464 1.484-1.345 1.994-1.484 1.947s0-0.278 0-0.278-0.232-0.185-0.556 0.325c-0.274 0.43-0.746 0.662-0.886 0.725 0.151-0.086 0.191-0.4 0.191-0.4s-0.325 0.185-1.808 0.417c-1.484 0.232-2.179-0.417-2.179-0.417 0.139-0.139 0.788 0 0.788 0 0-0.139-0.742-0.371-1.484-0.464-0.603-0.075-0.896-0.355-1.035-0.579-0.278-0.187-0.511-0.393-0.705-0.61-0.222-0.249-0.391-0.514-0.517-0.783-0.253-0.538-0.334-1.090-0.334-1.578 0-0.46 0.072-0.865 0.143-1.157s0.144-0.471 0.147-0.479v0l0.010 0.004c0.087-0.268 0.258-0.483 0.46-0.571-0.063-0.043-0.129-0.084-0.196-0.119-0.303-0.162-0.646-0.229-0.983-0.173-0.338 0.053-0.662 0.221-0.949 0.441-0.276 0.211-0.496 0.511-0.64 0.841-0.145 0.332-0.218 0.699-0.218 1.067s0.072 0.739 0.206 1.088c0.133 0.349 0.327 0.677 0.561 0.973s0.508 0.564 0.805 0.802c-0.31-0.221-0.6-0.473-0.854-0.761s-0.471-0.611-0.629-0.965c-0.159-0.354-0.257-0.738-0.279-1.131s0.033-0.793 0.173-1.167c0.14-0.374 0.362-0.724 0.677-0.995 0.153-0.128 0.319-0.244 0.499-0.34s0.376-0.171 0.582-0.213c0.206-0.042 0.421-0.050 0.632-0.021s0.414 0.093 0.603 0.183c0.189 0.090 0.364 0.204 0.524 0.333 0.080 0.065 0.156 0.134 0.229 0.207 0.036 0.036 0.072 0.074 0.107 0.113 0.029 0.033 0.056 0.063 0.085 0.1 0.165-0.428 0.049-1.144 0.022-1.294-0.087-0.124-0.211-0.28-0.351-0.503-0.105-0.168-0.219-0.375-0.336-0.637-0.182-0.411-0.245-0.824-0.245-1.197 0-0.436 0.085-0.819 0.169-1.095 0.026-0.085 0.052-0.16 0.076-0.224 0.262-1.14 1.517-2.261 1.517-2.261-1.762-0.232-2.967 1.391-2.967 1.391-0.005-0.003-0.010-0.006-0.015-0.009-0.125 0.138-0.549 0.634-0.588 1.029 0 0 0.015-0.71 0.192-1.206-0.672-0.214-1.464-0.102-1.869-0.018l0.003 0.015c-0.416 0.075-0.796 0.235-1.133 0.436s-0.631 0.444-0.873 0.679c-0.483 0.469-0.756 0.907-0.758 0.912v0l0 0-0.013-0.008c-0.853 1.237-1.39 3.874-1.39 3.874 0.093-0.417 0.51-0.927 0.51-0.927-0.464 0.696-0.371 3.895-0.371 3.895 0-0.51 0.278-1.113 0.278-1.113 0.093 1.066 0.556 4.498 3.57 7.094s5.564 2.829 5.564 2.829c-0.603-0.186-0.742-0.464-0.742-0.464 1.947 0.788 3.153 0.649 3.153 0.649-0.325-0.185-0.371-0.325-0.371-0.325 2.087 0.093 4.869-0.649 5.518-1.113s1.206-1.391 1.206-1.391c1.669-0.788 2.828-2.411 3.153-3.246s0-1.716 0-1.716 0-0.046 0.788-1.808c0.788-1.762-0-4.266-0-4.266zM7.485 9.458c0.196-0.117 0.407-0.223 0.632-0.311-0.893-0.744-0.823-1.723-0.823-1.723-0.893 0.862-1.111 2.318-1.157 3.198 0.013-0.015 0.025-0.030 0.038-0.045 0.302-0.348 0.743-0.78 1.31-1.12z"/>
+			</svg>
+		),
+	},
+	{
+		name: "Safari",
+		icon: (
+			<svg className="w-5 h-5" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+				<path d="M3.5 11.5L3.07125 11.2428C2.95321 11.4395 2.98421 11.6913 3.14645 11.8536C3.30868 12.0158 3.56051 12.0468 3.75725 11.9287L3.5 11.5ZM6.5 6.5L6.24275 6.07125L6.13557 6.13557L6.07125 6.24275L6.5 6.5ZM11.5 3.5L11.9287 3.75725C12.0468 3.56051 12.0158 3.30868 11.8536 3.14645C11.6913 2.98421 11.4395 2.95321 11.2428 3.07125L11.5 3.5ZM8.5 8.5L8.75725 8.92875L8.86443 8.86443L8.92875 8.75725L8.5 8.5ZM14 7.5C14 11.0903 11.0903 14 7.5 14V15C11.6426 15 15 11.6426 15 7.5H14ZM7.5 14C3.90971 14 1 11.0903 1 7.5H0C0 11.6426 3.35742 15 7.5 15V14ZM1 7.5C1 3.90971 3.90971 1 7.5 1V0C3.35742 0 0 3.35742 0 7.5H1ZM7.5 1C11.0903 1 14 3.90971 14 7.5H15C15 3.35742 11.6426 0 7.5 0V1ZM3.92875 11.7572L6.92875 6.75725L6.07125 6.24275L3.07125 11.2428L3.92875 11.7572ZM6.75725 6.92875L11.7572 3.92875L11.2428 3.07125L6.24275 6.07125L6.75725 6.92875ZM11.0713 3.24275L8.07125 8.24275L8.92875 8.75725L11.9287 3.75725L11.0713 3.24275ZM8.24275 8.07125L3.24275 11.0713L3.75725 11.9287L8.75725 8.92875L8.24275 8.07125Z" fill="currentColor"/>
+			</svg>
+		),
+	},
+	{
+		name: "Edge",
+		icon: (
+			<svg className="w-5 h-5" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+				<path d="M10.14 21.58a9.38 9.38 0 0 1-3.89-2.2A9.22 9.22 0 0 1 3 12.13 9.34 9.34 0 0 1 12.22 3h.1a9.22 9.22 0 0 1 8.44 5.52c-.77-1.11-2.35-2.11-4.76-2.11-3.31 0-6.17 2.18-6.17 5.85 0 3.18 2.47 4.96 5.72 4.96a6.68 6.68 0 0 0 4.43-1.66l.1-.09a9.34 9.34 0 0 1-2.93 4.19 9.32 9.32 0 0 1-7.01 1.92z"/>
+			</svg>
+		),
+	},
+	{
+		name: "Brave",
+		icon: (
+			<svg className="w-5 h-5" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
+				<path d="M28.823 8.036l0.833 2.38c0.041 0.125 0.047 0.261 0.016 0.387l-0.036 0.129-0.095 0.365-0.344 1.307-1.041 3.964c-0.817 3.115-1.353 5.167-1.484 5.677-0.703 2.781-1.26 3.749-3.057 5.020-1.584 1.115-4.875 3.355-5.505 3.751-0.073 0.047-0.145 0.093-0.219 0.14l-0.251 0.172c-0.239 0.172-0.495 0.323-0.76 0.453-0.301 0.14-0.588 0.219-0.88 0.219s-0.579-0.079-0.88-0.219c-0.265-0.131-0.521-0.281-0.76-0.453l-0.251-0.172c-0.073-0.047-0.145-0.093-0.219-0.14-0.631-0.396-3.921-2.636-5.505-3.751-1.797-1.271-2.355-2.239-3.057-5.020-0.131-0.511-0.667-2.563-1.479-5.657l-1.047-3.984-0.339-1.307-0.1-0.365-0.031-0.129c-0.036-0.125-0.031-0.261 0.016-0.387l0.828-2.38-0.625-1.536c-0.093-0.24-0.041-0.511 0.131-0.697l0.161-0.172c0.129-0.141 0.276-0.292 0.443-0.464 0.459-0.484 0.943-0.984 1.432-1.473 0.469-0.469 1.099-0.724 1.833-0.808 0.62-0.068 1.24-0.036 1.849 0.088l2.416-2.749c0.125-0.145 0.303-0.224 0.495-0.224h9.381c0.192 0 0.369 0.079 0.495 0.224l2.416 2.749c0.609-0.124 1.229-0.156 1.849-0.088 0.735 0.084 1.364 0.339 1.833 0.808 0.672 0.676 1.339 1.369 1.995 2.061 0.213 0.235 0.265 0.505 0.167 0.745l-0.62 1.536zM27.5 8.235c-0.052-0.152-0.047-0.317 0.016-0.464l0.557-1.375-0.303-0.317c-0.468-0.491-0.937-0.975-1.416-1.453-0.235-0.229-0.589-0.375-1.057-0.432-0.459-0.043-0.923-0.021-1.376 0.061-0.109 0.021-0.203 0.043-0.285 0.057l-0.095 0.027c-0.244 0.068-0.505-0.011-0.672-0.203l-2.473-2.819h-8.792l-2.473 2.819c-0.167 0.192-0.428 0.271-0.672 0.203-0.125-0.032-0.251-0.063-0.38-0.084-0.453-0.083-0.917-0.104-1.376-0.061-0.463 0.057-0.823 0.203-1.057 0.432-0.577 0.583-1.151 1.172-1.713 1.771l0.557 1.375c0.057 0.151 0.063 0.312 0.011 0.464l-0.844 2.427 0.079 0.303 0.344 1.301 1.041 3.969c0.5 1.896 0.995 3.792 1.484 5.687 0.631 2.505 1.032 3.204 2.541 4.272 1.563 1.099 4.839 3.323 5.443 3.708 0.079 0.047 0.157 0.099 0.261 0.167l0.244 0.172c0.256 0.172 0.428 0.276 0.584 0.348 0.14 0.068 0.249 0.095 0.323 0.095 0.079 0 0.183-0.027 0.323-0.095 0.161-0.072 0.328-0.176 0.584-0.348l0.249-0.172c0.099-0.068 0.183-0.12 0.256-0.167 0.609-0.38 3.885-2.609 5.443-3.708 1.509-1.068 1.911-1.767 2.547-4.272 0.129-0.515 0.667-2.567 1.479-5.667l1.047-3.989 0.344-1.301 0.079-0.303-0.844-2.427zM22.615 5.631c0 0 3.437 4.172 3.437 5.063s-0.432 1.124-0.864 1.588l-2.579 2.749c-0.245 0.261-0.749 0.652-0.453 1.36 0.297 0.708 0.74 1.615 0.251 2.527-0.489 0.916-1.333 1.531-1.871 1.427-0.536-0.099-1.796-0.765-2.265-1.063-0.464-0.303-1.932-1.527-1.932-1.989 0-0.469 1.521-1.303 1.801-1.495 0.281-0.188 1.563-0.928 1.589-1.213 0.025-0.287 0.016-0.376-0.365-1.089-0.375-0.713-1.057-1.667-0.943-2.297 0.109-0.635 1.209-0.963 1.995-1.26 0.781-0.297 2.292-0.859 2.485-0.948 0.187-0.088 0.135-0.172-0.432-0.224-0.573-0.057-2.193-0.271-2.928-0.068-0.729 0.209-1.979 0.516-2.077 0.683-0.1 0.167-0.193 0.172-0.089 0.74s0.641 3.301 0.693 3.787c0.052 0.484 0.151 0.801-0.371 0.921-0.52 0.125-1.395 0.328-1.697 0.328s-1.177-0.208-1.697-0.328c-0.521-0.12-0.423-0.437-0.371-0.921 0.052-0.485 0.589-3.219 0.693-3.787s0.011-0.573-0.089-0.74c-0.104-0.167-1.348-0.473-2.077-0.683-0.735-0.203-2.355 0.016-2.928 0.068-0.567 0.052-0.619 0.136-0.432 0.224 0.193 0.089 1.704 0.651 2.485 0.948 0.785 0.297 1.885 0.625 1.995 1.26 0.115 0.631-0.568 1.584-0.943 2.297-0.381 0.713-0.391 0.803-0.365 1.089 0.027 0.291 1.308 1.025 1.589 1.213 0.28 0.192 1.801 1.025 1.801 1.495 0 0.468-1.468 1.681-1.932 1.989-0.469 0.303-1.729 0.964-2.265 1.063-0.537 0.104-1.381-0.511-1.871-1.427-0.489-0.912-0.047-1.819 0.251-2.527 0.301-0.708-0.208-1.099-0.453-1.36l-2.579-2.749c-0.432-0.464-0.864-0.697-0.864-1.588s3.437-5.063 3.437-5.063c0 0 2.901 0.557 3.292 0.557s1.24-0.328 2.020-0.589c0.781-0.26 1.303-0.265 1.303-0.265s0.521 0.005 1.303 0.265c0.785 0.261 1.629 0.589 2.020 0.589s3.292-0.557 3.292-0.557zM20.036 21.584c0.215 0.135 0.084 0.385-0.109 0.52-0.192 0.141-2.796 2.161-3.052 2.385-0.249 0.224-0.62 0.593-0.875 0.593s-0.625-0.369-0.875-0.593c-0.256-0.224-2.86-2.244-3.052-2.385-0.193-0.135-0.324-0.385-0.109-0.52 0.213-0.131 0.875-0.469 1.796-0.948 0.917-0.48 2.063-0.881 2.24-0.881s1.323 0.401 2.24 0.881c0.921 0.479 1.583 0.817 1.796 0.948z"/>
+			</svg>
+		),
+	},
+	{
+		name: "Arc",
+		icon: (
+			<svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true">
+				<path d="M13.5061 13.6018C12.905 13.788 12.2654 13.8885 11.602 13.8885C9.12036 13.8885 6.96846 12.4842 5.93046 10.431C5.48592 9.55161 4.39999 9.19282 3.50496 9.62957C2.60993 10.0663 2.24474 11.1332 2.68928 12.0126C4.3146 15.2277 7.69305 17.444 11.602 17.444C12.8475 17.444 14.0394 17.2191 15.138 16.8084" />
+				<path d="M18.2384 14.9501C20.013 13.3865 21.2128 11.2053 21.4889 8.75026C21.5987 7.77436 20.8824 6.89583 19.8891 6.78801C18.8958 6.68019 18.0016 7.38391 17.8919 8.35981C17.7555 9.57212 17.2644 10.6794 16.5229 11.5793" />
+				<path d="M11.5473 3.99976C12.2327 3.99976 12.8592 4.38021 13.1658 4.98249L19.4989 17.427C19.9458 18.3052 19.5835 19.373 18.6897 19.8121C17.7958 20.2512 16.7089 19.8953 16.262 19.0171L11.5473 9.75278L9.6037 13.5719C8.41018 13.1819 7.37371 12.4516 6.61386 11.4964L9.92887 4.98249C10.2354 4.38021 10.8619 3.99976 11.5473 3.99976Z" />
+				<path d="M6.8326 19.0171C6.38568 19.8953 5.29878 20.2512 4.40494 19.8121C3.5111 19.373 3.1488 18.3052 3.59572 17.427L4.89047 14.8828C5.78379 15.686 6.82705 16.3313 7.97447 16.7733L6.8326 19.0171Z" />
+			</svg>
+		),
+	},
+];
+
+const syncFeatures = [
+	"All passwords available in your browser",
+	"Changes sync instantly across devices",
+	"Works on mobile browsers too",
+];
 
 export default function Extension() {
 	return (
@@ -16,92 +119,102 @@ export default function Extension() {
 			<Header
 				section="Coming Soon"
 				title="Extension"
-				description="browser extension for password auto-fill and OTP. coming soon."
+				description="Browser extension for password auto-fill, OTP, and more."
 			/>
 
-			<Section id="features" title="Planned features">
-				<div className="space-y-8">
-					<div>
-						<h3 id="autofill" className="text-xl font-semibold mb-3 text-black">auto-fill</h3>
-						<p className="text-black/60 max-w-2xl">
-							automatically fill passwords and login forms. works on any website.
-						</p>
-					</div>
-					<div>
-						<h3 id="generate" className="text-xl font-semibold mb-3 text-black">password generator</h3>
-						<p className="text-black/60 max-w-2xl">
-							generate strong, unique passwords for every site. customize length and character types.
-						</p>
-					</div>
-					<div>
-						<h3 id="otp" className="text-xl font-semibold mb-3 text-black">OTP auto-fill</h3>
-						<p className="text-black/60 max-w-2xl">
-							automatically fill two-factor codes. no need to switch apps or type codes manually.
-						</p>
-					</div>
-					<div>
-						<h3 id="save" className="text-xl font-semibold mb-3 text-black">auto-save</h3>
-						<p className="text-black/60 max-w-2xl">
-							automatically capture new logins when you sign up for sites.
-						</p>
-					</div>
+			
+			<div className="mb-12 p-6 rounded-2xl border border-[#d4b08c]/20 bg-linear-to-br from-[#d4b08c]/5 to-transparent">
+				<div className="flex items-center gap-3 mb-3">
+					<div className="w-2 h-2 rounded-full bg-[#d4b08c] animate-pulse" />
+					<span className="text-sm font-medium text-[#d4b08c]">In Development</span>
 				</div>
-			</Section>
-
-			<Section id="sync" title="Sync with desktop">
-				<p className="text-black/60 mb-4 max-w-2xl">
-					the extension syncs with the noro desktop app:
+				<p className="text-white/60 text-sm max-w-xl">
+					We&apos;re building browser extensions that seamlessly integrate with the noro desktop app. Auto-fill passwords, generate secure credentials, and manage 2FA codes directly in your browser.
 				</p>
-				<ul className="space-y-2 text-black/60 max-w-2xl">
-					<li className="flex items-start gap-2">
-						<span className="text-[#C53D43]">•</span>
-						<span>all passwords available in your browser</span>
-					</li>
-					<li className="flex items-start gap-2">
-						<span className="text-[#C53D43]">•</span>
-						<span>changes sync instantly across devices</span>
-					</li>
-					<li className="flex items-start gap-2">
-						<span className="text-[#C53D43]">•</span>
-						<span>works on mobile browsers too</span>
-					</li>
-				</ul>
-			</Section>
+			</div>
 
-			<Section id="browsers" title="Supported browsers">
-				<ul className="space-y-2 text-black/60 max-w-2xl">
-					<li className="flex items-start gap-2">
-						<span className="text-[#C53D43]">•</span>
-						<span>Chrome</span>
-					</li>
-					<li className="flex items-start gap-2">
-						<span className="text-[#C53D43]">•</span>
-						<span>Firefox</span>
-					</li>
-					<li className="flex items-start gap-2">
-						<span className="text-[#C53D43]">•</span>
-						<span>Safari</span>
-					</li>
-					<li className="flex items-start gap-2">
-						<span className="text-[#C53D43]">•</span>
-						<span>Edge</span>
-					</li>
-					<li className="flex items-start gap-2">
-						<span className="text-[#C53D43]">•</span>
-						<span>Brave</span>
-					</li>
-					<li className="flex items-start gap-2">
-						<span className="text-[#C53D43]">•</span>
-						<span>Arc</span>
-					</li>
-				</ul>
-			</Section>
+			
+			<section id="features" className="mb-12 scroll-mt-20">
+				<h2 className="text-xl font-semibold text-[#ededed] mb-6">Planned Features</h2>
+				<div className="grid sm:grid-cols-2 gap-4">
+					{features.map((feature) => (
+						<div
+							key={feature.title}
+							className="p-5 rounded-xl border border-white/10 bg-white/2 hover:bg-white/4 transition-colors"
+						>
+							<div className="w-10 h-10 rounded-lg bg-[#d4b08c]/10 flex items-center justify-center text-[#d4b08c] mb-4">
+								{feature.icon}
+							</div>
+							<h3 className="font-medium text-[#ededed] mb-2">{feature.title}</h3>
+							<p className="text-sm text-white/50 leading-relaxed">{feature.description}</p>
+						</div>
+					))}
+				</div>
+			</section>
 
-			<Section id="notify" title="Get notified">
-				<p className="text-black/60 max-w-2xl">
-					follow <a href="https://github.com/visible/noro" className="text-[#C53D43] hover:underline">visible/noro</a> on GitHub to get notified when the browser extension is released.
-				</p>
-			</Section>
+			
+			<section id="sync" className="mb-12 scroll-mt-20">
+				<div className="p-6 rounded-2xl border border-white/10 bg-white/2">
+					<div className="flex items-center gap-3 mb-4">
+						<div className="w-10 h-10 rounded-lg bg-[#d4b08c]/10 flex items-center justify-center text-[#d4b08c]">
+							<svg className="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+								<path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 0 1 9-9" />
+							</svg>
+						</div>
+						<div>
+							<h2 className="text-lg font-semibold text-[#ededed]">Sync with Desktop</h2>
+							<p className="text-sm text-white/50">The extension syncs with the noro desktop app</p>
+						</div>
+					</div>
+					<ul className="space-y-2">
+						{syncFeatures.map((feature) => (
+							<li key={feature} className="flex items-center gap-3 text-sm text-white/60">
+								<svg className="w-4 h-4 text-[#d4b08c] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+									<path d="M20 6L9 17l-5-5" />
+								</svg>
+								{feature}
+							</li>
+						))}
+					</ul>
+				</div>
+			</section>
+
+			
+			<section id="browsers" className="mb-12 scroll-mt-20">
+				<h2 className="text-xl font-semibold text-[#ededed] mb-6">Supported Browsers</h2>
+				<div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+					{browsers.map((browser) => (
+						<div
+							key={browser.name}
+							className="flex flex-col items-center gap-2 p-4 rounded-xl border border-white/10 bg-white/2 hover:bg-white/4 transition-colors"
+						>
+							<span className="text-white/60">{browser.icon}</span>
+							<span className="text-xs text-white/50">{browser.name}</span>
+						</div>
+					))}
+				</div>
+			</section>
+
+			
+			<section id="notify" className="mb-12 scroll-mt-20">
+				<div className="p-6 rounded-2xl border border-white/10 bg-white/2">
+					<h2 className="text-lg font-semibold text-[#ededed] mb-2">Get Notified</h2>
+					<p className="text-sm text-white/50 mb-4">
+						Follow the project on GitHub to receive updates when the browser extension is released.
+					</p>
+					<a
+						href="https://github.com/visible/noro"
+						target="_blank"
+						rel="noopener noreferrer"
+						className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-white/10 hover:bg-white/15 text-sm text-[#ededed] transition-colors"
+					>
+						<svg className="w-4 h-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+							<path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z" />
+						</svg>
+						Star on GitHub
+					</a>
+				</div>
+			</section>
 
 			<Prevnext />
 		</article>

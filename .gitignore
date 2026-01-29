@@ -1,3 +1,4 @@
+apps/mobile-core/target
 package-lock.json
 next-env.d.ts
 node_modules

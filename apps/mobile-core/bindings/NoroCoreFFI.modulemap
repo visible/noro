@@ -1,0 +1,4 @@
+module NoroCoreFFI {
+    header "NoroCoreFFI.h"
+    export *
+}

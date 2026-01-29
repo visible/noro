@@ -1,0 +1,6 @@
+[bindings.swift]
+module_name = "NoroCore"
+ffi_module_name = "NoroCoreFFI"
+
+[bindings.kotlin]
+package_name = "sh.noro.core"

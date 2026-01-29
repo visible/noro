@@ -1,0 +1,38 @@
+{
+  "name": "@noro/mobile",
+  "version": "0.0.0",
+  "private": true,
+  "main": "expo-router/entry",
+  "scripts": {
+    "start": "expo start",
+    "ios": "expo run:ios",
+    "android": "expo run:android",
+    "prebuild": "expo prebuild",
+    "lint": "expo lint"
+  },
+  "dependencies": {
+    "@gorhom/bottom-sheet": "^5.1.1",
+    "@react-native-async-storage/async-storage": "1.23.1",
+    "expo": "~52.0.0",
+    "expo-clipboard": "~7.0.1",
+    "expo-haptics": "~14.0.1",
+    "expo-local-authentication": "~15.0.2",
+    "expo-router": "~4.0.0",
+    "expo-secure-store": "~14.0.1",
+    "expo-status-bar": "~2.0.1",
+    "react": "18.3.1",
+    "react-native": "0.76.9",
+    "react-native-gesture-handler": "~2.20.2",
+    "react-native-reanimated": "~3.16.7",
+    "react-native-safe-area-context": "4.12.0",
+    "react-native-screens": "~4.4.0",
+    "react-native-svg": "15.8.0",
+    "zod": "^3.24.2",
+    "zustand": "^5.0.3"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.26.7",
+    "@types/react": "~18.3.18",
+    "typescript": "~5.7.3"
+  }
+}

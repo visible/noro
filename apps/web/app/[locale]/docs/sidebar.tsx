@@ -24,13 +24,13 @@ export function Sidebar() {
 	}, [pathname]);
 
 	return (
-		<aside ref={sidebarRef} data-sidebar className="hidden md:block w-56 shrink-0 border-r border-black/5 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+		<aside ref={sidebarRef} data-sidebar className="hidden md:block w-56 shrink-0 border-r border-white/5 overflow-y-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
 			<nav className="p-6">
 				<div className="space-y-8">
 					{navigation.map((group) => (
 						<div key={group.title}>
-							<h4 className="text-[10px] font-medium uppercase tracking-[0.2em] text-[#C53D43] mb-3 flex items-center gap-2">
-								<span className="w-4 h-px bg-[#C53D43]/40" />
+							<h4 className="text-[10px] font-medium uppercase tracking-[0.2em] text-[#d4b08c] mb-3 flex items-center gap-2">
+								<span className="w-4 h-px bg-[#d4b08c]/40" />
 								{group.title}
 							</h4>
 							<ul className="space-y-1">
@@ -44,8 +44,8 @@ export function Sidebar() {
 												data-active={isactive ? "" : undefined}
 												className={`block px-3 py-2 text-sm rounded-lg transition-all outline-none ${
 													isactive
-														? "bg-[#C53D43] text-white font-medium"
-														: "text-black/50 hover:text-black hover:bg-black/5"
+														? "bg-[#d4b08c] text-[#0a0a0a] font-medium"
+														: "text-white/50 hover:text-white hover:bg-white/5"
 												}`}
 											>
 												{item.title}

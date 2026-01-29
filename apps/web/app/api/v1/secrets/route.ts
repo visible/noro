@@ -1,8 +1,11 @@
+import { headers } from "next/headers";
 import { redis } from "@/lib/redis";
 import { validate, extractkey, checklimit } from "@/lib/apikey";
 import { send } from "@/lib/webhook";
 import { json, error } from "@/lib/response";
 import { ttls, maxsize, generateid } from "@/lib/secret";
+import { auth } from "@/lib/auth";
+import { listengines } from "@/lib/secrets/index";
 
 interface CreatePayload {
   data: string;
@@ -11,6 +14,25 @@ interface CreatePayload {
   filename?: string;
   mimetype?: string;
   views?: number;
+}
+
+export async function GET() {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) {
+    return error("unauthorized", 401);
+  }
+  try {
+    const engines = await listengines(session.user.id);
+    const safe = engines.map((e) => ({
+      id: e.id,
+      type: e.type,
+      name: e.name,
+      created: e.created,
+    }));
+    return json({ engines: safe });
+  } catch {
+    return error("failed to list engines", 500);
+  }
 }
 
 export async function POST(req: Request) {

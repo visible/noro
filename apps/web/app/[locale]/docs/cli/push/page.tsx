@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-	themeColor: "#F5F3EF",
+	themeColor: "#0a0a0a",
 };
 
 export default function Push() {

@@ -7,7 +7,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-	themeColor: "#F5F3EF",
+	themeColor: "#0a0a0a",
 };
 
 export default function Webhooks() {
@@ -20,13 +20,13 @@ export default function Webhooks() {
 			/>
 
 			<Section id="setup" title="Setup">
-				<p className="text-black/60 mb-4 max-w-2xl">
+				<p className="text-white/60 mb-4 max-w-2xl">
 					configure a webhook URL when generating your API key:
 				</p>
 				<Code>{`curl -X POST https://noro.sh/api/v1/keys \\
   -H "Content-Type: application/json" \\
   -d '{"webhook":"https://example.com/webhook"}'`}</Code>
-				<p className="text-black/60 mt-4 max-w-2xl">
+				<p className="text-white/60 mt-4 max-w-2xl">
 					the webhook URL must use HTTPS.
 				</p>
 			</Section>
@@ -34,20 +34,20 @@ export default function Webhooks() {
 			<Section id="events" title="Events">
 				<div className="space-y-6">
 					<div>
-						<h3 className="text-lg font-semibold mb-2 text-black">secret.created</h3>
-						<p className="text-black/60 mb-2 max-w-2xl">
+						<h3 className="text-lg font-semibold mb-2 text-[#ededed]">secret.created</h3>
+						<p className="text-white/60 mb-2 max-w-2xl">
 							fired when a new secret is stored.
 						</p>
 					</div>
 					<div>
-						<h3 className="text-lg font-semibold mb-2 text-black">secret.viewed</h3>
-						<p className="text-black/60 mb-2 max-w-2xl">
+						<h3 className="text-lg font-semibold mb-2 text-[#ededed]">secret.viewed</h3>
+						<p className="text-white/60 mb-2 max-w-2xl">
 							fired when a secret is claimed (but views remain).
 						</p>
 					</div>
 					<div>
-						<h3 className="text-lg font-semibold mb-2 text-black">secret.expired</h3>
-						<p className="text-black/60 mb-2 max-w-2xl">
+						<h3 className="text-lg font-semibold mb-2 text-[#ededed]">secret.expired</h3>
+						<p className="text-white/60 mb-2 max-w-2xl">
 							fired when the last view is consumed and the secret is deleted.
 						</p>
 					</div>
@@ -55,7 +55,7 @@ export default function Webhooks() {
 			</Section>
 
 			<Section id="payload" title="Payload">
-				<p className="text-black/60 mb-4 max-w-2xl">
+				<p className="text-white/60 mb-4 max-w-2xl">
 					all webhook events include the same payload structure:
 				</p>
 				<Code>{`{
@@ -68,17 +68,17 @@ export default function Webhooks() {
 			</Section>
 
 			<Section id="headers" title="Headers">
-				<p className="text-black/60 mb-4 max-w-2xl">
+				<p className="text-white/60 mb-4 max-w-2xl">
 					webhook requests include a signature header for verification:
 				</p>
 				<Code>x-noro-signature: t=1706000000000,v1=5d41402abc4b...</Code>
-				<p className="text-black/60 mt-4 max-w-2xl">
-					the header contains a timestamp (<code className="text-[#C53D43]">t</code>) and signature (<code className="text-[#C53D43]">v1</code>). the signature is HMAC-SHA256 of <code className="text-[#C53D43]">timestamp.body</code>.
+				<p className="text-white/60 mt-4 max-w-2xl">
+					the header contains a timestamp (<code className="text-[#d4b08c]">t</code>) and signature (<code className="text-[#d4b08c]">v1</code>). the signature is HMAC-SHA256 of <code className="text-[#d4b08c]">timestamp.body</code>.
 				</p>
 			</Section>
 
 			<Section id="verification" title="Verification">
-				<p className="text-black/60 mb-4 max-w-2xl">
+				<p className="text-white/60 mb-4 max-w-2xl">
 					verify the signature and check timestamp to prevent replay attacks:
 				</p>
 				<Code>{`const crypto = require("crypto");
@@ -88,7 +88,7 @@ function verify(body, header, secret) {
   const timestamp = tPart.split("=")[1];
   const signature = vPart.split("=")[1];
 
-  // reject if older than 5 minutes
+
   const age = Date.now() - parseInt(timestamp);
   if (age > 300000) return false;
 
@@ -105,41 +105,41 @@ function verify(body, header, secret) {
 			</Section>
 
 			<Section id="delivery" title="Delivery">
-				<p className="text-black/60 mb-4 max-w-2xl">
+				<p className="text-white/60 mb-4 max-w-2xl">
 					webhooks are delivered via upstash qstash with automatic retries:
 				</p>
-				<ul className="space-y-2 text-black/60 max-w-2xl">
+				<ul className="space-y-2 text-white/60 max-w-2xl">
 					<li className="flex items-start gap-2">
-						<span className="text-[#C53D43]">•</span>
+						<span className="text-[#d4b08c]">•</span>
 						<span>3 retry attempts on failure</span>
 					</li>
 					<li className="flex items-start gap-2">
-						<span className="text-[#C53D43]">•</span>
+						<span className="text-[#d4b08c]">•</span>
 						<span>exponential backoff between retries</span>
 					</li>
 					<li className="flex items-start gap-2">
-						<span className="text-[#C53D43]">•</span>
+						<span className="text-[#d4b08c]">•</span>
 						<span>10 second timeout per request</span>
 					</li>
 				</ul>
 			</Section>
 
 			<Section id="best-practices" title="Best practices">
-				<ul className="space-y-2 text-black/60 max-w-2xl">
+				<ul className="space-y-2 text-white/60 max-w-2xl">
 					<li className="flex items-start gap-2">
-						<span className="text-[#C53D43]">•</span>
+						<span className="text-[#d4b08c]">•</span>
 						<span>always verify the signature</span>
 					</li>
 					<li className="flex items-start gap-2">
-						<span className="text-[#C53D43]">•</span>
+						<span className="text-[#d4b08c]">•</span>
 						<span>respond with 200 quickly, process async</span>
 					</li>
 					<li className="flex items-start gap-2">
-						<span className="text-[#C53D43]">•</span>
+						<span className="text-[#d4b08c]">•</span>
 						<span>handle duplicate deliveries idempotently</span>
 					</li>
 					<li className="flex items-start gap-2">
-						<span className="text-[#C53D43]">•</span>
+						<span className="text-[#d4b08c]">•</span>
 						<span>use a queue for processing</span>
 					</li>
 				</ul>
