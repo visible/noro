@@ -86,8 +86,8 @@ export default function Login() {
     setLoading(true);
     try {
       const response = await api.auth.login(email, password);
-      await settoken(response.token);
-      useauth.getState().login(response.user, response.token);
+      await settoken(response.session.token);
+      useauth.getState().login(response.user, response.session.token);
       await Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
       router.replace("/(app)");
     } catch (e) {

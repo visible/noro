@@ -1,4 +1,5 @@
 import { betterAuth } from "better-auth";
+import { bearer } from "better-auth/plugins";
 import { prismaAdapter } from "better-auth/adapters/prisma";
 import { db } from "./db";
 import { upload, vaultkey } from "./r2";
@@ -9,6 +10,7 @@ export const auth = betterAuth({
 	database: prismaAdapter(db, {
 		provider: "postgresql",
 	}),
+	plugins: [bearer()],
 	emailAndPassword: {
 		enabled: true,
 		minPasswordLength: 12,

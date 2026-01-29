@@ -58,18 +58,16 @@ fn auth_header(token: &str) -> String {
 }
 
 fn encryptitem(id: &str, title: &str, data: &str) -> Result<(String, String), SyncError> {
-    let enctitle = crypto::encryptfield(id, title)
-        .map_err(|e| SyncError::Crypto(e.to_string()))?;
-    let encdata = crypto::encryptfield(id, data)
-        .map_err(|e| SyncError::Crypto(e.to_string()))?;
+    let enctitle = crypto::encryptfield(id, title).map_err(|e| SyncError::Crypto(e.to_string()))?;
+    let encdata = crypto::encryptfield(id, data).map_err(|e| SyncError::Crypto(e.to_string()))?;
     Ok((enctitle, encdata))
 }
 
 fn decryptitem(item: &mut RemoteItem) -> Result<(), SyncError> {
     item.title = crypto::decryptfield(&item.id, &item.title)
         .map_err(|e| SyncError::Crypto(e.to_string()))?;
-    item.data = crypto::decryptfield(&item.id, &item.data)
-        .map_err(|e| SyncError::Crypto(e.to_string()))?;
+    item.data =
+        crypto::decryptfield(&item.id, &item.data).map_err(|e| SyncError::Crypto(e.to_string()))?;
     Ok(())
 }
 
@@ -187,14 +185,16 @@ pub async fn sync_update(
     let url = format!("{}/api/v1/vault/items/{}", base_url, id);
 
     let enctitle = match &title {
-        Some(t) => Some(crypto::encryptfield(&id, t)
-            .map_err(|e| SyncError::Crypto(e.to_string()))?),
+        Some(t) => {
+            Some(crypto::encryptfield(&id, t).map_err(|e| SyncError::Crypto(e.to_string()))?)
+        }
         None => None,
     };
 
     let encdata = match &data {
-        Some(d) => Some(crypto::encryptfield(&id, d)
-            .map_err(|e| SyncError::Crypto(e.to_string()))?),
+        Some(d) => {
+            Some(crypto::encryptfield(&id, d).map_err(|e| SyncError::Crypto(e.to_string()))?)
+        }
         None => None,
     };
 

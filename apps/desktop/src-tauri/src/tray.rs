@@ -6,9 +6,13 @@ use tauri::{
 };
 
 fn quickpassword() -> String {
-    let charset: Vec<u8> = b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?".to_vec();
+    let charset: Vec<u8> =
+        b"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+-=[]{}|;:,.<>?"
+            .to_vec();
     let mut rng = rand::thread_rng();
-    (0..20).map(|_| charset[rng.gen_range(0..charset.len())] as char).collect()
+    (0..20)
+        .map(|_| charset[rng.gen_range(0..charset.len())] as char)
+        .collect()
 }
 
 fn copytoclipboard(text: &str) {
@@ -26,13 +30,19 @@ fn copytoclipboard(text: &str) {
     #[cfg(target_os = "windows")]
     {
         use std::process::Command;
-        let _ = Command::new("cmd").args(["/C", &format!("echo {} | clip", text)]).spawn();
+        let _ = Command::new("cmd")
+            .args(["/C", &format!("echo {} | clip", text)])
+            .spawn();
     }
     #[cfg(target_os = "linux")]
     {
         use std::io::Write;
         use std::process::{Command, Stdio};
-        if let Ok(mut child) = Command::new("xclip").args(["-selection", "clipboard"]).stdin(Stdio::piped()).spawn() {
+        if let Ok(mut child) = Command::new("xclip")
+            .args(["-selection", "clipboard"])
+            .stdin(Stdio::piped())
+            .spawn()
+        {
             if let Some(stdin) = child.stdin.as_mut() {
                 let _ = stdin.write_all(text.as_bytes());
             }
@@ -50,7 +60,9 @@ pub fn create<R: Runtime>(app: &AppHandle<R>) -> Result<(), Box<dyn std::error::
     let menu = Menu::with_items(app, &[&open, &lock, &generate, &separator, &quit])?;
 
     let _tray = TrayIconBuilder::new()
-        .icon(tauri::image::Image::from_bytes(include_bytes!("../icons/32x32.png"))?)
+        .icon(tauri::image::Image::from_bytes(include_bytes!(
+            "../icons/32x32.png"
+        ))?)
         .menu(&menu)
         .show_menu_on_left_click(false)
         .on_menu_event(|app, event| match event.id.as_ref() {
@@ -76,7 +88,12 @@ pub fn create<R: Runtime>(app: &AppHandle<R>) -> Result<(), Box<dyn std::error::
             _ => {}
         })
         .on_tray_icon_event(|tray, event| {
-            if let TrayIconEvent::Click { button: MouseButton::Left, button_state: MouseButtonState::Up, .. } = event {
+            if let TrayIconEvent::Click {
+                button: MouseButton::Left,
+                button_state: MouseButtonState::Up,
+                ..
+            } = event
+            {
                 if let Some(w) = tray.app_handle().get_webview_window("main") {
                     if w.is_visible().unwrap_or(false) {
                         let _ = w.hide();
@@ -97,15 +114,25 @@ pub fn tray_show_notification(title: String, body: String) -> Result<(), String>
     #[cfg(target_os = "macos")]
     {
         use std::process::Command;
-        let script = format!(r#"display notification "{}" with title "{}""#, body.replace('"', r#"\""#), title.replace('"', r#"\""#));
-        Command::new("osascript").args(["-e", &script]).spawn().map_err(|e| e.to_string())?;
+        let script = format!(
+            r#"display notification "{}" with title "{}""#,
+            body.replace('"', r#"\""#),
+            title.replace('"', r#"\""#)
+        );
+        Command::new("osascript")
+            .args(["-e", &script])
+            .spawn()
+            .map_err(|e| e.to_string())?;
     }
     #[cfg(target_os = "windows")]
     log::info!("notification: {} - {}", title, body);
     #[cfg(target_os = "linux")]
     {
         use std::process::Command;
-        Command::new("notify-send").args([&title, &body]).spawn().map_err(|e| e.to_string())?;
+        Command::new("notify-send")
+            .args([&title, &body])
+            .spawn()
+            .map_err(|e| e.to_string())?;
     }
     Ok(())
 }
@@ -142,9 +169,25 @@ pub fn tray_set_autostart(enabled: bool) -> Result<(), String> {
         let exe = std::env::current_exe().map_err(|e| e.to_string())?;
         let key = r#"HKCU\Software\Microsoft\Windows\CurrentVersion\Run"#;
         if enabled {
-            Command::new("reg").args(["add", key, "/v", "noro", "/t", "REG_SZ", "/d", exe.to_str().unwrap_or(""), "/f"]).spawn().map_err(|e| e.to_string())?;
+            Command::new("reg")
+                .args([
+                    "add",
+                    key,
+                    "/v",
+                    "noro",
+                    "/t",
+                    "REG_SZ",
+                    "/d",
+                    exe.to_str().unwrap_or(""),
+                    "/f",
+                ])
+                .spawn()
+                .map_err(|e| e.to_string())?;
         } else {
-            Command::new("reg").args(["delete", key, "/v", "noro", "/f"]).spawn().map_err(|e| e.to_string())?;
+            Command::new("reg")
+                .args(["delete", key, "/v", "noro", "/f"])
+                .spawn()
+                .map_err(|e| e.to_string())?;
         }
     }
     #[cfg(target_os = "linux")]
@@ -168,18 +211,33 @@ pub fn tray_get_autostart() -> Result<bool, String> {
     #[cfg(target_os = "macos")]
     {
         let home = std::env::var("HOME").map_err(|e| e.to_string())?;
-        Ok(std::path::Path::new(&format!("{}/Library/LaunchAgents/sh.noro.app.plist", home)).exists())
+        Ok(
+            std::path::Path::new(&format!("{}/Library/LaunchAgents/sh.noro.app.plist", home))
+                .exists(),
+        )
     }
     #[cfg(target_os = "windows")]
     {
         use std::process::Command;
-        let out = Command::new("reg").args(["query", r#"HKCU\Software\Microsoft\Windows\CurrentVersion\Run"#, "/v", "noro"]).output().map_err(|e| e.to_string())?;
+        let out = Command::new("reg")
+            .args([
+                "query",
+                r#"HKCU\Software\Microsoft\Windows\CurrentVersion\Run"#,
+                "/v",
+                "noro",
+            ])
+            .output()
+            .map_err(|e| e.to_string())?;
         Ok(out.status.success())
     }
     #[cfg(target_os = "linux")]
     {
         use directories::BaseDirs;
         let base = BaseDirs::new().ok_or("could not find base directories")?;
-        Ok(base.config_dir().join("autostart").join("noro.desktop").exists())
+        Ok(base
+            .config_dir()
+            .join("autostart")
+            .join("noro.desktop")
+            .exists())
     }
 }

@@ -35,8 +35,8 @@ mod macos {
     use objc::runtime::{Class, Object, BOOL, YES};
     use objc::{msg_send, sel, sel_impl};
     use std::ffi::CStr;
-    use std::sync::mpsc;
     use std::ptr;
+    use std::sync::mpsc;
 
     const LA_POLICY_BIOMETRICS: i64 = 1;
     const LA_ERROR_USER_CANCEL: i64 = -2;
@@ -125,7 +125,8 @@ mod macos {
                 reply: &*block
             ];
 
-            rx.recv().unwrap_or(Err(BiometricError::AuthFailed("timeout".into())))
+            rx.recv()
+                .unwrap_or(Err(BiometricError::AuthFailed("timeout".into())))
         }
     }
 }
@@ -195,7 +196,10 @@ pub fn biometric_authenticate(reason: String) -> Result<bool, BiometricError> {
 #[tauri::command]
 pub fn biometric_enabled() -> bool {
     get_entry(BIOMETRIC_ENABLED)
-        .and_then(|e| e.get_password().map_err(|err| BiometricError::Keyring(err.to_string())))
+        .and_then(|e| {
+            e.get_password()
+                .map_err(|err| BiometricError::Keyring(err.to_string()))
+        })
         .map(|v| v == "true")
         .unwrap_or(false)
 }
@@ -208,8 +212,8 @@ pub fn biometric_enable() -> Result<(), BiometricError> {
 
     platform::authenticate("enable biometric unlock")?;
 
-    let master_key = crate::storage::get_master_key()
-        .map_err(|e| BiometricError::Keyring(e.to_string()))?;
+    let master_key =
+        crate::storage::get_master_key().map_err(|e| BiometricError::Keyring(e.to_string()))?;
     let encoded = base64::Engine::encode(&base64::engine::general_purpose::STANDARD, &master_key);
 
     let key_entry = get_entry(BIOMETRIC_KEY)?;
@@ -252,8 +256,8 @@ pub fn biometric_unlock() -> Result<bool, BiometricError> {
     let key_bytes = base64::Engine::decode(&base64::engine::general_purpose::STANDARD, &encoded)
         .map_err(|e| BiometricError::Keyring(e.to_string()))?;
 
-    let master_entry = Entry::new(SERVICE, "master_key")
-        .map_err(|e| BiometricError::Keyring(e.to_string()))?;
+    let master_entry =
+        Entry::new(SERVICE, "master_key").map_err(|e| BiometricError::Keyring(e.to_string()))?;
 
     let existing = master_entry.get_password().ok();
     if let Some(combined) = existing {

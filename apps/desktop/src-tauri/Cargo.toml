@@ -37,3 +37,6 @@ tokio = { version = "1", features = ["full"] }
 cocoa = "0.26"
 objc = "0.2"
 block = "0.1"
+
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+tauri-plugin-window-state = "2"

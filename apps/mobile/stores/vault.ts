@@ -85,7 +85,8 @@ type VaultState = {
 
 import { gettoken } from "../lib/storage";
 
-const baseurl = process.env.EXPO_PUBLIC_API_URL || "https://noro.sh/api";
+const apihost = process.env.EXPO_PUBLIC_API_URL || "https://noro.sh";
+const baseurl = `${apihost}/api`;
 
 async function authfetch(path: string, options: RequestInit = {}) {
 	const token = await gettoken();

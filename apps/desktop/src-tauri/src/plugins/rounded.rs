@@ -5,7 +5,7 @@ use tauri::{AppHandle, Runtime, WebviewWindow};
 
 #[cfg(target_os = "macos")]
 use cocoa::{
-    appkit::{NSWindow, NSView, NSColor},
+    appkit::{NSColor, NSView, NSWindow},
     base::{id, nil},
 };
 

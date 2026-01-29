@@ -70,7 +70,9 @@ pub async fn login(
         let err: ErrorResponse = res.json().await.unwrap_or(ErrorResponse {
             message: Some("login failed".into()),
         });
-        return Err(AuthError::Failed(err.message.unwrap_or("login failed".into())));
+        return Err(AuthError::Failed(
+            err.message.unwrap_or("login failed".into()),
+        ));
     }
 
     let token = res
@@ -109,9 +111,8 @@ pub async fn register(
         name: String,
     }
 
-    let display_name = name.unwrap_or_else(|| {
-        email.split('@').next().unwrap_or("user").to_string()
-    });
+    let display_name =
+        name.unwrap_or_else(|| email.split('@').next().unwrap_or("user").to_string());
 
     let body = RegisterRequest {
         email: email.clone(),
@@ -134,7 +135,9 @@ pub async fn register(
         let err: ErrorResponse = res.json().await.unwrap_or(ErrorResponse {
             message: Some("registration failed".into()),
         });
-        return Err(AuthError::Failed(err.message.unwrap_or("registration failed".into())));
+        return Err(AuthError::Failed(
+            err.message.unwrap_or("registration failed".into()),
+        ));
     }
 
     let token = res

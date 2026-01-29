@@ -63,21 +63,23 @@ fn get_data_dir() -> Result<PathBuf, StorageError> {
 }
 
 fn derive_key(password: &str, salt: &[u8]) -> Result<[u8; KEY_SIZE], StorageError> {
-    let salt_str = SaltString::encode_b64(salt)
-        .map_err(|e| StorageError::Encryption(e.to_string()))?;
+    let salt_str =
+        SaltString::encode_b64(salt).map_err(|e| StorageError::Encryption(e.to_string()))?;
     let argon2 = Argon2::default();
     let hash = argon2
         .hash_password(password.as_bytes(), &salt_str)
         .map_err(|e| StorageError::Encryption(e.to_string()))?;
-    let hash_bytes = hash.hash.ok_or_else(|| StorageError::Encryption("no hash".into()))?;
+    let hash_bytes = hash
+        .hash
+        .ok_or_else(|| StorageError::Encryption("no hash".into()))?;
     let mut key = [0u8; KEY_SIZE];
     key.copy_from_slice(&hash_bytes.as_bytes()[..KEY_SIZE]);
     Ok(key)
 }
 
 fn encrypt(data: &[u8], key: &[u8; KEY_SIZE]) -> Result<Vec<u8>, StorageError> {
-    let cipher = Aes256Gcm::new_from_slice(key)
-        .map_err(|e| StorageError::Encryption(e.to_string()))?;
+    let cipher =
+        Aes256Gcm::new_from_slice(key).map_err(|e| StorageError::Encryption(e.to_string()))?;
     let mut nonce_bytes = [0u8; NONCE_SIZE];
     OsRng.fill_bytes(&mut nonce_bytes);
     let nonce = Nonce::from_slice(&nonce_bytes);
@@ -93,8 +95,8 @@ fn decrypt(data: &[u8], key: &[u8; KEY_SIZE]) -> Result<Vec<u8>, StorageError> {
     if data.len() < NONCE_SIZE {
         return Err(StorageError::Encryption("data too short".into()));
     }
-    let cipher = Aes256Gcm::new_from_slice(key)
-        .map_err(|e| StorageError::Encryption(e.to_string()))?;
+    let cipher =
+        Aes256Gcm::new_from_slice(key).map_err(|e| StorageError::Encryption(e.to_string()))?;
     let nonce = Nonce::from_slice(&data[..NONCE_SIZE]);
     let plaintext = cipher
         .decrypt(nonce, &data[NONCE_SIZE..])
@@ -103,8 +105,7 @@ fn decrypt(data: &[u8], key: &[u8; KEY_SIZE]) -> Result<Vec<u8>, StorageError> {
 }
 
 pub fn store_session(token: &str) -> Result<(), StorageError> {
-    let entry = Entry::new(SERVICE, "session")
-        .map_err(|e| StorageError::Keyring(e.to_string()))?;
+    let entry = Entry::new(SERVICE, "session").map_err(|e| StorageError::Keyring(e.to_string()))?;
     entry
         .set_password(token)
         .map_err(|e| StorageError::Keyring(e.to_string()))?;
@@ -112,16 +113,14 @@ pub fn store_session(token: &str) -> Result<(), StorageError> {
 }
 
 pub fn get_session() -> Result<String, StorageError> {
-    let entry = Entry::new(SERVICE, "session")
-        .map_err(|e| StorageError::Keyring(e.to_string()))?;
+    let entry = Entry::new(SERVICE, "session").map_err(|e| StorageError::Keyring(e.to_string()))?;
     entry
         .get_password()
         .map_err(|e| StorageError::Keyring(e.to_string()))
 }
 
 pub fn delete_session() -> Result<(), StorageError> {
-    let entry = Entry::new(SERVICE, "session")
-        .map_err(|e| StorageError::Keyring(e.to_string()))?;
+    let entry = Entry::new(SERVICE, "session").map_err(|e| StorageError::Keyring(e.to_string()))?;
     entry
         .delete_credential()
         .map_err(|e| StorageError::Keyring(e.to_string()))?;
@@ -132,8 +131,8 @@ pub fn store_master_key(password: &str) -> Result<(), StorageError> {
     let mut salt = [0u8; 16];
     OsRng.fill_bytes(&mut salt);
     let key = derive_key(password, &salt)?;
-    let entry = Entry::new(SERVICE, "master_key")
-        .map_err(|e| StorageError::Keyring(e.to_string()))?;
+    let entry =
+        Entry::new(SERVICE, "master_key").map_err(|e| StorageError::Keyring(e.to_string()))?;
     let combined = format!("{}:{}", STANDARD.encode(salt), STANDARD.encode(key));
     entry
         .set_password(&combined)
@@ -142,8 +141,8 @@ pub fn store_master_key(password: &str) -> Result<(), StorageError> {
 }
 
 pub fn get_master_key() -> Result<Vec<u8>, StorageError> {
-    let entry = Entry::new(SERVICE, "master_key")
-        .map_err(|e| StorageError::Keyring(e.to_string()))?;
+    let entry =
+        Entry::new(SERVICE, "master_key").map_err(|e| StorageError::Keyring(e.to_string()))?;
     let combined = entry
         .get_password()
         .map_err(|e| StorageError::Keyring(e.to_string()))?;
@@ -155,8 +154,8 @@ pub fn get_master_key() -> Result<Vec<u8>, StorageError> {
 }
 
 pub fn verify_password(password: &str) -> Result<bool, StorageError> {
-    let entry = Entry::new(SERVICE, "master_key")
-        .map_err(|e| StorageError::Keyring(e.to_string()))?;
+    let entry =
+        Entry::new(SERVICE, "master_key").map_err(|e| StorageError::Keyring(e.to_string()))?;
     let combined = entry
         .get_password()
         .map_err(|e| StorageError::Keyring(e.to_string()))?;
@@ -171,8 +170,8 @@ pub fn verify_password(password: &str) -> Result<bool, StorageError> {
 }
 
 pub fn delete_master_key() -> Result<(), StorageError> {
-    let entry = Entry::new(SERVICE, "master_key")
-        .map_err(|e| StorageError::Keyring(e.to_string()))?;
+    let entry =
+        Entry::new(SERVICE, "master_key").map_err(|e| StorageError::Keyring(e.to_string()))?;
     entry
         .delete_credential()
         .map_err(|e| StorageError::Keyring(e.to_string()))?;

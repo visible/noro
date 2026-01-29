@@ -70,10 +70,9 @@ pub fn crypto_setup(password: String) -> Result<SetupResult, CryptoError> {
     let salt = twoskd::generatesalt();
     let vaultkey = twoskd::generatevaultkey();
 
-    let auk = twoskd::deriveauk(&password, &secretkey, &salt)
-        .map_err(|_| CryptoError::Encryption)?;
-    let wrapped = twoskd::wrapvaultkey(&vaultkey, &auk)
-        .map_err(|_| CryptoError::Encryption)?;
+    let auk =
+        twoskd::deriveauk(&password, &secretkey, &salt).map_err(|_| CryptoError::Encryption)?;
+    let wrapped = twoskd::wrapvaultkey(&vaultkey, &auk).map_err(|_| CryptoError::Encryption)?;
 
     entry(VAULT_KEY_ENTRY)?
         .set_password(&STANDARD.encode(&wrapped))
@@ -97,20 +96,22 @@ pub fn crypto_unlock(password: String, secretkey: String) -> Result<bool, Crypto
     let wrapped_b64 = entry(VAULT_KEY_ENTRY)?
         .get_password()
         .map_err(|_| CryptoError::NotSetup)?;
-    let wrapped = STANDARD.decode(&wrapped_b64)
+    let wrapped = STANDARD
+        .decode(&wrapped_b64)
         .map_err(|_| CryptoError::Encryption)?;
 
     let salt_b64 = entry(SALT_ENTRY)?
         .get_password()
         .map_err(|_| CryptoError::NotSetup)?;
-    let salt = STANDARD.decode(&salt_b64)
+    let salt = STANDARD
+        .decode(&salt_b64)
         .map_err(|_| CryptoError::Encryption)?;
 
     let auk = twoskd::deriveauk(&password, &secretkey, &salt)
         .map_err(|_| CryptoError::InvalidPassword)?;
 
-    let vaultkey = twoskd::unwrapvaultkey(&wrapped, &auk)
-        .map_err(|_| CryptoError::InvalidPassword)?;
+    let vaultkey =
+        twoskd::unwrapvaultkey(&wrapped, &auk).map_err(|_| CryptoError::InvalidPassword)?;
 
     *VAULT_KEY.write().unwrap() = Some(vaultkey);
     Ok(true)
@@ -132,22 +133,21 @@ pub fn crypto_get_secret_key() -> Result<Option<String>, CryptoError> {
 pub fn encryptfield(itemid: &str, plaintext: &str) -> Result<String, CryptoError> {
     let vaultkey = VAULT_KEY.read().unwrap();
     let vaultkey = vaultkey.as_ref().ok_or(CryptoError::Locked)?;
-    let itemkey = twoskd::deriveitemkey(vaultkey, itemid)
-        .map_err(|_| CryptoError::Encryption)?;
-    let encrypted = twoskd::encryptitem(plaintext.as_bytes(), &itemkey)
-        .map_err(|_| CryptoError::Encryption)?;
+    let itemkey = twoskd::deriveitemkey(vaultkey, itemid).map_err(|_| CryptoError::Encryption)?;
+    let encrypted =
+        twoskd::encryptitem(plaintext.as_bytes(), &itemkey).map_err(|_| CryptoError::Encryption)?;
     Ok(STANDARD.encode(&encrypted))
 }
 
 pub fn decryptfield(itemid: &str, ciphertext: &str) -> Result<String, CryptoError> {
     let vaultkey = VAULT_KEY.read().unwrap();
     let vaultkey = vaultkey.as_ref().ok_or(CryptoError::Locked)?;
-    let itemkey = twoskd::deriveitemkey(vaultkey, itemid)
+    let itemkey = twoskd::deriveitemkey(vaultkey, itemid).map_err(|_| CryptoError::Encryption)?;
+    let encrypted = STANDARD
+        .decode(ciphertext)
         .map_err(|_| CryptoError::Encryption)?;
-    let encrypted = STANDARD.decode(ciphertext)
-        .map_err(|_| CryptoError::Encryption)?;
-    let decrypted = twoskd::decryptitem(&encrypted, &itemkey)
-        .map_err(|_| CryptoError::Encryption)?;
+    let decrypted =
+        twoskd::decryptitem(&encrypted, &itemkey).map_err(|_| CryptoError::Encryption)?;
     String::from_utf8(decrypted).map_err(|_| CryptoError::Encryption)
 }
 

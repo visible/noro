@@ -1,7 +1,10 @@
 import { z } from "zod";
 import { gettoken } from "./storage";
 
-const BASE_URL = "https://noro.sh/api/v1";
+const API_HOST = process.env.EXPO_PUBLIC_API_URL || "https://noro.sh";
+const BASE_URL = `${API_HOST}/api`;
+const AUTH_URL = `${API_HOST}/api/auth`;
+const V1_URL = `${API_HOST}/api/v1`;
 
 export class ApiError extends Error {
   constructor(
@@ -23,9 +26,10 @@ async function request<T>(
     body?: unknown;
     schema?: z.ZodType<T>;
     auth?: boolean;
+    baseurl?: string;
   } = {}
 ): Promise<T> {
-  const { method = "GET", body, schema, auth = true } = options;
+  const { method = "GET", body, schema, auth = true, baseurl = V1_URL } = options;
 
   const headers: Record<string, string> = {
     "content-type": "application/json",
@@ -38,7 +42,7 @@ async function request<T>(
     }
   }
 
-  const response = await fetch(`${BASE_URL}${path}`, {
+  const response = await fetch(`${baseurl}${path}`, {
     method,
     headers,
     body: body ? JSON.stringify(body) : undefined,
@@ -91,8 +95,15 @@ export const FoldersResponseSchema = z.object({
   counts: z.record(z.number()),
 });
 
-export const AuthResponseSchema = z.object({
+export const SessionSchema = z.object({
+  id: z.string(),
   token: z.string(),
+  userId: z.string(),
+  expiresAt: z.string(),
+});
+
+export const AuthResponseSchema = z.object({
+  session: SessionSchema,
   user: UserSchema,
 });
 
@@ -104,28 +115,31 @@ export type AuthResponse = z.infer<typeof AuthResponseSchema>;
 export const api = {
   auth: {
     login: (email: string, password: string) =>
-      request<AuthResponse>("/auth/sign-in/email", {
+      request<AuthResponse>("/sign-in/email", {
         method: "POST",
         body: { email, password },
         schema: AuthResponseSchema,
         auth: false,
+        baseurl: AUTH_URL,
       }),
 
     register: (email: string, password: string, name?: string) =>
-      request<AuthResponse>("/auth/sign-up/email", {
+      request<AuthResponse>("/sign-up/email", {
         method: "POST",
         body: { email, password, name },
         schema: AuthResponseSchema,
         auth: false,
+        baseurl: AUTH_URL,
       }),
 
     logout: () =>
-      request<{ success: boolean }>("/auth/sign-out", {
+      request<{ success: boolean }>("/sign-out", {
         method: "POST",
+        baseurl: AUTH_URL,
       }),
 
     session: () =>
-      request<{ session: { user: User } }>("/auth/get-session"),
+      request<{ session: { user: User } }>("/get-session", { baseurl: AUTH_URL }),
   },
 
   user: {
@@ -174,6 +188,6 @@ export const api = {
 
   health: {
     check: () =>
-      request<{ status: string }>("/health", { auth: false }),
+      request<{ status: string }>("/health", { auth: false, baseurl: BASE_URL }),
   },
 };

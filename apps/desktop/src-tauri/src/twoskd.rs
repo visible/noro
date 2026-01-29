@@ -103,7 +103,12 @@ pub fn deriveauk(password: &str, secretkey: &str, salt: &[u8]) -> Result<[u8; 32
     combined.extend_from_slice(password.as_bytes());
     combined.extend_from_slice(&keybytes);
 
-    let params = Params::new(ARGON_MEMORY, ARGON_ITERATIONS, ARGON_PARALLELISM, Some(ARGON_OUTPUT_LEN))?;
+    let params = Params::new(
+        ARGON_MEMORY,
+        ARGON_ITERATIONS,
+        ARGON_PARALLELISM,
+        Some(ARGON_OUTPUT_LEN),
+    )?;
     let argon2 = Argon2::new(Algorithm::Argon2id, Version::V0x13, params);
 
     let mut auk = [0u8; 32];
@@ -116,7 +121,9 @@ pub fn wrapvaultkey(vaultkey: &[u8; 32], auk: &[u8; 32]) -> Result<Vec<u8>> {
     let mut rng = rand::thread_rng();
     let noncebytes: [u8; NONCE_LEN] = rng.gen();
     let nonce = Nonce::from_slice(&noncebytes);
-    let ciphertext = cipher.encrypt(nonce, vaultkey.as_ref()).map_err(|_| TwoskdError::Encryption)?;
+    let ciphertext = cipher
+        .encrypt(nonce, vaultkey.as_ref())
+        .map_err(|_| TwoskdError::Encryption)?;
     let mut wrapped = Vec::with_capacity(NONCE_LEN + ciphertext.len());
     wrapped.extend_from_slice(&noncebytes);
     wrapped.extend_from_slice(&ciphertext);
@@ -130,7 +137,9 @@ pub fn unwrapvaultkey(wrapped: &[u8], auk: &[u8; 32]) -> Result<[u8; 32]> {
     let cipher = Aes256Gcm::new_from_slice(auk).map_err(|_| TwoskdError::Decryption)?;
     let nonce = Nonce::from_slice(&wrapped[..NONCE_LEN]);
     let ciphertext = &wrapped[NONCE_LEN..];
-    let plaintext = cipher.decrypt(nonce, ciphertext).map_err(|_| TwoskdError::Decryption)?;
+    let plaintext = cipher
+        .decrypt(nonce, ciphertext)
+        .map_err(|_| TwoskdError::Decryption)?;
     let mut vaultkey = [0u8; 32];
     vaultkey.copy_from_slice(&plaintext);
     Ok(vaultkey)
@@ -149,7 +158,9 @@ pub fn encryptitem(data: &[u8], itemkey: &[u8; 32]) -> Result<Vec<u8>> {
     let mut rng = rand::thread_rng();
     let noncebytes: [u8; NONCE_LEN] = rng.gen();
     let nonce = Nonce::from_slice(&noncebytes);
-    let ciphertext = cipher.encrypt(nonce, data).map_err(|_| TwoskdError::Encryption)?;
+    let ciphertext = cipher
+        .encrypt(nonce, data)
+        .map_err(|_| TwoskdError::Encryption)?;
     let mut result = Vec::with_capacity(NONCE_LEN + ciphertext.len());
     result.extend_from_slice(&noncebytes);
     result.extend_from_slice(&ciphertext);
@@ -163,7 +174,9 @@ pub fn decryptitem(encrypted: &[u8], itemkey: &[u8; 32]) -> Result<Vec<u8>> {
     let cipher = Aes256Gcm::new_from_slice(itemkey).map_err(|_| TwoskdError::Decryption)?;
     let nonce = Nonce::from_slice(&encrypted[..NONCE_LEN]);
     let ciphertext = &encrypted[NONCE_LEN..];
-    cipher.decrypt(nonce, ciphertext).map_err(|_| TwoskdError::Decryption)
+    cipher
+        .decrypt(nonce, ciphertext)
+        .map_err(|_| TwoskdError::Decryption)
 }
 
 pub fn generatevaultkey() -> [u8; 32] {
