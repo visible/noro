@@ -76,12 +76,12 @@ export const VaultSearch = forwardRef<HTMLInputElement, Props>(function VaultSea
 					value={search}
 					onChange={(e) => onSearchChange(e.target.value)}
 					placeholder="Search vault..."
-					className="w-full bg-white/[0.03] border border-white/[0.06] rounded-xl pl-11 pr-11 py-3 text-sm text-white placeholder:text-white/30 focus:outline-none focus:border-[#d4b08c]/50 focus:ring-1 focus:ring-[#d4b08c]/20 transition-all"
+					className="w-full bg-[#161616]/80 backdrop-blur-sm border border-white/5 rounded-xl pl-11 pr-11 py-3 text-sm text-[#ededed] placeholder:text-white/30 focus:outline-none focus:border-[#d4b08c]/30 focus:ring-1 focus:ring-[#d4b08c]/20 transition-all shadow-lg shadow-black/10"
 				/>
 				{search && (
 					<button
 						onClick={() => onSearchChange("")}
-						className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center text-white/30 hover:text-white/50 rounded transition-colors"
+						className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 flex items-center justify-center text-white/30 hover:text-white/50 rounded-md transition-colors"
 						aria-label="clear search"
 					>
 						<svg aria-hidden="true" className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -97,8 +97,8 @@ export const VaultSearch = forwardRef<HTMLInputElement, Props>(function VaultSea
 						onClick={() => onTypeFilterChange(null)}
 						className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
 							typeFilter === null
-								? "bg-[#d4b08c]/15 text-[#d4b08c] border border-[#d4b08c]/20"
-								: "bg-white/[0.03] text-white/50 border border-transparent hover:text-white/70 hover:bg-white/[0.05]"
+								? "bg-gradient-to-br from-[#d4b08c]/20 to-[#d4b08c]/10 text-[#d4b08c] border border-[#d4b08c]/20 shadow-lg shadow-[#d4b08c]/5"
+								: "bg-[#161616]/80 text-white/50 border border-white/5 hover:text-white/70 hover:bg-[#1a1a1a]"
 						}`}
 					>
 						all
@@ -114,8 +114,8 @@ export const VaultSearch = forwardRef<HTMLInputElement, Props>(function VaultSea
 								onClick={() => onTypeFilterChange(isActive ? null : type)}
 								className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
 									isActive
-										? "bg-[#d4b08c]/15 text-[#d4b08c] border border-[#d4b08c]/20"
-										: "bg-white/[0.03] text-white/50 border border-transparent hover:text-white/70 hover:bg-white/[0.05]"
+										? "bg-gradient-to-br from-[#d4b08c]/20 to-[#d4b08c]/10 text-[#d4b08c] border border-[#d4b08c]/20 shadow-lg shadow-[#d4b08c]/5"
+										: "bg-[#161616]/80 text-white/50 border border-white/5 hover:text-white/70 hover:bg-[#1a1a1a]"
 								}`}
 							>
 								<svg aria-hidden="true" className={`w-3.5 h-3.5 ${isActive ? "text-[#d4b08c]" : "text-white/40"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -142,8 +142,8 @@ export const VaultSearch = forwardRef<HTMLInputElement, Props>(function VaultSea
 										onClick={() => onTagFilterChange(isActive ? null : tag)}
 										className={`px-2.5 py-1.5 rounded-lg text-xs transition-all ${
 											isActive
-												? "bg-[#d4b08c]/15 text-[#d4b08c] border border-[#d4b08c]/20"
-												: "bg-white/[0.03] text-white/40 border border-transparent hover:text-white/60 hover:bg-white/[0.05]"
+												? "bg-gradient-to-br from-[#d4b08c]/20 to-[#d4b08c]/10 text-[#d4b08c] border border-[#d4b08c]/20 shadow-lg shadow-[#d4b08c]/5"
+												: "bg-[#161616]/80 text-white/40 border border-white/5 hover:text-white/60 hover:bg-[#1a1a1a]"
 										}`}
 									>
 										{tag}
@@ -159,7 +159,7 @@ export const VaultSearch = forwardRef<HTMLInputElement, Props>(function VaultSea
 					{hasFilters && (
 						<button
 							onClick={() => { onTypeFilterChange(null); onTagFilterChange(null); }}
-							className="ml-auto text-xs text-white/40 hover:text-white/60 transition-colors"
+							className="ml-auto text-xs text-white/40 hover:text-[#d4b08c] transition-colors"
 						>
 							clear filters
 						</button>

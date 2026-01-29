@@ -6,18 +6,18 @@ export function VaultLoading() {
 			{Array.from({ length: 6 }).map((_, i) => (
 				<div
 					key={i}
-					className="bg-white/[0.02] border border-white/[0.06] rounded-xl p-4 animate-pulse"
+					className="bg-[#161616]/80 backdrop-blur-sm border border-white/5 rounded-xl p-4 animate-pulse shadow-lg shadow-black/10"
 				>
 					<div className="flex items-start gap-3">
-						<div className="w-10 h-10 rounded-lg bg-white/[0.04]" />
+						<div className="w-10 h-10 rounded-xl bg-gradient-to-br from-white/[0.06] to-white/[0.02]" />
 						<div className="flex-1 space-y-2">
-							<div className="h-4 w-2/3 rounded bg-white/[0.04]" />
-							<div className="h-3 w-1/2 rounded bg-white/[0.03]" />
+							<div className="h-4 w-2/3 rounded-lg bg-gradient-to-r from-white/[0.06] to-white/[0.03]" />
+							<div className="h-3 w-1/2 rounded-lg bg-gradient-to-r from-white/[0.04] to-white/[0.02]" />
 						</div>
 					</div>
 					<div className="flex gap-1.5 mt-3">
-						<div className="h-5 w-12 rounded-md bg-white/[0.03]" />
-						<div className="h-5 w-16 rounded-md bg-white/[0.03]" />
+						<div className="h-5 w-12 rounded-md bg-white/[0.03] border border-white/[0.04]" />
+						<div className="h-5 w-16 rounded-md bg-white/[0.03] border border-white/[0.04]" />
 					</div>
 				</div>
 			))}

@@ -18,7 +18,7 @@
 }
 
 ::-webkit-scrollbar {
-	width: 6px;
+	width: 4px;
 }
 
 ::-webkit-scrollbar-track {
@@ -26,28 +26,30 @@
 }
 
 ::-webkit-scrollbar-thumb {
-	background: rgba(255, 255, 255, 0.1);
-	border-radius: 3px;
+	background: rgba(255, 255, 255, 0.08);
+	border-radius: 2px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-	background: rgba(255, 255, 255, 0.15);
+	background: rgba(255, 255, 255, 0.12);
 }
 
 body {
-	width: 320px;
-	min-height: 400px;
-	font-family: "JetBrains Mono", ui-monospace, monospace;
+	width: 340px;
+	min-height: 420px;
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 	font-size: 13px;
 	background: #0a0a0a;
-	color: #fafafa;
+	color: #ededed;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
 }
 
 main {
-	padding: 20px;
+	padding: 24px;
 	display: flex;
 	flex-direction: column;
-	min-height: 400px;
+	min-height: 420px;
 	position: relative;
 }
 
@@ -56,9 +58,9 @@ main::before {
 	position: absolute;
 	top: 0;
 	right: 0;
-	width: 160px;
-	height: 160px;
-	background: radial-gradient(circle at top right, rgba(212, 176, 140, 0.06) 0%, transparent 70%);
+	width: 200px;
+	height: 200px;
+	background: radial-gradient(circle at top right, rgba(212, 176, 140, 0.04) 0%, transparent 70%);
 	pointer-events: none;
 }
 
@@ -66,21 +68,22 @@ header {
 	display: flex;
 	align-items: center;
 	gap: 10px;
-	margin-bottom: 24px;
+	margin-bottom: 28px;
 	position: relative;
 	z-index: 1;
 }
 
 header svg {
 	color: #d4b08c;
+	opacity: 0.9;
 }
 
 header span {
-	font-size: 11px;
-	font-weight: 700;
-	letter-spacing: 0.12em;
-	text-transform: uppercase;
-	color: rgba(255, 255, 255, 0.5);
+	font-family: Georgia, "Times New Roman", serif;
+	font-style: italic;
+	font-size: 15px;
+	letter-spacing: 0.02em;
+	color: #ededed;
 }
 
 .view {
@@ -98,23 +101,24 @@ header span {
 input {
 	width: 100%;
 	padding: 14px 16px;
-	border: 1px solid rgba(255, 255, 255, 0.08);
-	border-radius: 10px;
-	background: rgba(255, 255, 255, 0.02);
-	color: #fafafa;
+	border: 1px solid rgba(255, 255, 255, 0.05);
+	border-radius: 12px;
+	background: #161616;
+	color: #ededed;
 	font-family: inherit;
 	font-size: 13px;
 	transition: all 0.2s ease;
 }
 
 input:hover {
-	border-color: rgba(255, 255, 255, 0.12);
+	border-color: rgba(255, 255, 255, 0.08);
 }
 
 input:focus {
 	outline: none;
-	border-color: #d4b08c;
-	background: rgba(212, 176, 140, 0.03);
+	border-color: rgba(212, 176, 140, 0.4);
+	background: #161616;
+	box-shadow: 0 0 0 3px rgba(212, 176, 140, 0.08);
 }
 
 input::placeholder {
@@ -122,13 +126,14 @@ input::placeholder {
 }
 
 input.mono {
+	font-family: "JetBrains Mono", ui-monospace, monospace;
 	font-size: 11px;
 	letter-spacing: 0.02em;
 }
 
 #login {
 	justify-content: center;
-	padding-top: 20px;
+	padding-top: 16px;
 }
 
 #login input {
@@ -141,60 +146,66 @@ input.mono {
 	min-height: 18px;
 	margin-bottom: 8px;
 	text-align: center;
+	font-weight: 500;
 }
 
 button {
 	width: 100%;
-	padding: 14px 16px;
+	padding: 14px 20px;
 	border: none;
-	border-radius: 10px;
-	background: #d4b08c;
+	border-radius: 12px;
+	background: linear-gradient(135deg, #d4b08c 0%, #c9a27b 100%);
 	color: #0a0a0a;
 	font-family: inherit;
-	font-weight: 700;
-	font-size: 11px;
-	letter-spacing: 0.1em;
-	text-transform: uppercase;
+	font-weight: 600;
+	font-size: 13px;
+	letter-spacing: 0.01em;
 	cursor: pointer;
-	transition: all 0.2s ease;
+	transition: all 0.25s ease;
+	box-shadow: 0 2px 12px rgba(212, 176, 140, 0.15);
 }
 
 button:hover {
-	background: #dfc09e;
+	background: linear-gradient(135deg, #dfc09e 0%, #d4b08c 100%);
+	box-shadow: 0 4px 20px rgba(212, 176, 140, 0.25);
 	transform: translateY(-1px);
 }
 
 button:active {
 	transform: translateY(0);
+	box-shadow: 0 2px 8px rgba(212, 176, 140, 0.2);
 }
 
 button:disabled {
-	opacity: 0.4;
+	opacity: 0.5;
 	cursor: not-allowed;
 	transform: none;
+	box-shadow: none;
 }
 
 button.ghost {
 	background: transparent;
-	border: 1px solid rgba(255, 255, 255, 0.08);
+	border: 1px solid rgba(255, 255, 255, 0.06);
 	color: rgba(255, 255, 255, 0.5);
-	padding: 8px 12px;
+	padding: 8px 14px;
 	width: auto;
+	box-shadow: none;
+	font-weight: 500;
 }
 
 button.ghost:hover {
-	border-color: rgba(255, 255, 255, 0.15);
-	color: rgba(255, 255, 255, 0.7);
-	background: rgba(255, 255, 255, 0.02);
+	border-color: rgba(255, 255, 255, 0.12);
+	color: rgba(255, 255, 255, 0.8);
+	background: rgba(255, 255, 255, 0.03);
 	transform: none;
 }
 
 .link {
 	display: block;
 	text-align: center;
-	margin-top: 16px;
-	color: rgba(255, 255, 255, 0.35);
-	font-size: 11px;
+	margin-top: 20px;
+	color: rgba(255, 255, 255, 0.4);
+	font-size: 12px;
 	text-decoration: none;
 	transition: color 0.2s ease;
 }
@@ -205,7 +216,7 @@ button.ghost:hover {
 
 .search {
 	position: relative;
-	margin-bottom: 16px;
+	margin-bottom: 20px;
 }
 
 .search svg {
@@ -213,38 +224,50 @@ button.ghost:hover {
 	left: 14px;
 	top: 50%;
 	transform: translateY(-50%);
-	color: rgba(255, 255, 255, 0.25);
+	color: rgba(255, 255, 255, 0.2);
 	pointer-events: none;
 	transition: color 0.2s ease;
 }
 
 .search:focus-within svg {
-	color: #d4b08c;
+	color: rgba(212, 176, 140, 0.6);
 }
 
 .search input {
 	padding-left: 40px;
+	background: rgba(255, 255, 255, 0.03);
+	border-color: rgba(255, 255, 255, 0.04);
+}
+
+.search input:hover {
+	background: rgba(255, 255, 255, 0.04);
+	border-color: rgba(255, 255, 255, 0.06);
+}
+
+.search input:focus {
+	background: rgba(255, 255, 255, 0.04);
 }
 
 #items {
 	list-style: none;
 	flex: 1;
 	overflow-y: auto;
-	max-height: 240px;
-	margin: 0 -8px;
-	padding: 0 8px;
+	max-height: 260px;
+	margin: 0 -12px;
+	padding: 0 12px;
 }
 
 #items li {
 	display: flex;
 	align-items: center;
-	gap: 12px;
-	padding: 12px;
-	margin-bottom: 4px;
-	border-radius: 10px;
+	gap: 14px;
+	padding: 14px;
+	margin-bottom: 6px;
+	border-radius: 14px;
 	cursor: pointer;
-	transition: all 0.15s ease;
+	transition: all 0.2s ease;
 	border: 1px solid transparent;
+	background: transparent;
 }
 
 #items li:hover {
@@ -254,20 +277,23 @@ button.ghost:hover {
 
 #items li:active {
 	background: rgba(255, 255, 255, 0.05);
+	transform: scale(0.99);
 }
 
 #items li .icon {
-	width: 36px;
-	height: 36px;
+	width: 40px;
+	height: 40px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background: rgba(212, 176, 140, 0.1);
-	border-radius: 10px;
+	background: linear-gradient(135deg, rgba(212, 176, 140, 0.12) 0%, rgba(212, 176, 140, 0.06) 100%);
+	border: 1px solid rgba(212, 176, 140, 0.1);
+	border-radius: 12px;
 	font-size: 14px;
 	font-weight: 600;
 	color: #d4b08c;
 	flex-shrink: 0;
+	font-family: "JetBrains Mono", ui-monospace, monospace;
 }
 
 #items li .info {
@@ -278,11 +304,11 @@ button.ghost:hover {
 #items li .title {
 	font-size: 13px;
 	font-weight: 500;
-	color: #fafafa;
+	color: #ededed;
 	white-space: nowrap;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	margin-bottom: 2px;
+	margin-bottom: 3px;
 }
 
 #items li .subtitle {
@@ -295,37 +321,41 @@ button.ghost:hover {
 
 #items li .star {
 	color: #d4b08c;
-	font-size: 14px;
-	opacity: 0.8;
+	font-size: 12px;
+	opacity: 0.7;
 }
 
 #items .empty {
-	padding: 48px 20px;
+	padding: 56px 24px;
 	text-align: center;
-	color: rgba(255, 255, 255, 0.25);
-	font-size: 12px;
+	color: rgba(255, 255, 255, 0.4);
+	font-size: 13px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	gap: 8px;
+	gap: 16px;
+	cursor: default;
 }
 
-#items .empty::before {
-	content: "";
-	width: 40px;
-	height: 40px;
-	background: rgba(255, 255, 255, 0.03);
-	border-radius: 10px;
-	display: block;
+#items .empty .emptyicon {
+	width: 56px;
+	height: 56px;
+	background: linear-gradient(135deg, rgba(212, 176, 140, 0.08) 0%, rgba(212, 176, 140, 0.03) 100%);
+	border: 1px solid rgba(212, 176, 140, 0.08);
+	border-radius: 16px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	color: rgba(212, 176, 140, 0.5);
 }
 
 .footer {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	padding-top: 16px;
+	padding-top: 20px;
 	margin-top: auto;
-	border-top: 1px solid rgba(255, 255, 255, 0.06);
+	border-top: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .email {
@@ -341,50 +371,54 @@ button.ghost:hover {
 	display: flex;
 	align-items: center;
 	gap: 6px;
-	margin-bottom: 20px;
-	font-size: 11px;
+	margin-bottom: 24px;
+	font-size: 12px;
 }
 
 .back svg {
-	transition: transform 0.15s ease;
+	transition: transform 0.2s ease;
 }
 
 .back:hover svg {
-	transform: translateX(-2px);
+	transform: translateX(-3px);
 }
 
 .detailheader {
 	display: flex;
 	align-items: center;
-	gap: 14px;
-	margin-bottom: 24px;
-	padding-bottom: 20px;
-	border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+	gap: 16px;
+	margin-bottom: 28px;
+	padding-bottom: 24px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.05);
 }
 
 .detailheader .icon {
-	width: 48px;
-	height: 48px;
+	width: 52px;
+	height: 52px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	background: rgba(212, 176, 140, 0.1);
-	border-radius: 12px;
-	font-size: 20px;
+	background: linear-gradient(135deg, rgba(212, 176, 140, 0.15) 0%, rgba(212, 176, 140, 0.08) 100%);
+	border: 1px solid rgba(212, 176, 140, 0.15);
+	border-radius: 14px;
+	font-size: 18px;
 	font-weight: 600;
 	color: #d4b08c;
+	font-family: "JetBrains Mono", ui-monospace, monospace;
 }
 
 .detailheader h2 {
-	font-size: 15px;
+	font-size: 16px;
 	font-weight: 600;
 	margin-bottom: 4px;
+	color: #ededed;
 }
 
 .detailheader .type {
 	font-size: 11px;
-	color: rgba(255, 255, 255, 0.35);
+	color: rgba(255, 255, 255, 0.4);
 	text-transform: lowercase;
+	font-weight: 500;
 }
 
 .fields {
@@ -394,23 +428,25 @@ button.ghost:hover {
 }
 
 .field {
-	background: rgba(255, 255, 255, 0.02);
-	border: 1px solid rgba(255, 255, 255, 0.06);
-	border-radius: 10px;
-	padding: 12px 14px;
-	transition: border-color 0.15s ease;
+	background: #161616;
+	border: 1px solid rgba(255, 255, 255, 0.05);
+	border-radius: 14px;
+	padding: 14px 16px;
+	transition: all 0.2s ease;
 }
 
 .field:hover {
-	border-color: rgba(255, 255, 255, 0.1);
+	border-color: rgba(255, 255, 255, 0.08);
+	background: #181818;
 }
 
 .field .label {
 	font-size: 10px;
 	color: rgba(255, 255, 255, 0.35);
 	text-transform: uppercase;
-	letter-spacing: 0.06em;
-	margin-bottom: 6px;
+	letter-spacing: 0.08em;
+	margin-bottom: 8px;
+	font-weight: 500;
 }
 
 .field .value {
@@ -418,7 +454,7 @@ button.ghost:hover {
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
-	gap: 8px;
+	gap: 10px;
 }
 
 .field .text {
@@ -427,38 +463,42 @@ button.ghost:hover {
 	overflow: hidden;
 	text-overflow: ellipsis;
 	white-space: nowrap;
+	color: #ededed;
 }
 
 .field .text.password {
-	font-family: inherit;
-	letter-spacing: 0.15em;
-	color: rgba(255, 255, 255, 0.6);
+	font-family: "JetBrains Mono", ui-monospace, monospace;
+	letter-spacing: 0.2em;
+	color: rgba(255, 255, 255, 0.5);
+	font-size: 12px;
 }
 
 .field .actions {
 	display: flex;
-	gap: 4px;
+	gap: 6px;
 }
 
 .field button {
-	width: 30px;
-	height: 30px;
+	width: 32px;
+	height: 32px;
 	padding: 0;
-	border-radius: 8px;
-	background: rgba(255, 255, 255, 0.05);
+	border-radius: 10px;
+	background: rgba(255, 255, 255, 0.04);
 	color: rgba(255, 255, 255, 0.4);
 	font-size: 12px;
 	display: flex;
 	align-items: center;
 	justify-content: center;
 	border: 1px solid transparent;
+	box-shadow: none;
 }
 
 .field button:hover {
-	background: rgba(212, 176, 140, 0.15);
-	border-color: rgba(212, 176, 140, 0.2);
+	background: rgba(212, 176, 140, 0.12);
+	border-color: rgba(212, 176, 140, 0.15);
 	color: #d4b08c;
 	transform: none;
+	box-shadow: none;
 }
 
 .field button svg {
@@ -474,34 +514,35 @@ button.ghost:hover {
 
 .field.autofill:hover {
 	border-color: transparent;
+	background: transparent;
 }
 
 .autofillbtn {
 	width: 100%;
-	padding: 14px 16px;
+	padding: 16px 20px;
 	border: none;
-	border-radius: 10px;
+	border-radius: 14px;
 	background: linear-gradient(135deg, #d4b08c 0%, #c9a27b 100%);
 	color: #0a0a0a;
 	font-family: inherit;
-	font-weight: 700;
-	font-size: 11px;
-	letter-spacing: 0.1em;
-	text-transform: uppercase;
+	font-weight: 600;
+	font-size: 13px;
+	letter-spacing: 0.01em;
 	cursor: pointer;
-	transition: all 0.2s ease;
+	transition: all 0.25s ease;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	box-shadow: 0 2px 8px rgba(212, 176, 140, 0.2);
+	box-shadow: 0 4px 16px rgba(212, 176, 140, 0.2);
 }
 
 .autofillbtn:hover {
 	background: linear-gradient(135deg, #dfc09e 0%, #d4b08c 100%);
-	box-shadow: 0 4px 12px rgba(212, 176, 140, 0.3);
+	box-shadow: 0 6px 24px rgba(212, 176, 140, 0.3);
 	transform: translateY(-1px);
 }
 
 .autofillbtn:active {
 	transform: translateY(0);
+	box-shadow: 0 2px 12px rgba(212, 176, 140, 0.2);
 }

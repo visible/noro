@@ -1,11 +1,10 @@
-import { useState, useCallback } from "react";
+import { useCallback } from "react";
 import {
   View,
   Text,
   StyleSheet,
   ScrollView,
   Pressable,
-  Image,
   Alert,
 } from "react-native";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -15,7 +14,20 @@ import Animated, {
   useSharedValue,
 } from "react-native-reanimated";
 import * as Haptics from "expo-haptics";
-import { Svg, Path, Circle, Rect } from "react-native-svg";
+import Constants from "expo-constants";
+import { Svg, Path, Circle } from "react-native-svg";
+import { useauth } from "../../stores/auth";
+import { usesettings, type AutolockDuration } from "../../stores/settings";
+
+const autolockLabels: Record<AutolockDuration, string> = {
+  immediate: "Immediately",
+  "1min": "1 minute",
+  "5min": "5 minutes",
+  "15min": "15 minutes",
+  "30min": "30 minutes",
+  "1hour": "1 hour",
+  never: "Never",
+};
 
 const colors = {
   bg: "#0a0a0a",
@@ -251,8 +263,11 @@ function SettingsSection({
 
 export default function SettingsScreen() {
   const insets = useSafeAreaInsets();
-  const [biometricEnabled, setBiometricEnabled] = useState(true);
-  const [autoLockTime, setAutoLockTime] = useState("15 minutes");
+  const user = useauth((s) => s.user);
+  const biometricEnabled = usesettings((s) => s.biometricEnabled);
+  const setBiometricEnabled = usesettings((s) => s.setBiometricEnabled);
+  const autolockDuration = usesettings((s) => s.autolockDuration);
+  const version = Constants.expoConfig?.version || "1.0.0";
 
   const handleLogout = useCallback(() => {
     Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
@@ -304,8 +319,8 @@ export default function SettingsScreen() {
             <UserIcon />
           </View>
           <View style={styles.profileInfo}>
-            <Text style={styles.profileName}>Josh</Text>
-            <Text style={styles.profileEmail}>josh@noro.sh</Text>
+            <Text style={styles.profileName}>{user?.name || "User"}</Text>
+            <Text style={styles.profileEmail}>{user?.email || ""}</Text>
           </View>
           <View style={styles.syncStatus}>
             <SyncIcon />
@@ -326,7 +341,7 @@ export default function SettingsScreen() {
             icon={<ClockIcon />}
             title="Auto-Lock"
             subtitle="Lock vault after inactivity"
-            value={autoLockTime}
+            value={autolockLabels[autolockDuration]}
             onPress={() => {}}
           />
           <SettingsRow
@@ -341,7 +356,7 @@ export default function SettingsScreen() {
           <SettingsRow
             icon={<CloudIcon />}
             title="Sync"
-            subtitle="Last synced 2 minutes ago"
+            subtitle="Sync vault with cloud"
             value="Auto"
             onPress={() => {}}
           />
@@ -357,7 +372,7 @@ export default function SettingsScreen() {
           <SettingsRow
             icon={<InfoIcon />}
             title="Version"
-            value="1.0.0"
+            value={version}
           />
           <SettingsRow
             icon={<HelpIcon />}

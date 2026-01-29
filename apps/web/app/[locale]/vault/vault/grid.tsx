@@ -23,14 +23,14 @@ const paths: Record<ItemType, string> = {
 };
 
 const colors: Record<ItemType, string> = {
-	login: "bg-blue-500/10 text-blue-400",
-	note: "bg-amber-500/10 text-amber-400",
-	card: "bg-emerald-500/10 text-emerald-400",
-	identity: "bg-violet-500/10 text-violet-400",
-	ssh: "bg-slate-500/10 text-slate-400",
-	api: "bg-rose-500/10 text-rose-400",
-	otp: "bg-cyan-500/10 text-cyan-400",
-	passkey: "bg-fuchsia-500/10 text-fuchsia-400",
+	login: "from-blue-500/15 to-blue-500/5 border-blue-500/10 text-blue-400",
+	note: "from-amber-500/15 to-amber-500/5 border-amber-500/10 text-amber-400",
+	card: "from-emerald-500/15 to-emerald-500/5 border-emerald-500/10 text-emerald-400",
+	identity: "from-violet-500/15 to-violet-500/5 border-violet-500/10 text-violet-400",
+	ssh: "from-slate-500/15 to-slate-500/5 border-slate-500/10 text-slate-400",
+	api: "from-rose-500/15 to-rose-500/5 border-rose-500/10 text-rose-400",
+	otp: "from-cyan-500/15 to-cyan-500/5 border-cyan-500/10 text-cyan-400",
+	passkey: "from-fuchsia-500/15 to-fuchsia-500/5 border-fuchsia-500/10 text-fuchsia-400",
 };
 
 function getsubtitle(item: VaultItem): string | null {
@@ -67,17 +67,17 @@ export function VaultGrid({ items, onItemClick, onFavorite, onTagClick }: Props)
 					<div
 						key={item.id}
 						onClick={() => onItemClick(item)}
-						className="group relative bg-white/[0.02] hover:bg-white/[0.04] border border-white/[0.06] hover:border-white/[0.1] rounded-xl p-4 cursor-pointer transition-all"
+						className="group relative bg-[#161616]/80 backdrop-blur-sm hover:bg-[#1a1a1a] border border-white/5 hover:border-white/10 rounded-xl p-4 cursor-pointer transition-all duration-200 shadow-lg shadow-black/10 hover:shadow-xl hover:shadow-black/20"
 					>
 						<div className="flex items-start gap-3">
-							<div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${colors[item.type]}`}>
+							<div className={`w-10 h-10 rounded-xl bg-gradient-to-br border flex items-center justify-center shrink-0 ${colors[item.type]}`}>
 								<svg aria-hidden="true" className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
 									<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d={paths[item.type]} />
 								</svg>
 							</div>
 							<div className="flex-1 min-w-0">
 								<div className="flex items-center gap-2">
-									<h3 className="text-sm font-medium text-white truncate">{item.title}</h3>
+									<h3 className="text-sm font-medium text-[#ededed] truncate">{item.title}</h3>
 									{item.favorite && (
 										<svg aria-hidden="true" className="w-3.5 h-3.5 text-[#d4b08c] shrink-0" fill="currentColor" viewBox="0 0 24 24">
 											<path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z" />
@@ -90,7 +90,7 @@ export function VaultGrid({ items, onItemClick, onFavorite, onTagClick }: Props)
 							</div>
 							<button
 								onClick={(e) => { e.stopPropagation(); onFavorite(item.id); }}
-								className={`p-1.5 rounded-md transition-all ${
+								className={`p-1.5 rounded-lg transition-all ${
 									item.favorite
 										? "text-[#d4b08c] hover:bg-[#d4b08c]/10"
 										: "text-transparent group-hover:text-white/20 hover:!text-white/40 hover:!bg-white/5"
@@ -108,7 +108,7 @@ export function VaultGrid({ items, onItemClick, onFavorite, onTagClick }: Props)
 									<button
 										key={tag}
 										onClick={(e) => { e.stopPropagation(); onTagClick?.(tag); }}
-										className="px-2 py-0.5 rounded-md text-[10px] bg-white/[0.04] text-white/40 hover:bg-white/[0.08] hover:text-white/60 transition-colors"
+										className="px-2 py-0.5 rounded-md text-[10px] bg-white/[0.04] text-white/40 hover:bg-white/[0.08] hover:text-white/60 transition-colors border border-white/[0.04]"
 									>
 										{tag}
 									</button>

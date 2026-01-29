@@ -118,7 +118,15 @@ function renderitems() {
 	if (filtered.length === 0) {
 		const empty = document.createElement("li");
 		empty.className = "empty";
-		empty.textContent = items.length === 0 ? "no items yet" : "no matches";
+		const icon = document.createElement("div");
+		icon.className = "emptyicon";
+		icon.innerHTML = items.length === 0
+			? `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>`
+			: `<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>`;
+		const text = document.createElement("span");
+		text.textContent = items.length === 0 ? "your vault is empty" : "no matches found";
+		empty.appendChild(icon);
+		empty.appendChild(text);
 		itemslist.appendChild(empty);
 		return;
 	}

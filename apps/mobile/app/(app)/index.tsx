@@ -49,7 +49,7 @@ const filters: { type: FilterType; label: string }[] = [
 
 function SearchIcon() {
   return (
-    <Svg width={20} height={20} viewBox="0 0 24 24" fill="none">
+    <Svg width={18} height={18} viewBox="0 0 24 24" fill="none">
       <Circle cx={11} cy={11} r={7} stroke={colors.muted} strokeWidth={1.5} />
       <Path d="M21 21l-4.35-4.35" stroke={colors.muted} strokeWidth={1.5} strokeLinecap="round" />
     </Svg>
@@ -58,7 +58,7 @@ function SearchIcon() {
 
 function StarIcon({ filled }: { filled: boolean }) {
   return (
-    <Svg width={18} height={18} viewBox="0 0 24 24" fill={filled ? colors.accent : "none"}>
+    <Svg width={16} height={16} viewBox="0 0 24 24" fill={filled ? colors.accent : "none"}>
       <Path
         d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
         stroke={filled ? colors.accent : colors.muted}
@@ -69,6 +69,27 @@ function StarIcon({ filled }: { filled: boolean }) {
     </Svg>
   );
 }
+
+function TypeBadge({ type }: { type: ItemType }) {
+  const labels: Record<ItemType, string> = {
+    login: "login",
+    card: "card",
+    note: "note",
+    identity: "id",
+    ssh: "ssh",
+    api: "api",
+  };
+  return (
+    <View style={badgeStyles.badge}>
+      <Text style={badgeStyles.text}>{labels[type]}</Text>
+    </View>
+  );
+}
+
+const badgeStyles = StyleSheet.create({
+  badge: { paddingHorizontal: 6, paddingVertical: 2, borderRadius: 4, backgroundColor: "rgba(255,255,255,0.06)" },
+  text: { fontSize: 9, fontWeight: "600", color: colors.subtle, textTransform: "uppercase", letterSpacing: 0.3 },
+});
 
 function ChevronIcon() {
   return (
@@ -86,12 +107,12 @@ function PlusIcon() {
   );
 }
 
-function VaultIcon() {
+function LockIcon() {
   return (
-    <Svg width={56} height={56} viewBox="0 0 24 24" fill="none">
-      <Rect x={2} y={4} width={20} height={16} rx={3} stroke={colors.accent} strokeWidth={1.5} />
-      <Circle cx={12} cy={12} r={4} stroke={colors.accent} strokeWidth={1.5} />
-      <Path d="M12 10v4M10 12h4" stroke={colors.accent} strokeWidth={1.5} strokeLinecap="round" />
+    <Svg width={40} height={40} viewBox="0 0 24 24" fill="none">
+      <Rect x={3} y={11} width={18} height={10} rx={2} stroke={colors.accent} strokeWidth={1.5} />
+      <Path d="M7 11V7a5 5 0 0110 0v4" stroke={colors.accent} strokeWidth={1.5} strokeLinecap="round" />
+      <Circle cx={12} cy={16} r={1.5} fill={colors.accent} />
     </Svg>
   );
 }
@@ -160,7 +181,7 @@ function FilterChip({ label, active, onPress }: { label: string; active: boolean
       style={({ pressed }) => [
         styles.filterChip,
         active && styles.filterChipActive,
-        pressed && { opacity: 0.8 },
+        pressed && { opacity: 0.7, transform: [{ scale: 0.97 }] },
       ]}
     >
       <Text style={[styles.filterChipText, active && styles.filterChipTextActive]}>{label}</Text>
@@ -195,7 +216,10 @@ function VaultListItem({ item, onPress, onFavorite, wide }: { item: VaultItem; o
           <ItemIcon type={item.type} />
         </View>
         <View style={styles.listItemContent}>
-          <Text style={styles.listItemTitle} numberOfLines={1}>{item.title}</Text>
+          <View style={styles.listItemRow}>
+            <Text style={styles.listItemTitle} numberOfLines={1}>{item.title}</Text>
+            <TypeBadge type={item.type} />
+          </View>
           {subtitle ? <Text style={styles.listItemSubtitle} numberOfLines={1}>{subtitle}</Text> : null}
         </View>
         <Pressable onPress={() => { Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium); onFavorite(); }} hitSlop={12} style={styles.favoriteButton}>
@@ -226,18 +250,21 @@ function EmptyState({ search, onAdd }: { search: string; onAdd: () => void }) {
   return (
     <View style={styles.emptyState}>
       <Animated.View entering={FadeInUp.delay(100).duration(400)} style={styles.emptyIconContainer}>
-        <VaultIcon />
+        <View style={styles.emptyIconInner}>
+          <View style={styles.emptyIconGlow} />
+          <LockIcon />
+        </View>
       </Animated.View>
       <Animated.Text entering={FadeInUp.delay(200).duration(400)} style={styles.emptyTitle}>
-        {search ? "no results found" : "your vault is empty"}
+        {search ? "No results" : "Your vault is empty"}
       </Animated.Text>
       <Animated.Text entering={FadeInUp.delay(300).duration(400)} style={styles.emptySubtitle}>
-        {search ? "try a different search term" : "securely store your passwords, cards,\nand sensitive information"}
+        {search ? "Try a different search term" : "Securely store your passwords, cards,\nand sensitive information"}
       </Animated.Text>
       {!search && (
         <Animated.View entering={FadeInUp.delay(400).duration(400)}>
-          <Pressable onPress={onAdd} style={styles.emptyButton}>
-            <Text style={styles.emptyButtonText}>add first item</Text>
+          <Pressable onPress={onAdd} style={({ pressed }) => [styles.emptyButton, pressed && styles.emptyButtonPressed]}>
+            <Text style={styles.emptyButtonText}>Add first item</Text>
           </Pressable>
         </Animated.View>
       )}
@@ -370,40 +397,44 @@ const styles = StyleSheet.create({
   title: { fontSize: 34, fontWeight: "700", color: colors.text, letterSpacing: -0.5 },
   titleTablet: { fontSize: 40 },
   subtitle: { fontSize: 15, color: colors.muted, marginTop: 4 },
-  searchContainer: { flexDirection: "row", alignItems: "center", marginTop: 16, backgroundColor: "rgba(255,255,255,0.04)", borderRadius: 14, borderWidth: 1, borderColor: colors.border },
-  searchIcon: { paddingLeft: 16, paddingRight: 8 },
-  searchInput: { flex: 1, height: 50, fontSize: 16, color: colors.text, paddingRight: 16 },
-  filtersContainer: { marginTop: 20, maxHeight: 44 },
-  filtersContent: { gap: 10, flexDirection: "row" },
-  filterChip: { paddingHorizontal: 18, paddingVertical: 10, borderRadius: 22, backgroundColor: "rgba(255,255,255,0.05)", borderWidth: 1, borderColor: colors.border },
+  searchContainer: { flexDirection: "row", alignItems: "center", marginTop: 16, backgroundColor: colors.surface, borderRadius: 12, borderWidth: 1, borderColor: colors.border },
+  searchIcon: { paddingLeft: 14, paddingRight: 10 },
+  searchInput: { flex: 1, height: 46, fontSize: 15, color: colors.text, paddingRight: 14 },
+  filtersContainer: { marginTop: 16, maxHeight: 36 },
+  filtersContent: { gap: 8, flexDirection: "row" },
+  filterChip: { paddingHorizontal: 12, paddingVertical: 6, borderRadius: 8, backgroundColor: "rgba(255,255,255,0.04)", borderWidth: 1, borderColor: "rgba(255,255,255,0.06)" },
   filterChipActive: { backgroundColor: colors.accent, borderColor: colors.accent },
-  filterChipText: { fontSize: 14, fontWeight: "600", color: colors.subtle },
-  filterChipTextActive: { color: colors.bg },
-  listContainer: { flex: 1, marginTop: 20 },
+  filterChipText: { fontSize: 12, fontWeight: "500", color: colors.subtle },
+  filterChipTextActive: { color: colors.bg, fontWeight: "600" },
+  listContainer: { flex: 1, marginTop: 16 },
   listContent: {},
-  section: { marginBottom: 28 },
-  sectionHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: 10, marginBottom: 10 },
-  sectionHeaderLeft: { flexDirection: "row", alignItems: "center", gap: 10 },
-  sectionTitle: { fontSize: 12, fontWeight: "700", color: colors.muted, textTransform: "uppercase", letterSpacing: 1 },
-  countBadge: { backgroundColor: "rgba(255,255,255,0.06)", paddingHorizontal: 10, paddingVertical: 4, borderRadius: 12 },
-  countText: { fontSize: 12, fontWeight: "600", color: colors.subtle },
-  sectionItems: { gap: 8 },
-  listItem: { flexDirection: "row", alignItems: "center", padding: 16, backgroundColor: "rgba(255,255,255,0.03)", borderRadius: 16, borderWidth: 1, borderColor: colors.border },
-  listItemWide: { padding: 20 },
-  listItemIcon: { width: 44, height: 44, borderRadius: 12, backgroundColor: "rgba(255,255,255,0.05)", alignItems: "center", justifyContent: "center" },
-  listItemContent: { flex: 1, marginLeft: 16 },
-  listItemTitle: { fontSize: 16, fontWeight: "600", color: colors.text },
-  listItemSubtitle: { fontSize: 14, color: colors.muted, marginTop: 3 },
-  favoriteButton: { width: 40, height: 40, alignItems: "center", justifyContent: "center" },
-  emptyState: { alignItems: "center", paddingTop: 80, paddingHorizontal: 32 },
-  emptyIconContainer: { width: 100, height: 100, borderRadius: 28, backgroundColor: "rgba(212,176,140,0.08)", borderWidth: 1, borderColor: "rgba(212,176,140,0.15)", alignItems: "center", justifyContent: "center", marginBottom: 28 },
-  emptyTitle: { fontSize: 22, fontWeight: "700", color: colors.text, marginBottom: 12 },
+  section: { marginBottom: 24 },
+  sectionHeader: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", paddingVertical: 8, marginBottom: 8 },
+  sectionHeaderLeft: { flexDirection: "row", alignItems: "center", gap: 8 },
+  sectionTitle: { fontSize: 11, fontWeight: "600", color: colors.muted, textTransform: "uppercase", letterSpacing: 0.8 },
+  countBadge: { backgroundColor: "rgba(255,255,255,0.06)", paddingHorizontal: 8, paddingVertical: 3, borderRadius: 10 },
+  countText: { fontSize: 11, fontWeight: "600", color: colors.subtle },
+  sectionItems: { gap: 6 },
+  listItem: { flexDirection: "row", alignItems: "center", padding: 14, backgroundColor: colors.surface, borderRadius: 14, borderWidth: 1, borderColor: colors.border, shadowColor: "#000", shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.1, shadowRadius: 4, elevation: 2 },
+  listItemWide: { padding: 18 },
+  listItemIcon: { width: 42, height: 42, borderRadius: 11, backgroundColor: "rgba(255,255,255,0.06)", alignItems: "center", justifyContent: "center" },
+  listItemContent: { flex: 1, marginLeft: 14 },
+  listItemRow: { flexDirection: "row", alignItems: "center", gap: 8 },
+  listItemTitle: { fontSize: 15, fontWeight: "600", color: colors.text, letterSpacing: -0.2, flexShrink: 1 },
+  listItemSubtitle: { fontSize: 13, color: colors.muted, marginTop: 2 },
+  favoriteButton: { width: 36, height: 36, alignItems: "center", justifyContent: "center" },
+  emptyState: { alignItems: "center", paddingTop: 100, paddingHorizontal: 40 },
+  emptyIconContainer: { width: 88, height: 88, marginBottom: 28 },
+  emptyIconInner: { flex: 1, backgroundColor: colors.surface, borderWidth: 1, borderColor: "rgba(212,176,140,0.15)", borderRadius: 24, alignItems: "center", justifyContent: "center", overflow: "hidden" },
+  emptyIconGlow: { position: "absolute", bottom: -20, right: -20, width: 60, height: 60, borderRadius: 30, backgroundColor: colors.accent, opacity: 0.15 },
+  emptyTitle: { fontSize: 24, fontWeight: "600", color: colors.text, marginBottom: 8, letterSpacing: -0.5 },
   emptySubtitle: { fontSize: 15, color: colors.muted, textAlign: "center", lineHeight: 22 },
-  emptyButton: { marginTop: 28, paddingHorizontal: 28, paddingVertical: 14, backgroundColor: colors.accent, borderRadius: 14 },
-  emptyButtonText: { fontSize: 15, fontWeight: "600", color: colors.bg },
-  errorBanner: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", backgroundColor: "rgba(239,68,68,0.1)", paddingHorizontal: 16, paddingVertical: 14, borderRadius: 14, marginBottom: 20, borderWidth: 1, borderColor: "rgba(239,68,68,0.2)" },
-  errorText: { fontSize: 14, color: "#ef4444", flex: 1 },
-  retryText: { fontSize: 14, fontWeight: "600", color: colors.accent, marginLeft: 12 },
-  fab: { position: "absolute", right: 20, width: 60, height: 60, borderRadius: 20, backgroundColor: colors.accent, alignItems: "center", justifyContent: "center", shadowColor: colors.accent, shadowOffset: { width: 0, height: 6 }, shadowOpacity: 0.35, shadowRadius: 12, elevation: 8 },
-  fabPressed: { transform: [{ scale: 0.95 }] },
+  emptyButton: { marginTop: 32, paddingHorizontal: 24, paddingVertical: 14, backgroundColor: colors.accent, borderRadius: 12, shadowColor: colors.accent, shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 8 },
+  emptyButtonPressed: { opacity: 0.9, transform: [{ scale: 0.98 }] },
+  emptyButtonText: { fontSize: 15, fontWeight: "600", color: colors.bg, letterSpacing: -0.2 },
+  errorBanner: { flexDirection: "row", alignItems: "center", justifyContent: "space-between", backgroundColor: "rgba(239,68,68,0.1)", paddingHorizontal: 14, paddingVertical: 12, borderRadius: 12, marginBottom: 16, borderWidth: 1, borderColor: "rgba(239,68,68,0.2)" },
+  errorText: { fontSize: 13, color: "#ef4444", flex: 1 },
+  retryText: { fontSize: 13, fontWeight: "600", color: colors.accent, marginLeft: 12 },
+  fab: { position: "absolute", right: 20, width: 56, height: 56, borderRadius: 16, backgroundColor: colors.accent, alignItems: "center", justifyContent: "center", shadowColor: colors.accent, shadowOffset: { width: 0, height: 8 }, shadowOpacity: 0.4, shadowRadius: 16, elevation: 8 },
+  fabPressed: { transform: [{ scale: 0.94 }], opacity: 0.95 },
 });
