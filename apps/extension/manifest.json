@@ -2,11 +2,12 @@
   "manifest_version": 3,
   "name": "noro",
   "version": "0.1.0",
-  "description": "one-time secret sharing with end-to-end encryption",
+  "description": "secure password manager with end-to-end encryption",
   "permissions": ["contextMenus", "storage", "clipboardWrite", "notifications", "tabs", "activeTab"],
   "host_permissions": ["https://noro.sh/*", "<all_urls>"],
   "action": {
     "default_popup": "popup.html",
+    "default_title": "noro - password manager",
     "default_icon": {
       "16": "icons/16.png",
       "32": "icons/32.png",
